@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include <signal.h> // function fo rsignal funcs
+
 # include <stdbool.h>	// bool
 
 // libs for readline
