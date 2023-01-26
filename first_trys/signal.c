@@ -25,16 +25,18 @@ void signal_handler(int keypress)
 {
 	printf("signal SIGINT got called\n");
 //    printf("Caught signal %d, ends running program\n", keypress);
-   exit(1); // bash: returns 1 if ctr-c is used
+//    exit(1); // bash: returns 1 if ctr-c is used
 }
 
 int main()
 {
 	char *line = NULL;
 
+	signal(SIGINT, signal_handler);
 	printf("sigint val before: %d\n", SIGINT);
 	while(1)
 	{
+
 		printf("in while loop\n");
 		sleep(1);
 	}
