@@ -1,7 +1,7 @@
 NAME= minishell.a
 
 CC = gcc
-CFLAGS= -Wall -Werror -Wextra
+CFLAGS= -Wall -Werror -Wextra -g
 # -fsanitize=thread
 HEADER= minishell.h
 RM= rm -rf

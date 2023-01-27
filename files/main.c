@@ -8,12 +8,20 @@ void exit_status(char *message, int32_t exit_code)
 
 
 // throw error if the amount of quotes is unequal (no interpreting of unclosed quotes)
+// returns the i that gives the position after the closing quote
 int32_t lex_quote(t_data *data, int32_t i_)
 {
-	if (data->line[i_] == 39)
-	{
-		while (data.)
-	}
+	int32_t end = i_ + 1;
+	char quote;
+
+// either single or double quote
+	quote = data->line[i_];
+	while (data->line[end] != quote)
+		end++;
+	char *chunk;
+	chunk = ft_substr(data->line, i_, end - i_ + 1);
+	printf(GRN"[%s]\n"RESET, chunk);
+	return (end);
 }
 
 
@@ -47,8 +55,12 @@ void lexer(t_data *data)
 		// if if detectes single or double quote
 		// 39 -> single quote
 		// 34 -> double quote
-		if (data->line[i] == 39 || data->line[i] == 39)
+		if (data->line[i] == 39 || data->line[i] == 34)
+		{
 			i += lex_quote(data, i);
+		}
+		printf("i: [%c]\n", data->line[i]);
+		// printf("[%c]\n", data->line[i]);
 		i++;
 
 		// if it detectes space (or any whitespace? --> guess there are only spaces)
