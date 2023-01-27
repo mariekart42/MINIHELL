@@ -11,8 +11,21 @@
 
 # include <stdbool.h>	// bool
 
+#include "../include/libft/libft.h"
+
 // libs for readline
 #include <readline/readline.h>
 #include <readline/history.h>
 
+typedef struct s_data
+{
+	char	*line;
+	char	*item;
+	struct s_data	*lexed_line;
+}		t_data;
+
+typedef struct s_lexing
+{
+
+}
 #endif

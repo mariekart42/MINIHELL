@@ -1,28 +1,84 @@
 #include "../head/minishell.h"
 
+void exit_status(char *message, int32_t exit_code)
+{
+	write(2, message, ft_strlen(message));
+	exit(exit_code);
+}
+
+
+// throw error if the amount of quotes is unequal (no interpreting of unclosed quotes)
+int32_t lex_quote(t_data *data, int32_t i_)
+{
+	if (data->line[i_] == 39)
+	{
+		while (data.)
+	}
+}
+
+
+// if amount of single or double quotes are not equal, function throws error 
+// -> detects unclose quotes
+void illegal_syntax(t_data *data)
+{
+	int32_t	i = 0;
+	int32_t	single_quotes = 0;
+	int32_t	double_quotes = 0;
+	while (data->line[i] != '\0')
+	{
+		if (data->line[i] == 39)
+			single_quotes++;
+		else if (data->line[i] == 34)
+			double_quotes++;
+		i++;
+	}
+	if (single_quotes % 2 != 0 || double_quotes % 2 != 0)
+		exit_status("syntax error: quotes are unclosed!\n", 69);
+}
+
+// devide chunks of commands etc in single linked list
+void lexer(t_data *data)
+{
+	int32_t	i = 0;
+
+	illegal_syntax(data);
+	while (data->line[i] != '\0')
+	{
+		// if if detectes single or double quote
+		// 39 -> single quote
+		// 34 -> double quote
+		if (data->line[i] == 39 || data->line[i] == 39)
+			i += lex_quote(data, i);
+		i++;
+
+		// if it detectes space (or any whitespace? --> guess there are only spaces)
+	}
+}
 
 
 int main(int32_t argc, char **argv)
 {
-	char *line = NULL;
+	t_data data;
 
 	// using signal function here to catch signal if eg ctr-c is used
-
 
 argc++;
 argv++;
 	while (1)
 	{
 		// read content from terminal
-		line = readline("MINIHELL> ");
-		if (!line)
+		data.line = readline("MINIHELL> ");
+		if (!data.line)
 			break ;
-		printf("content before history: %s\n", line);
-		if (line && *line)	// if line exist and is not empty, stuff gets saved in history list
-		add_history(line);
-		// parse_and_execute(line);
-		printf("content after history: %s\n", line);
-		free(line);
+
+		lexer(&data);
+		
+		// printf("content before history: %s\n", line);
+		// if (line && *line)	// if line exist and is not empty, stuff gets saved in history list
+		// 	add_history(line);
+		// // parse_and_execute(line);
+		// printf("content after history: %s\n", line);
+		free(data.line);
 		
 	}
 	//free(line);
