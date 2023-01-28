@@ -28,15 +28,16 @@
 # define WHT   "\x1B[37m"
 # define RESET "\x1B[0m"
 
-typedef struct s_data
+typedef struct s_lexing
 {
 	char	*line;
 	char	*item;
-	struct s_data	*lexed_line;
-}		t_data;
+	struct s_data	*next;
+}		t_lexing;
 
-// typedef struct s_lexing
-// {
+typedef struct s_hold
+{
+	s_data *lexed_list;
+}				t_hold;
 
-// }
 #endif
