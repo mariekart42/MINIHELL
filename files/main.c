@@ -1,31 +1,5 @@
 #include "../head/minishell.h"
 
-void exit_status(char *message, int32_t exit_code)
-{
-	write(2, message, ft_strlen(message));
-	exit(exit_code);
-}
-
-t_lexing	*ft_lstnew_lex(void *content)
-{
-	t_lexing	*ptr;
-
-	ptr = (t_lexing *)malloc(sizeof(*ptr));
-	if (ptr == NULL)
-		return (NULL);
-	ptr->item = content;
-	ptr->next = NULL;
-	return (ptr);
-}
-
-t_lexing	*ft_lstlast_lex(t_lexing *lst)
-{
-	if (!lst)
-		return (NULL);
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
-}
 
 // throw error if the amount of quotes is unequal (no interpreting of unclosed quotes)
 // returns the i that gives the position after the closing quote
@@ -137,44 +111,6 @@ void lexer(t_hold *hold)
 	}
 }
 
-void print_list(t_lexing *list, char *name)
-{
-	printf("----------\n[%s]:\n", name);
-	if(list == NULL)
-	{
-		printf("list_pos_1: (NULL)\n");
-		return ;
-	}
-	int32_t i = 1;
-	t_lexing *node = NULL;
-	node = list;
-	while (node->next != NULL)
-	{
-		printf("list_pos_%d: %s\n", i, node->item);
-		i++;
-		node = node->next;
-	}
-	printf("list_pos_%d: %s\n", i, node->item);
-	i++;
-	if(node->next == NULL)
-		printf("list_pos_%d: (NULL)\n", i);
-	else	
-		printf("something wrong! (print_list function)\n");
-	printf("-- done --\n\n");
-}
-
-void freeList(t_lexing* head)
-{
-   t_lexing* tmp;
-
-   while (head != NULL)
-    {
-       tmp = head;
-       head = head->next;
-       free(tmp);
-    }
-}
-
 int main(int32_t argc, char **argv)
 {
 	t_hold	*hold;
@@ -197,11 +133,9 @@ argv++;
 
 		print_list(hold->lexed_list, "yee");
 		
-		// printf("content before history: %s\n", line);
 		// if (line && *line)	// if line exist and is not empty, stuff gets saved in history list
 		// 	add_history(line);
-		// // parse_and_execute(line);
-		// printf("content after history: %s\n", line);
+
 		freeList(hold->lexed_list);
 		free(hold->line);
 		break;
@@ -210,5 +144,4 @@ argv++;
 	//free(line);
 }
 
-// change linked list to new struct
-// reconstruct code to new struct
+// do the redirect function

@@ -40,4 +40,15 @@ typedef struct s_hold
 	struct s_lexing *lexed_list;
 }				t_hold;
 
+
+//		delete_later.c
+void print_list(t_lexing *list, char *name);
+
+
+//		utils.c
+void freeList(t_lexing* head);
+void exit_status(char *message, int32_t exit_code);
+t_lexing	*ft_lstnew_lex(void *content);
+t_lexing	*ft_lstlast_lex(t_lexing *lst);
+
 #endif

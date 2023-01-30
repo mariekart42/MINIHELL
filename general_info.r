@@ -1,0 +1,1 @@
+- for cases where i dont know wich error code we should throw i use 69 lol (->> exit(69))
