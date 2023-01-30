@@ -30,14 +30,14 @@
 
 typedef struct s_lexing
 {
-	char	*line;
 	char	*item;
-	struct s_data	*next;
+	struct s_lexing	*next;
 }		t_lexing;
 
 typedef struct s_hold
 {
-	s_data *lexed_list;
+	char	*line;
+	struct s_lexing *lexed_list;
 }				t_hold;
 
 #endif

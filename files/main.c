@@ -6,18 +6,19 @@ void exit_status(char *message, int32_t exit_code)
 	exit(exit_code);
 }
 
-t_data	*ft_lstnew_(void *content)
+t_lexing	*ft_lstnew_lex(void *content)
 {
-	t_data	*ptr;
+	t_lexing	*ptr;
 
-	ptr = (t_data *)malloc(sizeof(*ptr));
+	ptr = (t_lexing *)malloc(sizeof(*ptr));
 	if (ptr == NULL)
 		return (NULL);
 	ptr->item = content;
 	ptr->next = NULL;
 	return (ptr);
 }
-t_data	*ft_lstlast_(t_data *lst)
+
+t_lexing	*ft_lstlast_lex(t_lexing *lst)
 {
 	if (!lst)
 		return (NULL);
@@ -28,42 +29,44 @@ t_data	*ft_lstlast_(t_data *lst)
 
 // throw error if the amount of quotes is unequal (no interpreting of unclosed quotes)
 // returns the i that gives the position after the closing quote
-int32_t lex_quote(t_data *data, int32_t i_)
+int32_t lex_quote(t_hold *hold, int32_t i)
 {
-	int32_t end = i_ + 1;
-	char quote;
+	int32_t	end;
+	char	quote;
+	char	*tmp;
 
-// either single or double quote
-	quote = data->line[i_];
-	while (data->line[end] != quote)
+	end = i + 1;
+	// either single or double quote
+	quote = hold->line[i];
+	while (hold->line[end] != quote)
 		end++;
 
-char *chunk = ft_substr(data->line, i_, end - i_ + 1);
-printf("chunk: %s\n", chunk);
-	if (data->next == NULL)
-		data->next = ft_lstnew_(chunk);
+	// put token into linked list
+	tmp = ft_substr(hold->line, i, end - i + 1);
+	if (hold->lexed_list == NULL)
+		hold->lexed_list = ft_lstnew_lex(tmp);
 	else
-		(ft_lstlast_(data))->next = ft_lstnew_(chunk);
-	// put it into linked list
-	// ft_lstlast((t_list*)data) = ft_lstnew(ft_substr(data->line, i_, end - i_ + 1));
-
-	// printf(GRN"[%s]\n"RESET, chunk);
-	return (end - i_);
+		(ft_lstlast_lex(hold->lexed_list))->next = ft_lstnew_lex(tmp);
+	return (end - i);
 }
 
-
-// if amount of single or double quotes are not equal, function throws error 
-// -> detects unclose quotes
-void illegal_syntax(t_data *data)
+/* function checks if amount of quotes is equal -> all quotes are closed
+ * THROWS ERROR IF:
+ *		- either amount of single or double quotes are not equal	*/
+void closed_quotes(t_hold *hold)
 {
-	int32_t	i = 0;
-	int32_t	single_quotes = 0;
-	int32_t	double_quotes = 0;
-	while (data->line[i] != '\0')
+	int32_t	i;
+	int32_t	single_quotes;
+	int32_t	double_quotes;
+
+	i = 0;
+	single_quotes = 0;
+	double_quotes = 0;
+	while (hold->line[i] != '\0')
 	{
-		if (data->line[i] == 39)
+		if (hold->line[i] == 39)
 			single_quotes++;
-		else if (data->line[i] == 34)
+		else if (hold->line[i] == 34)
 			double_quotes++;
 		i++;
 	}
@@ -71,28 +74,70 @@ void illegal_syntax(t_data *data)
 		exit_status("syntax error: quotes are unclosed!\n", 69);
 }
 
-// devide chunks of commands etc in single linked list
-void lexer(t_data *data)
+/* function adds pipe symbol as a new node to the 'lexed_list'
+ * THROWS ERROR IF:
+ *		- pipe at the very beginning of the line
+ *		- more then one pipe symbol in a row (only deperated by spaces) */
+void lex_pipe(t_hold *hold, int32_t i)
 {
-	int32_t	i = 0;
-	t_data *head = data;
-	head->item = "bla";
-
-	illegal_syntax(data);
-	while (data->line[i] != '\0')
-	{
-		// if if detectes single or double quote
-		// 39 -> single quote
-		// 34 -> double quote
-		if (data->line[i] == 39 || data->line[i] == 34)
-			i += lex_quote(data, i);
+	if (i == 0)
+		exit_status("syntax error near unexpected token '|'\n", 2);
+	// skip all spaces
+	i++;
+	while (hold->line[i] == 32)
 		i++;
+	if (hold->line[i] == 124)
+		exit_status("syntax error near unexpected token '|'\n", 2);
+	// pipe token cant be at the very beginning of 'lexed_list'
+	(ft_lstlast_lex(hold->lexed_list))->next = ft_lstnew_lex("|");
+}
 
-		// if it detectes space (or any whitespace? --> guess there are only spaces)
+/* function skips all spaces in the very beginning of 'line'
+ * like this its easier to throw errors in eg. the pipe function 
+ *	-> no pipe at the very beginning possible
+ * If there are spaces, line gets cutted till there are no more spaces in the beginning
+ * 	eg.		before: '   santi isn't real'
+ * 			after:	'santi isn't real'		*/
+void skip_spaces(t_hold *hold)
+{
+	int32_t	i;
+	char *tmp;
+
+	i = 0;
+	while (hold->line[i] == 32)
+		i++;
+	if (i == 0)
+		return ;
+	tmp = ft_substr(hold->line, i, ft_strlen(hold->line) - i);
+	ft_memmove(hold->line, tmp, ft_strlen(hold->line) - i + 1);
+}
+
+// int32_t lex_redir(t_hold *hold, int32_t i)
+// {
+// 	while ()
+// }
+
+// devide chunks of commands etc in single linked list
+void lexer(t_hold *hold)
+{
+	int32_t	i;
+
+	i = 0;
+	skip_spaces(hold);
+	closed_quotes(hold);
+	while (hold->line[i] != '\0')
+	{
+		if (hold->line[i] == 39 || hold->line[i] == 34)	//  ' "  -> single and double quote
+			i += lex_quote(hold, i);
+		else if (hold->line[i] == 124) //  |  -> pipe
+			lex_pipe(hold, i);
+		// else if (hold->line[i] == 60 || hold->line[i] == 62) //  < >  -> redirection signs
+		// 	i += lex_redir(hold, i);
+		i++;
 	}
 }
 
-void print_list(t_data *list, char *name)
+void print_list(t_lexing *list, char *name)
 {
 	printf("----------\n[%s]:\n", name);
 	if(list == NULL)
@@ -101,7 +146,7 @@ void print_list(t_data *list, char *name)
 		return ;
 	}
 	int32_t i = 1;
-	t_data *node = NULL;
+	t_lexing *node = NULL;
 	node = list;
 	while (node->next != NULL)
 	{
@@ -118,9 +163,9 @@ void print_list(t_data *list, char *name)
 	printf("-- done --\n\n");
 }
 
-void freeList(t_data* head)
+void freeList(t_lexing* head)
 {
-   t_data* tmp;
+   t_lexing* tmp;
 
    while (head != NULL)
     {
@@ -128,14 +173,13 @@ void freeList(t_data* head)
        head = head->next;
        free(tmp);
     }
-
 }
 
 int main(int32_t argc, char **argv)
 {
-	t_hold	hold;
+	t_hold	*hold;
 
-	hold = malloc(sizeof(t_hold));
+	hold = (t_hold*)malloc(sizeof(t_hold));
 	if (!hold)
 		return (1);
 
@@ -145,27 +189,26 @@ argv++;
 	while (1)
 	{
 		// read content from terminal
-		data.line = readline("MINIHELL> ");
-		if (!data.line)
+		hold->line = readline("MINIHELL> ");
+		if (!hold->line)
 			break ;
 
-		lexer(&data);
+		lexer(hold);
 
-		print_list(&data, "yee");
+		print_list(hold->lexed_list, "yee");
 		
 		// printf("content before history: %s\n", line);
 		// if (line && *line)	// if line exist and is not empty, stuff gets saved in history list
 		// 	add_history(line);
 		// // parse_and_execute(line);
 		// printf("content after history: %s\n", line);
-		freeList(t_hold);
-		free(data.line);
+		freeList(hold->lexed_list);
+		free(hold->line);
+		break;
 		
 	}
 	//free(line);
 }
-
-
 
 // change linked list to new struct
 // reconstruct code to new struct
