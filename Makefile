@@ -12,6 +12,7 @@ LIBFT= include/libft/libft.a
 
 FILES=	files/main.c \
 		files/utils.c \
+		files/lexing.c \
 		files/delete_later.c
 
 O_FILES= $(FILES:%.c=%.o)

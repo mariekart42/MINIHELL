@@ -46,9 +46,22 @@ void print_list(t_lexing *list, char *name);
 
 
 //		utils.c
-void freeList(t_lexing* head);
-void exit_status(char *message, int32_t exit_code);
+void		freeList(t_lexing* head);
+void		exit_status(char *message, int32_t exit_code);
 t_lexing	*ft_lstnew_lex(void *content);
 t_lexing	*ft_lstlast_lex(t_lexing *lst);
+
+
+//		lexing.c
+int32_t	lex_quote(t_hold *hold, int32_t i);
+void	closed_quotes(t_hold *hold);
+void	lex_pipe(t_hold *hold, int32_t i);
+int32_t	skip_spaces(char *str, int32_t i);
+void	check_spaces(t_hold *hold);
+void	check_beginning_redir(char *line);
+int32_t	lex_redir(t_hold *hold, int32_t i);
+int32_t	lex_word(t_hold *hold, int32_t i);
+void	lexer(t_hold *hold);
+
 
 #endif
