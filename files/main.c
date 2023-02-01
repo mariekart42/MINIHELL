@@ -39,9 +39,12 @@ argv++;
 	//free(line);
 }
 
-// write function that appens new node and checks in there if its NULL or not
-//		-> saving lines
+// wfidh""qiuhdf>efd<      ->>> gives not correct output!
 
-// redir function throw error if redir signs at the very end --> do it in parser
 
 // how do i exit from failed command but not out of whole minishell
+
+// add $? as single node
+
+
+// (redir function throw error if redir signs at the very end --> do it in parser)

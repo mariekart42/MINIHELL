@@ -16,10 +16,8 @@ int32_t lex_quote(t_hold *hold, int32_t i)
 
 	// put token into linked list
 	tmp = ft_substr(hold->line, i, end - i + 1);
-	if (hold->lexed_list == NULL)
-		hold->lexed_list = ft_lstnew_lex(tmp);
-	else
-		(ft_lstlast_lex(hold->lexed_list))->next = ft_lstnew_lex(tmp);
+	add_node_lex(hold, tmp);
+	free(tmp);
 	return (end - i);
 }
 
@@ -55,14 +53,12 @@ void lex_pipe(t_hold *hold, int32_t i)
 {
 	if (i == 0)
 		exit_status("syntax error near unexpected token '|'\n", 2);
-	// skip all spaces
 	i++;
 	while (hold->line[i] == 32)
 		i++;
 	if (hold->line[i] == 124)
 		exit_status("syntax error near unexpected token '|'\n", 2);
-	// pipe token cant be at the very beginning of 'lexed_list'
-	(ft_lstlast_lex(hold->lexed_list))->next = ft_lstnew_lex("|");
+	add_node_lex(hold, "|");
 }
 
 /* function skips all spaces and returns new index i			*/
@@ -122,20 +118,14 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 		i = skip_spaces(hold->line, i);
 		if(hold->line[i] == '<')
 		{
-			if (hold->lexed_list == NULL)
-				hold->lexed_list = ft_lstnew_lex("<<");
-			else
-				(ft_lstlast_lex(hold->lexed_list))->next = ft_lstnew_lex("<<");
+			add_node_lex(hold, "<<");
 			i++;
 			i = skip_spaces(hold->line, i);
 			if (hold->line[i] == '<')
-				exit_status("1syntax error near unexpected token '<'\n", 2);
+				exit_status("syntax error near unexpected token '<'\n", 2);
 			return (i-1);
 		}
-		if (hold->lexed_list == NULL)
-			hold->lexed_list = ft_lstnew_lex("<");
-		else
-			(ft_lstlast_lex(hold->lexed_list))->next = ft_lstnew_lex("<");
+		add_node_lex(hold, "<");
 		return (i-1);
 	}
 	else if (hold->line[i] == '>')
@@ -143,24 +133,18 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 		i++;
 		i = skip_spaces(hold->line, i);
 		if (hold->line[i] == '<')
-			exit_status("2syntax error near unexpected token '<'\n", 2);
+			exit_status("syntax error near unexpected token '<'\n", 2);
 		if (hold->line[i] == '>')
 		{
-			if (hold->lexed_list == NULL)
-				hold->lexed_list = ft_lstnew_lex(">>");
-			else
-				(ft_lstlast_lex(hold->lexed_list))->next = ft_lstnew_lex(">>");
+			add_node_lex(hold, ">>");
 			i++;
 			i = skip_spaces(hold->line, i);
 			if (hold->line[i] == '>' || hold->line[i] == '<')
-				exit_status("3syntax error near unexpected token '>'\n", 2);
+				exit_status("syntax error near unexpected token '>'\n", 2);
 			printf("here: %c\n", hold->line[i]);
 			return (i-1);
 		}
-		if (hold->lexed_list == NULL)
-			hold->lexed_list = ft_lstnew_lex(">");
-		else
-			(ft_lstlast_lex(hold->lexed_list))->next = ft_lstnew_lex(">");
+		add_node_lex(hold, ">");
 		return (i-1);
 	}
 	return (69);
@@ -182,10 +166,7 @@ int32_t lex_word(t_hold *hold, int32_t i)
 
 	// put token into linked list
 	tmp = ft_substr(hold->line, i, end - i);
-	if (hold->lexed_list == NULL)
-		hold->lexed_list = ft_lstnew_lex(tmp);
-	else
-		(ft_lstlast_lex(hold->lexed_list))->next = ft_lstnew_lex(tmp);
+	add_node_lex(hold, tmp);
 	return (end - i - 1);
 }
 
