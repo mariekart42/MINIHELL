@@ -17,7 +17,6 @@ int32_t lex_quote(t_hold *hold, int32_t i)
 	// put token into linked list
 	tmp = ft_substr(hold->line, i, end - i + 1);
 	add_node_lex(hold, tmp);
-	free(tmp);
 	return (end - i);
 }
 
@@ -152,7 +151,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 
 /* function adds words as a new node to 'lexed_list' 
  * 	as long as there are no:
- *		- special characters (quotes, pipe, redirection signs)
+ *		- special characters (quotes, pipe, redirection signs, $?)
  *		- spaces
  *		- newline character or null-terminator		*/
 int32_t lex_word(t_hold *hold, int32_t i)
@@ -162,7 +161,11 @@ int32_t lex_word(t_hold *hold, int32_t i)
 
 	end = i;
 	while (hold->line[end] != 32 && hold->line[end] != '\0' && hold->line[end] != '\n' && hold->line[end] != 34 && hold->line[end] != 39 && hold->line[end] != '>' && hold->line[end] != '<' && hold->line[end] != '|')
+	{
+		if (hold->line[end] == '$' && hold->line[end + 1] == '?')
+			break;
 		end++;
+	}
 
 	// put token into linked list
 	tmp = ft_substr(hold->line, i, end - i);
@@ -180,7 +183,12 @@ void lexer(t_hold *hold)
 	closed_quotes(hold);
 	while (hold->line[i] != '\0' && hold->line[i] != '\n')
 	{
-		if (hold->line[i] == 39 || hold->line[i] == 34)	//  ' or "  -> single and double quote
+		if (hold->line[i] == '$' && hold->line[i + 1] == '?')
+		{
+			add_node_lex(hold, "$?");
+			i++;
+		}
+		else if (hold->line[i] == 39 || hold->line[i] == 34)	//  ' or "  -> single and double quote
 			i += lex_quote(hold, i);
 		else if (hold->line[i] == '|')
 			lex_pipe(hold, i);

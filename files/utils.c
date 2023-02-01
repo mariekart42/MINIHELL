@@ -12,8 +12,6 @@ void freeList(t_lexing* head)
     }
 }
 
-
-
 /* function adds node at the end of 'lexed_list'
  * checks if list is NULL -> appends node at the beginning			*/
 void add_node_lex(t_hold *hold, char *content)

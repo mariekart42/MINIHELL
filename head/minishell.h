@@ -48,7 +48,7 @@ void print_list(t_lexing *list, char *name);
 //		utils.c
 void		freeList(t_lexing* head);
 void		exit_status(char *message, int32_t exit_code);
-void add_node_lex(t_hold *hold, char *content);
+void		add_node_lex(t_hold *hold, char *content);
 t_lexing	*last_node_lex(t_lexing *lst);
 t_lexing	*ft_lstnew_lex(void *content);
 t_lexing	*ft_lstlast_lex(t_lexing *lst);

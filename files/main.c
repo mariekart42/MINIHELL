@@ -1,11 +1,16 @@
 #include "../head/minishell.h"
 
-// void parser(t_hold *hold)
-// {
+void recognize_type(t_hold *hold)
+{
+	
+}
 
-// }
+void parser(t_hold *hold)
+{
+	recognize_type(hold);
+}
 
-int main(int32_t argc, char **argv)
+int main(int32_t argc, char **argv, char **env)
 {
 	t_hold	*hold;
 
@@ -18,13 +23,12 @@ argc++;
 argv++;
 	while (1)
 	{
-		// read content from terminal
 		hold->line = readline("MINIHELL> ");
 		if (!hold->line)
 			break ;
 
 		lexer(hold);
-		// parser(hold);
+		parser(hold);
 		print_list(hold->lexed_list, "yee");
 		
 		// if (line && *line)	// if line exist and is not empty, stuff gets saved in history list
@@ -32,19 +36,29 @@ argv++;
 
 		freeList(hold->lexed_list);
 		hold->lexed_list = NULL;
-		free(hold->line);
-		// break;
-		
+		free(hold->line);		
 	}
 	//free(line);
 }
 
-// wfidh""qiuhdf>efd<      ->>> gives not correct output!
+
+//GENERAL:
+// - change from exiting on errors to return to main loop
+//		-> set flag in struct, do nothing in lexer, parser, executer and return to main loop
+
+// - add history stuff
 
 
-// how do i exit from failed command but not out of whole minishell
-
-// add $? as single node
+//LEXER:
 
 
-// (redir function throw error if redir signs at the very end --> do it in parser)
+//PARSER:
+// !do env/export shit in parser first
+
+// - write recognize function -> sets specific MACROS to the single nodes
+// 		eg. node with content pipe symbol gets macro 'PIPE'
+
+// - redir function throw error if redir signs at the very end --> do it in parser
+
+
+//EXECUTER:
