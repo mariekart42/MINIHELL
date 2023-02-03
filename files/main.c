@@ -1,8 +1,55 @@
 #include "../head/minishell.h"
 
+bool builtin(char *node)
+{
+	if (ft_strncmp(node, "echo", 4) == 0)
+		return (true);
+	else if (ft_strncmp(node, "pwd", 3) == 0)
+		return (true);
+	else if (ft_strncmp(node, "unset", 5) == 0)
+		return (true);
+	else if (ft_strncmp(node, "env", 3) == 0)
+		return (true);
+	else if (ft_strncmp(node, "export", 6) == 0)
+		return (true);
+	else if (ft_strncmp(node, "cd", 2) == 0)
+		return (true);
+	else if (ft_strncmp(node, "exit", 4) == 0)
+		return (true);
+	else
+		return (false);
+}
+
+/* function appends specific macro to each node of 'lexed_list'
+ * 	Macros: QUOTES, PIPE, (SINGLE-/DOUBLE) REDIRECTION */
 void recognize_type(t_hold *hold)
 {
-	
+	t_lexing *tmp;
+
+	tmp = hold->lexed_list;
+// tmp!=NULL or tmp->next!=NULL?
+	while (tmp->next != NULL)
+	{
+		if (builtin(tmp->item) == true)
+			tmp->macro = BUILTIN;
+		else if (ft_strncmp(tmp->item, "|", 1) == 0)
+			tmp->macro = PIPE;
+		else if (ft_strncmp(tmp->item, "'", 1) == 0)
+			tmp->macro = SING_QUOTE;
+		else if (ft_strncmp(tmp->item, """", 1) == 0)
+			tmp->macro = DOUBL_QUOTE;
+		else if (ft_strncmp(tmp->item, "<", 1) == 0)
+			tmp->macro = SING_OPEN_REDIR;
+		else if (ft_strncmp(tmp->item, ">", 1) == 0)
+			tmp->macro = SING_CLOSE_REDIR;
+		else if (ft_strncmp(tmp->item, "<<", 2) == 0)
+			tmp->macro = DOUBL_OPEN_REDIR;
+		else if (ft_strncmp(tmp->item, ">>", 2) == 0)
+			tmp->macro = DOUBL_CLOSE_REDIR;
+		else
+			tmp->macro = WORD;
+		tmp = tmp->next;
+	}
 }
 
 void parser(t_hold *hold)
@@ -21,6 +68,7 @@ int main(int32_t argc, char **argv, char **env)
 	// using signal function here to catch signal if eg ctr-c is used
 argc++;
 argv++;
+env++;
 	while (1)
 	{
 		hold->line = readline("MINIHELL> ");
@@ -28,7 +76,8 @@ argv++;
 			break ;
 
 		lexer(hold);
-		parser(hold);
+		print_macro_list(hold->lexed_list);
+		// parser(hold);
 		print_list(hold->lexed_list, "yee");
 		
 		// if (line && *line)	// if line exist and is not empty, stuff gets saved in history list
@@ -54,6 +103,9 @@ argv++;
 
 //PARSER:
 // !do env/export shit in parser first
+
+// check if recognize function works like this -> write function that prints out list with macros!
+// IS SEGFAULTING
 
 // - write recognize function -> sets specific MACROS to the single nodes
 // 		eg. node with content pipe symbol gets macro 'PIPE'

@@ -17,6 +17,17 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+# define BUILTIN 0
+# define WORD 1
+# define SING_QUOTE 2
+# define DOUBL_QUOTE 3
+# define PIPE 4
+# define SING_OPEN_REDIR 5
+# define SING_CLOSE_REDIR 6
+# define DOUBL_OPEN_REDIR 7
+# define DOUBL_CLOSE_REDIR 8
+
+
 
 //colour shit
 # define RED   "\x1B[31m"
@@ -30,7 +41,8 @@
 
 typedef struct s_lexing
 {
-	char	*item;
+	char		*item;
+	int32_t		macro;
 	struct s_lexing	*next;
 }		t_lexing;
 
@@ -42,7 +54,9 @@ typedef struct s_hold
 
 
 //		delete_later.c
+char *return_macro(int32_t m);
 void print_list(t_lexing *list, char *name);
+void print_macro_list(t_lexing *list);
 
 
 //		utils.c
