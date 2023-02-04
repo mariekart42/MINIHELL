@@ -4,6 +4,7 @@ void executer(t_hold *hold)
 {
 	if (hold->exit_code != 0)
 		return ;
+	
 }
 
 int main(int32_t argc, char **argv, char **env)
@@ -23,6 +24,7 @@ int main(int32_t argc, char **argv, char **env)
 	hold->lexed_list = NULL;
 	hold->exit_code = 0;
 	// using signal function here to catch signal if eg ctr-c is used
+
 	while (1)
 	{
 		hold->line = readline("MINIHELL> ");
@@ -50,6 +52,8 @@ int main(int32_t argc, char **argv, char **env)
 
 //GENERAL:
 // - add history stuff
+
+// - create env/export list
 
 
 //LEXER:
