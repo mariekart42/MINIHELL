@@ -49,6 +49,7 @@ typedef struct s_lexing
 typedef struct s_hold
 {
 	char	*line;
+	int8_t	exit_code;
 	struct s_lexing *lexed_list;
 }				t_hold;
 
@@ -61,7 +62,7 @@ void print_macro_list(t_lexing *list);
 
 //		utils.c
 void		freeList(t_lexing* head);
-void		exit_status(char *message, int32_t exit_code);
+void exit_status(t_hold *hold, char *message, int8_t exit_code_);
 void		add_node_lex(t_hold *hold, char *content);
 t_lexing	*last_node_lex(t_lexing *lst);
 t_lexing	*ft_lstnew_lex(void *content);
@@ -74,10 +75,15 @@ void	closed_quotes(t_hold *hold);
 void	lex_pipe(t_hold *hold, int32_t i);
 int32_t	skip_spaces(char *str, int32_t i);
 void	check_spaces(t_hold *hold);
-void	check_beginning_redir(char *line);
+int32_t check_beginning_redir(t_hold *hold);
 int32_t	lex_redir(t_hold *hold, int32_t i);
 int32_t	lex_word(t_hold *hold, int32_t i);
 void	lexer(t_hold *hold);
 
+
+//		parser.c
+bool builtin(char *node);
+void recognize_type(t_hold *hold);
+void parser(t_hold *hold);
 
 #endif

@@ -21,7 +21,7 @@ void add_node_lex(t_hold *hold, char *content)
 
 	ptr = (t_lexing *)malloc(sizeof(t_lexing));
 	if (!ptr)
-		exit_status("Error! Failed to malloc\n", 69);
+		return (exit_status(hold, "Error! Failed to malloc\n", 69));
 	ptr->item = content;
 	ptr->next = NULL;
 
@@ -29,8 +29,8 @@ void add_node_lex(t_hold *hold, char *content)
 	{
 		hold->lexed_list = ptr;
 	}
-	else{
-
+	else
+	{
 		(last_node_lex(hold->lexed_list))->next = ptr;
 	}
 }
@@ -38,37 +38,16 @@ void add_node_lex(t_hold *hold, char *content)
 t_lexing	*last_node_lex(t_lexing *lst)
 {
 	if (!lst)
-		exit_status("Error! last_node_lex\n", 69);
+		return (NULL);
 	while (lst->next)
 		lst = lst->next;
 	return (lst);
 }
 
-void exit_status(char *message, int32_t exit_code)
+void exit_status(t_hold *hold, char *message, int8_t exit_code_)
 {
 	write(2, message, ft_strlen(message));
-	exit(exit_code);
+	hold->exit_code = exit_code_;
 }
-
-// t_lexing	*ft_lstnew_lex(void *content)
-// {
-// 	t_lexing	*ptr;
-
-// 	ptr = (t_lexing *)malloc(sizeof(*ptr));
-// 	if (ptr == NULL)
-// 		return (NULL);
-// 	ptr->item = content;
-// 	ptr->next = NULL;
-// 	return (ptr);
-// }
-
-// t_lexing	*ft_lstlast_lex(t_lexing *lst)
-// {
-// 	if (!lst)
-// 		return (NULL);
-// 	while (lst->next)
-// 		lst = lst->next;
-// 	return (lst);
-// }
 
 
