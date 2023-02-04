@@ -55,24 +55,22 @@ void print_macro_list(t_lexing *list)
 	printf("----------\n\n");
 	if(list == NULL)
 	{
-		printf("list_pos_1: (NULL)\n");
+		printf(MAG"list_pos_1: (NULL)\n"RESET);
 		return ;
 	}
 	int32_t i = 1;
 	t_lexing *node = NULL;
 	node = list;
-			printf(GRN"check\n"RESET);
-
 	while (node->next != NULL)
 	{
-		printf("list_pos_%d: %s\t\t"YEL"%s\n"RESET, i, node->item, return_macro(node->macro));
+		printf("list_pos_%d: "WHT" %s\t\t"YEL"%s\n"RESET, i, node->item, return_macro(node->macro));
 		i++;
 		node = node->next;
 	}
-	printf("list_pos_%d: %s\t\t"YEL"%s\n"RESET, i, node->item, return_macro(node->macro));
+	printf("list_pos_%d: "WHT" %s\t\t"YEL"%s\n"RESET, i, node->item, return_macro(node->macro));
 	i++;
 	if(node->next == NULL)
-		printf("list_pos_%d: (NULL)\n", i);
+		printf("list_pos_%d: "MAG" (NULL)\n"RESET, i);
 	else	
 		printf("something wrong! (print_list function)\n");
 	printf("-- done --\n\n");

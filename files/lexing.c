@@ -140,7 +140,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 			i = skip_spaces(hold->line, i);
 			if (hold->line[i] == '>' || hold->line[i] == '<')
 				exit_status("syntax error near unexpected token '>'\n", 2);
-			printf("here: %c\n", hold->line[i]);
+			// printf("here: %c\n", hold->line[i]);
 			return (i-1);
 		}
 		add_node_lex(hold, ">");
@@ -163,7 +163,7 @@ int32_t lex_word(t_hold *hold, int32_t i)
 	while (hold->line[end] != 32 && hold->line[end] != '\0' && hold->line[end] != '\n' && hold->line[end] != 34 && hold->line[end] != 39 && hold->line[end] != '>' && hold->line[end] != '<' && hold->line[end] != '|')
 	{
 		if (hold->line[end] == '$' && hold->line[end + 1] == '?')
-			break;
+			break ;
 		end++;
 	}
 
@@ -177,25 +177,46 @@ int32_t lex_word(t_hold *hold, int32_t i)
 void lexer(t_hold *hold)
 {
 	int32_t	i;
-
 	i = 0;
 	check_spaces(hold);
 	closed_quotes(hold);
 	while (hold->line[i] != '\0' && hold->line[i] != '\n')
 	{
+// printf(GRN"GEN check\n"RESET);
 		if (hold->line[i] == '$' && hold->line[i + 1] == '?')
 		{
 			add_node_lex(hold, "$?");
 			i++;
+// printf(GRN"5 check\n"/RESET);
 		}
 		else if (hold->line[i] == 39 || hold->line[i] == 34)	//  ' or "  -> single and double quote
+        {
 			i += lex_quote(hold, i);
+// printf(GRN"4 check\n"RESET);
+
+        }
 		else if (hold->line[i] == '|')
+        {
+// printf(GRN"3 check\n"RESET);
 			lex_pipe(hold, i);
+
+        }
 		else if (hold->line[i] == '<' || hold->line[i] == '>')
+        {
 			i = lex_redir(hold, i);
+// printf(GRN"2 check\n"RESET);
+
+        }
 		else if (hold->line[i] != 32)
+        {
 			i += lex_word(hold, i);
+// printf(GRN"1 check\n"RESET);
+
+        }
 		i++;
 	}
+    // printf("item: %s\n", hold->lexed_list->item);
+    // printf("item: %s\n", hold->lexed_list->next->item);
+    // printf(RED"EXIT lexing\n"RESET);
+    // exit(0);
 }

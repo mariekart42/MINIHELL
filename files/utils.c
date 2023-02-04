@@ -18,22 +18,27 @@ void add_node_lex(t_hold *hold, char *content)
 {
 	t_lexing *ptr;
 
-	ptr = (t_lexing *)malloc(sizeof(ptr));
+
+	ptr = (t_lexing *)malloc(sizeof(t_lexing));
 	if (!ptr)
 		exit_status("Error! Failed to malloc\n", 69);
 	ptr->item = content;
 	ptr->next = NULL;
 
 	if (hold->lexed_list == NULL)
+	{
 		hold->lexed_list = ptr;
-	else
+	}
+	else{
+
 		(last_node_lex(hold->lexed_list))->next = ptr;
+	}
 }
 
 t_lexing	*last_node_lex(t_lexing *lst)
 {
 	if (!lst)
-		return (NULL);
+		exit_status("Error! last_node_lex\n", 69);
 	while (lst->next)
 		lst = lst->next;
 	return (lst);

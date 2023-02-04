@@ -27,8 +27,7 @@ void recognize_type(t_hold *hold)
 	t_lexing *tmp;
 
 	tmp = hold->lexed_list;
-// tmp!=NULL or tmp->next!=NULL?
-	while (tmp->next != NULL)
+	while (tmp != NULL)
 	{
 		if (builtin(tmp->item) == true)
 			tmp->macro = BUILTIN;
@@ -38,14 +37,14 @@ void recognize_type(t_hold *hold)
 			tmp->macro = SING_QUOTE;
 		else if (ft_strncmp(tmp->item, """", 1) == 0)
 			tmp->macro = DOUBL_QUOTE;
-		else if (ft_strncmp(tmp->item, "<", 1) == 0)
-			tmp->macro = SING_OPEN_REDIR;
-		else if (ft_strncmp(tmp->item, ">", 1) == 0)
-			tmp->macro = SING_CLOSE_REDIR;
 		else if (ft_strncmp(tmp->item, "<<", 2) == 0)
 			tmp->macro = DOUBL_OPEN_REDIR;
 		else if (ft_strncmp(tmp->item, ">>", 2) == 0)
 			tmp->macro = DOUBL_CLOSE_REDIR;
+		else if (ft_strncmp(tmp->item, "<", 1) == 0)
+			tmp->macro = SING_OPEN_REDIR;
+		else if (ft_strncmp(tmp->item, ">", 1) == 0)
+			tmp->macro = SING_CLOSE_REDIR;
 		else
 			tmp->macro = WORD;
 		tmp = tmp->next;
@@ -59,16 +58,19 @@ void parser(t_hold *hold)
 
 int main(int32_t argc, char **argv, char **env)
 {
-	t_hold	*hold;
+	t_hold	*hold = NULL;
+	(void)argc++;
+	(void)argv++;
+	(void)env++;
 
 	hold = (t_hold*)malloc(sizeof(t_hold));
 	if (!hold)
 		return (1);
-
+	hold->lexed_list = (t_lexing*)malloc(sizeof(t_lexing));
+	if (!hold->lexed_list)
+		return (1);
+	hold->lexed_list = NULL;
 	// using signal function here to catch signal if eg ctr-c is used
-argc++;
-argv++;
-env++;
 	while (1)
 	{
 		hold->line = readline("MINIHELL> ");
@@ -76,16 +78,16 @@ env++;
 			break ;
 
 		lexer(hold);
+		parser(hold);
 		print_macro_list(hold->lexed_list);
-		// parser(hold);
-		print_list(hold->lexed_list, "yee");
 		
 		// if (line && *line)	// if line exist and is not empty, stuff gets saved in history list
 		// 	add_history(line);
 
 		freeList(hold->lexed_list);
 		hold->lexed_list = NULL;
-		free(hold->line);		
+		free(hold->line);
+
 	}
 	//free(line);
 }
@@ -103,12 +105,6 @@ env++;
 
 //PARSER:
 // !do env/export shit in parser first
-
-// check if recognize function works like this -> write function that prints out list with macros!
-// IS SEGFAULTING
-
-// - write recognize function -> sets specific MACROS to the single nodes
-// 		eg. node with content pipe symbol gets macro 'PIPE'
 
 // - redir function throw error if redir signs at the very end --> do it in parser
 
