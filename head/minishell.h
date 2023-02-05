@@ -50,6 +50,7 @@ typedef struct s_hold
 {
 	char	*line;
 	int8_t	exit_code;
+	char	**args;
 	struct s_lexing *lexed_list;
 }				t_hold;
 

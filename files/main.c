@@ -4,25 +4,26 @@ void executer(t_hold *hold)
 {
 	if (hold->exit_code != 0)
 		return ;
-	
+	if ()
 }
 
 int main(int32_t argc, char **argv, char **env)
 {
 	t_hold	*hold = NULL;
-	(void)argc++;
-	(void)argv++;
-	(void)env++;
-	
+	(void) argc;
+	(void) argv;
+	(void) env;
 
-	hold = (t_hold*)malloc(sizeof(t_hold));
+	hold = (t_hold *)malloc(sizeof(t_hold));
 	if (!hold)
-		return (1);
+		return (69);
 	hold->lexed_list = (t_lexing*)malloc(sizeof(t_lexing));
 	if (!hold->lexed_list)
-		return (1);
+		return (69);
+
 	hold->lexed_list = NULL;
 	hold->exit_code = 0;
+	
 	// using signal function here to catch signal if eg ctr-c is used
 
 	while (1)
@@ -31,29 +32,33 @@ int main(int32_t argc, char **argv, char **env)
 		if (!hold->line)
 			break ;
 
+		// add_history to update history with current line
+		if (ft_strlen(hold->line) > 0)
+			add_history(line);
+
 		lexer(hold);
 		parser(hold);
 		if (hold->exit_code == 0)
 			print_macro_list(hold->lexed_list);
 		
-		// executer(hold);
+		executer(hold);
 
-		// if (line && *line)	// if line exist and is not empty, stuff gets saved in history list
-		// 	add_history(line);
 
+		free(hold->line);
 		freeList(hold->lexed_list);
 		hold->lexed_list = NULL;
-		free(hold->line);
 
 	}
-	//free(line);
+	// here func to clear all memory
 }
 
 
 //GENERAL:
-// - add history stuff
+// - add history stuff -> move cursor bums
 
 // - create env/export list
+
+// - how to store prev return value for $?
 
 
 //LEXER:
@@ -67,3 +72,9 @@ int main(int32_t argc, char **argv, char **env)
 
 //EXECUTER:
 // - include pipex approach and test stuff
+
+
+//LATER:
+// - after main loop clear all memory
+
+// - signals shit
