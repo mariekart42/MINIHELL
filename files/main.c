@@ -28,7 +28,7 @@ void init_args(t_hold *hold)
 		}
 		hold->lexed_list = hold->lexed_list->next;
 	}
-print_args(hold);
+// print_args(hold);
 
 }
 
@@ -66,17 +66,20 @@ void executer(t_hold *hold, char **env)
 
 	// redirect shit
 
-	// execute shit
-	if (execve(hold->valid_path, hold->args, env) == -1)
+	int pid = fork();
+	if (pid == 0)
 	{
-		exit_status(hold, "Command not found: ", 69);
-		ft_putstr_fd(hold->args[0], 2);
-		return;
+		// execute shit
+		if (execve(hold->valid_path, hold->args, env) == -1)
+		{
+			exit_status(hold, RED"COMMAND NOT FOUND: "RESET, 69);
+			ft_putstr_fd(hold->args[0], 2);
+			write(2, "\n", 1);
+			return;
+		}
 	}
-	printf(GRN"\nexecution went fine\n"RESET);
+	waitpid(-1, NULL, 0);
 	free(hold->valid_path);
-
-
 }
 
 int main(int32_t argc, char **argv, char **env)
@@ -84,7 +87,6 @@ int main(int32_t argc, char **argv, char **env)
 	t_hold	*hold = NULL;
 	(void) argc;
 	(void) argv;
-	// (void) env;
 
 	hold = (t_hold *)malloc(sizeof(t_hold));
 	if (!hold)
@@ -100,34 +102,28 @@ int main(int32_t argc, char **argv, char **env)
 
 	while (1)
 	{
-		hold->line = readline("MINIHELL> ");
+		hold->line = readline(BLU"MINIHELL> "RESET);
 		if (!hold->line)
 			break ;
 
 		// add_history to update history with current line
-		// if (ft_strlen(hold->line) > 0)
-		// 	add_history(hold->line);
-	// printf(GRN"CHECK MAIN LOOP\n"RESET);
+		if (ft_strlen(hold->line) > 0)
+			add_history(hold->line);
 
 		lexer(hold);
-		// printf("main loop->[0]: %s\n", hold->lexed_list->item);
-		// printf(GRN"after LEXER good\n"RESET);
 		parser(hold);
-		// printf(GRN"after PARSER good\n"RESET);
-		// print_list(hold->lexed_list, "prnt_lst");
+
 		if (hold->exit_code == 0)
 			print_macro_list(hold->lexed_list);
 		
 		executer(hold, env);
-		printf(GRN"\nend of main loop\n"RESET);
-		break;
-
 
 		free(hold->line);
 		freeList(hold->lexed_list);
 		hold->lexed_list = NULL;
 
 	}
+	printf(RED"out of loop\n"RESET);
 	// here func to clear all memory
 }
 
@@ -153,7 +149,10 @@ int main(int32_t argc, char **argv, char **env)
 
 //EXECUTER:
 // - include pipex approach and test stuff
-//	-> execute 'ls'
+//	-> execute:
+//		- 'ls'		-> works
+//		- 'ls -l' 
+
 
 
 //LATER:
