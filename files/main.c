@@ -1,5 +1,20 @@
 #include "../head/minishell.h"
 
+// --- just for printing args (delete later) ---
+void print_args(t_hold *hold)
+{
+int32_t i = 0;
+printf("ARGS:\n");
+while (hold->args[i] != NULL)
+{
+	printf("[%d]: %s\n",i, hold->args[i]);
+	i++;
+}
+if (hold->args[i] == NULL)
+	printf("(NULL)\n\n");
+}
+// ---------------------------------------------
+
 // CREATE COMMAND DOUBLE ARRAY
 // dis shit only works for one (just for testing)
 void init_args(t_hold *hold)
@@ -13,18 +28,8 @@ void init_args(t_hold *hold)
 		}
 		hold->lexed_list = hold->lexed_list->next;
 	}
+print_args(hold);
 
-// --- just for printing args (delete later) ---
-int32_t i = 0;
-	printf("ARGS:\n");
-	while (hold->args[i] != NULL)
-	{
-		printf("[%d]: %s\n",i, hold->args[i]);
-		i++;
-	}
-	if (hold->args[i] == NULL)
-		printf("(NULL)\n");
-// ---------------------------------------------
 }
 
 void get_path(t_hold *hold, char **env)
@@ -54,13 +59,23 @@ void executer(t_hold *hold, char **env)
 {
 	if (hold->exit_code != 0)
 		return ;
-	init_cmds(hold);
+	init_args(hold);
 	// find path
 	// -> check for access (if command exist)
 	get_path(hold, env);
 
 	// redirect shit
+
 	// execute shit
+	if (execve(hold->valid_path, hold->args, env) == -1)
+	{
+		exit_status(hold, "Command not found: ", 69);
+		ft_putstr_fd(hold->args[0], 2);
+		return;
+	}
+	printf(GRN"\nexecution went fine\n"RESET);
+	free(hold->valid_path);
+
 
 }
 
@@ -92,7 +107,7 @@ int main(int32_t argc, char **argv, char **env)
 		// add_history to update history with current line
 		// if (ft_strlen(hold->line) > 0)
 		// 	add_history(hold->line);
-	printf(GRN"CHECK MAIN LOOP\n"RESET);
+	// printf(GRN"CHECK MAIN LOOP\n"RESET);
 
 		lexer(hold);
 		// printf("main loop->[0]: %s\n", hold->lexed_list->item);
@@ -104,7 +119,7 @@ int main(int32_t argc, char **argv, char **env)
 			print_macro_list(hold->lexed_list);
 		
 		executer(hold, env);
-		printf(GRN"after EXECUTER good\n"RESET);
+		printf(GRN"\nend of main loop\n"RESET);
 		break;
 
 
