@@ -179,6 +179,7 @@ int main(int32_t argc, char **argv, char **env)
 // - afterwards: shit after exit in init_args is segfaulting:)
 
 
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 //!  GENERAL:
 // - add history stuff -> should work like this √
 // - move cursor bums
@@ -198,6 +199,7 @@ int main(int32_t argc, char **argv, char **env)
 //		-> execute:
 //			- 'ls'	√
 //			- 'ls -l' 
+
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 //!  LATER:
