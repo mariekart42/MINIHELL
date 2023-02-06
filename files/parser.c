@@ -20,13 +20,13 @@ bool builtin(char *node)
 		return (false);
 }
 
-/* function appends specific macro to each node of 'lexed_list'
+/* function appends specific macro to each node of 'lex_struct'
  * 	Macros: QUOTES, PIPE, (SINGLE-/DOUBLE) REDIRECTION */
 void recognize_type(t_hold *hold)
 {
 	t_lexing *tmp;
 
-	tmp = hold->lexed_list;
+	tmp = hold->lex_struct;
 	while (tmp != NULL)
 	{
 		if (builtin(tmp->item) == true)

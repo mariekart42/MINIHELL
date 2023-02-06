@@ -44,7 +44,7 @@ void closed_quotes(t_hold *hold)
 		exit_status(hold, "syntax error: quotes are unclosed!\n", 69);
 }
 
-/* function adds pipe symbol as a new node to the 'lexed_list'
+/* function adds pipe symbol as a new node to the 'lex_struct'
  * THROWS ERROR IF:
  *		- pipe at the very beginning of the line
  *		- more then one pipe symbol in a row (only seperated by spaces) */
@@ -105,7 +105,7 @@ int32_t check_beginning_redir(t_hold *hold)
     return (-1);
 }
 
-/* function adds redirection symbol(s) as a new node to the 'lexed_list'
+/* function adds redirection symbol(s) as a new node to the 'lex_struct'
  * THROWS ERROR IF:
  *		- redir sign at the very beginning and nothing else (except spaces)
  *		- same symbol more then 2 times in a row (eg. >>>, > > >, >> >)
@@ -163,7 +163,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 	return (69);
 }
 
-/* function adds words as a new node to 'lexed_list' 
+/* function adds words as a new node to 'lex_struct' 
  * 	as long as there are no:
  *		- special characters (quotes, pipe, redirection signs, $?)
  *		- spaces

@@ -46,6 +46,13 @@ typedef struct s_lexing
 	struct s_lexing	*next;
 }		t_lexing;
 
+typedef struct s_args
+{
+
+	char	**arg_array;
+	struct s_args	*next;
+}				t_args;
+
 typedef struct s_hold
 {
 	char *infile;
@@ -54,8 +61,9 @@ typedef struct s_hold
 
 	char	*line;
 	int8_t	exit_code;
-	char	**args;
-	struct s_lexing *lexed_list;
+
+	struct s_args	*args_struct;
+	struct s_lexing *lex_struct;
 }				t_hold;
 
 
@@ -72,6 +80,9 @@ void		add_node_lex(t_hold *hold, char *content);
 t_lexing	*last_node_lex(t_lexing *lst);
 t_lexing	*ft_lstnew_lex(void *content);
 t_lexing	*ft_lstlast_lex(t_lexing *lst);
+
+void add_node_args(t_hold *hold, char **content);
+t_args	*last_node_args(t_args *lst);
 
 
 //		lexing.c
