@@ -192,6 +192,7 @@ void lexer(t_hold *hold)
 {
 	int32_t	i;
 	i = 0;
+
 	check_spaces(hold);
 	closed_quotes(hold);
 	while (hold->line[i] != '\0' && hold->line[i] != '\n')
@@ -217,6 +218,7 @@ void lexer(t_hold *hold)
         }
 		else if (hold->line[i] != 32)
         {
+            // printf("good\n");
 			i += lex_word(hold, i);
         }
 		i++;

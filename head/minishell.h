@@ -48,6 +48,10 @@ typedef struct s_lexing
 
 typedef struct s_hold
 {
+	char *infile;
+	char *outfile;
+	char *valid_path;
+
 	char	*line;
 	int8_t	exit_code;
 	char	**args;

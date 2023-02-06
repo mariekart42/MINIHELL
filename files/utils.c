@@ -27,10 +27,12 @@ void add_node_lex(t_hold *hold, char *content)
 
 	if (hold->lexed_list == NULL)
 	{
+		// printf(YEL"IS NULL\n"RESET);
 		hold->lexed_list = ptr;
 	}
 	else
 	{
+		// printf(MAG"IS NOT NULL\n"RESET);
 		(last_node_lex(hold->lexed_list))->next = ptr;
 	}
 }
