@@ -154,7 +154,9 @@ int main(int32_t argc, char **argv, char **env)
 	// here func to clear all memory
 }
 
-//!!!URGENT:
+//!!!NEXT:
+// - move around with cd
+// - exit with exit command
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -175,8 +177,13 @@ int main(int32_t argc, char **argv, char **env)
 //!  EXECUTER:
 // - include pipex approach and test stuff
 //		-> execute:
-//			- 'ls'	√
-//			- 'ls -l' 
+//			- ls  √
+//			- ls -l  √
+//			- pwd  √
+//			- touch test.txt  √
+//			- echo $?
+//			- cd bla
+//			- exit
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
