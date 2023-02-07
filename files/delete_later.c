@@ -80,21 +80,22 @@ void print_args(t_hold *hold)
 {
 int32_t i;
 int32_t k=0;
+t_args *tmp = hold->args_struct;
 printf(YEL"ARGS ---------------\n"RESET);
-while(hold->args_struct != NULL)
+while(tmp != NULL)
 {
 i=0;
 printf(MAG"[%d]"RESET, k);
-while (hold->args_struct->arg_array[i] != NULL)
+while (tmp->arg_array[i] != NULL)
 {
 	if(i==0)
 		printf("\n");
-	printf("\t[%d]: %s\n",i,hold->args_struct->arg_array[i]);
+	printf("\t[%d]: %s\n",i,tmp->arg_array[i]);
 	i++;
 }
-if (hold->args_struct->arg_array[i] == NULL)
+if (tmp->arg_array[i] == NULL)
 	printf(BLU"\t(NULL)\n"RESET);
-hold->args_struct = hold->args_struct->next;
+tmp = tmp->next;
 k++;
 }
 printf(YEL"---------------------\n"RESET);

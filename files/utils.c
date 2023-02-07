@@ -1,8 +1,20 @@
 #include "../head/minishell.h"
 
-void freeList(t_lexing* head)
+void free_list_lex(t_lexing* head)
 {
    t_lexing* tmp;
+
+   while (head != NULL)
+    {
+       tmp = head;
+       head = head->next;
+       free(tmp);
+    }
+}
+
+void free_list_arg(t_args* head)
+{
+   t_args* tmp;
 
    while (head != NULL)
     {
@@ -86,5 +98,6 @@ void exit_status(t_hold *hold, char *message, int8_t exit_code_)
 	write(2, message, ft_strlen(message));
 	hold->exit_code = exit_code_;
 }
+
 
 

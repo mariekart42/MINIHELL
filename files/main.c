@@ -35,11 +35,11 @@ void init_args(t_hold *hold)
 			break;
 		tmp_lex = tmp_lex->next;
 	}
-print_args(hold);
+// print_args(hold);
 // exit(0);
 }
 
-void get_path(t_hold *hold, char **env)
+void get_path(t_hold *hold, char **env, int32_t cmd_index)
 {
 // CREATE COMMAND DOUBLE ARRAY
 	int32_t		i;
@@ -60,6 +60,13 @@ void get_path(t_hold *hold, char **env)
 		free(hold->valid_path);
 		k++;
 	}
+	if (access(hold->valid_path, F_OK | X_OK) != 0)
+	{
+		ft_putstr_fd(hold->args_struct->arg_array[cmd_index], 2);
+		exit_status(hold, ":"RED" COMMAND NOT FOUND\n"RESET, 127);
+		return ;
+	}
+	printf("path: "GRN"%s\n"RESET, hold->valid_path);
 }
 
 void executer(t_hold *hold, char **env)
@@ -67,10 +74,14 @@ void executer(t_hold *hold, char **env)
 	if (hold->exit_code != 0)
 		return ;
 	init_args(hold);
-	// find path
-	// -> check for access (if command exist)
-	get_path(hold, env);
+	print_args(hold);
 
+	// cmd index defines which iteration of args, later implement in while loop
+	int32_t cmd_index = 0;
+	get_path(hold, env, cmd_index);
+
+// printf(RED"EXIT in executer after get path\n"RESET);
+// exit(0);
 	// redirect shit
 
 	int pid = fork();
@@ -132,8 +143,10 @@ int main(int32_t argc, char **argv, char **env)
 		executer(hold, env);
 
 		free(hold->line);
-		freeList(hold->lex_struct);
+		free_list_lex(hold->lex_struct);
+		free_list_arg(hold->args_struct);
 		hold->lex_struct = NULL;
+		hold->args_struct = NULL;
 
 	}
 	printf(RED"out of loop\n"RESET);
@@ -142,9 +155,6 @@ int main(int32_t argc, char **argv, char **env)
 }
 
 //!!!URGENT:
-// - in execution->init args, in struct next all previouse nodes get repeated
-//   change to each 'next' has the new chunk of args
-// - afterwards: shit after exit in init_args is segfaulting:)
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

@@ -75,7 +75,8 @@ void print_args(t_hold *hold);
 
 
 //		utils.c
-void		freeList(t_lexing* head);
+void free_list_lex(t_lexing* head);
+void free_list_arg(t_args* head);
 void exit_status(t_hold *hold, char *message, int8_t exit_code_);
 void		add_node_lex(t_hold *hold, char *content);
 t_lexing	*last_node_lex(t_lexing *lst);
