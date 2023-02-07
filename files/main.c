@@ -54,7 +54,7 @@ void get_path(t_hold *hold, char **env, int32_t cmd_index)
 	while (splitted_path[k] != NULL)
 	{
 		splitted_path[k] = ft_strjoin(splitted_path[k], "/");
-		hold->valid_path = ft_strjoin(splitted_path[k], hold->args_struct->arg_array[0]);
+		hold->valid_path = ft_strjoin(splitted_path[k], hold->args_struct->arg_array[cmd_index]);
 		if (access(hold->valid_path, F_OK | X_OK) == 0)
 			break ;
 		free(hold->valid_path);
@@ -62,8 +62,8 @@ void get_path(t_hold *hold, char **env, int32_t cmd_index)
 	}
 	if (access(hold->valid_path, F_OK | X_OK) != 0)
 	{
-		ft_putstr_fd(hold->args_struct->arg_array[cmd_index], 2);
-		exit_status(hold, ":"RED" COMMAND NOT FOUND\n"RESET, 127);
+		// ft_putstr_fd(hold->args_struct->arg_array[cmd_index], 2);
+		// exit_status(hold, ":"RED" COMMAND NOT FOUND\n"RESET, 127);
 		return ;
 	}
 	printf("path: "GRN"%s\n"RESET, hold->valid_path);
@@ -90,10 +90,13 @@ void executer(t_hold *hold, char **env)
 		// execute shit
 		if (execve(hold->valid_path, hold->args_struct->arg_array, env) == -1)
 		{
-			exit_status(hold, RED"COMMAND NOT FOUND: "RESET, 69);
-			ft_putstr_fd(hold->args_struct->arg_array[0], 2);
-			write(2, "\n", 1);
-			return;
+			ft_putstr_fd(hold->args_struct->arg_array[cmd_index], 2);
+			exit_status(hold, ":"RED" COMMAND NOT FOUND\n"RESET, 127);
+			return ;
+			// exit_status(hold, RED"COMMAND NOT FOUND: "RESET, 69);
+			// ft_putstr_fd(hold->args_struct->arg_array[0], 2);
+			// write(2, "\n", 1);
+			// return;
 		}
 	}
 	waitpid(-1, NULL, 0);
@@ -156,7 +159,7 @@ int main(int32_t argc, char **argv, char **env)
 
 //!!!NEXT:
 // - move around with cd
-// - exit with exit command
+// - exit with exit command -> returns 0
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -165,6 +168,9 @@ int main(int32_t argc, char **argv, char **env)
 // - move cursor bums
 // - create env/export list
 // - how to store prev return value for $? ?
+// - when just pressing enter (no input) do nothing and return 0
+// - handle also relativ paths
+
 
 //!  LEXER: √
 
@@ -184,6 +190,8 @@ int main(int32_t argc, char **argv, char **env)
 //			- echo $?
 //			- cd bla
 //			- exit
+//			- env √ 
+//			- export
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
