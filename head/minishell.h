@@ -71,6 +71,7 @@ typedef struct s_hold
 char *return_macro(int32_t m);
 void print_list(t_lexing *list, char *name);
 void print_macro_list(t_lexing *list);
+void print_args(t_hold *hold);
 
 
 //		utils.c

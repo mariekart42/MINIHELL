@@ -1,37 +1,5 @@
 #include "../head/minishell.h"
 
-// --- just for printing args (delete later) ---
-void print_args(t_hold *hold)
-{
-// int32_t i;
-// int32_t k=0;
-printf("ARGS:\n");
-
-printf("%s\n", hold->args_struct->arg_array[0]);
-printf("%s\n", hold->args_struct->arg_array[1]);
-printf("%s\n", hold->args_struct->arg_array[2]);
-
-printf("%s\n", hold->args_struct->next->arg_array[0]);
-printf("%s\n", hold->args_struct->next->arg_array[1]);
-printf("%s\n", hold->args_struct->next->arg_array[2]);
-// while(hold->args_struct != NULL)
-// {
-// i = 0;
-// printf(MAG"[%d]"RESET, k);
-// 	while (hold->args_struct->arg_array[i] != NULL)
-// 	{
-// 		printf("\t[%d]: %s\n",i, hold->args_struct->arg_array[i]);
-// 		i++;
-// 	}
-// 	if (hold->args_struct->arg_array[i] == NULL)
-// 		printf("\t(NULL)\n\n");
-// 	hold->args_struct = hold->args_struct->next;
-
-// 	k++;
-// }
-}
-// ---------------------------------------------
-
 // CREATE COMMAND DOUBLE ARRAY
 // dis shit only works for one (just for testing)
 void init_args(t_hold *hold)
@@ -59,16 +27,16 @@ void init_args(t_hold *hold)
 				tmp_lex = tmp_lex->next;
 			}
 			add_node_args(hold, ft_split(tmp, ' '));
+			free(tmp);
+			tmp = malloc(sizeof(char));
+			tmp = "\0";
 		}
 		if (tmp_lex->next == NULL)
 			break;
 		tmp_lex = tmp_lex->next;
 	}
-	// printf("[0]: %s\n", hold->args_struct->arg_array[0]);
-printf(YEL"\nHERE NOW:\n"RESET);
 print_args(hold);
-printf(YEL"ABOVE HERE\n\n"RESET);
-exit(0);
+// exit(0);
 }
 
 void get_path(t_hold *hold, char **env)

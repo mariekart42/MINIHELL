@@ -60,26 +60,16 @@ void add_node_args(t_hold *hold, char **content)
 		return (exit_status(hold, "Error! Failed to malloc\n", 69));
 	ptr->arg_array = content;
 	ptr->next = NULL;
-
-	// printf("in add node: \n");
-	// printf("[0]: %s\n", ptr->arg_array[0]);
-	// printf("[1]: %s\n", ptr->arg_array[1]);
-	// printf("[2]: %s\n", ptr->arg_array[2]);
-
 	if (hold->args_struct == NULL)
 	{
-		printf(YEL"IS NULL\n"RESET);
+		// printf(YEL"IS NULL\n"RESET);
 		hold->args_struct = ptr;
 	}
 	else
 	{
-		printf(MAG"IS NOT NULL\n"RESET);
+		// printf(MAG"IS NOT NULL\n"RESET);
 		(last_node_args(hold->args_struct))->next = ptr;
 	}
-	// printf("\nIN STRUCT NOW: \n");
-	// printf("[0]: %s\n", hold->args_struct->arg_array[0]);
-	// printf("[1]: %s\n", hold->args_struct->arg_array[1]);
-	// printf("[2]: %s\n", hold->args_struct->arg_array[2]);
 }
 
 t_args	*last_node_args(t_args *lst)
