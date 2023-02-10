@@ -40,12 +40,12 @@ void add_node_lex(t_hold *hold, char *content)
 
 	if (hold->lex_struct == NULL)
 	{
-		// printf(YEL"IS NULL\n"RESET);
+		printf(YEL"IS NULL\n"RESET);
 		hold->lex_struct = ptr;
 	}
 	else
 	{
-		// printf(MAG"IS NOT NULL\n"RESET);
+		printf(MAG"IS NOT NULL\n"RESET);
 		(last_node_lex(hold->lex_struct))->next = ptr;
 	}
 }

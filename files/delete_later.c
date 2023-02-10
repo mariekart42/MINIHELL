@@ -84,15 +84,15 @@ t_args *tmp = hold->args_struct;
 printf(YEL"ARGS ---------------\n"RESET);
 while(tmp != NULL)
 {
-i=0;
-printf(MAG"[%d]"RESET, k);
-while (tmp->arg_array[i] != NULL)
-{
-	if(i==0)
-		printf("\n");
-	printf("\t[%d]: %s\n",i,tmp->arg_array[i]);
-	i++;
-}
+	i=0;
+	printf(MAG"[%d]"RESET, k);
+	while (tmp->arg_array[i] != NULL)
+	{
+		if(i==0)
+			printf("\n");
+		printf("\t[%d]: %s\n",i,tmp->arg_array[i]);
+		i++;
+	}
 if (tmp->arg_array[i] == NULL)
 	printf(BLU"\t(NULL)\n"RESET);
 tmp = tmp->next;

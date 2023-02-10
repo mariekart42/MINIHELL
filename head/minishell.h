@@ -48,20 +48,28 @@ typedef struct s_lexing
 
 typedef struct s_args
 {
-
 	char	**arg_array;
 	struct s_args	*next;
 }				t_args;
 
+// typedef struct s_env
+// {
+// 	char	*env_list;
+// 	struct s_data *next;
+// }				t_env;
+
 typedef struct s_hold
 {
-	char *infile;
-	char *outfile;
+	// char *infile;
+	// char *outfile;
+
+
 	char *valid_path;
 
 	char	*line;
 	int8_t	exit_code;
 
+	struct s_env	*env_struct;
 	struct s_args	*args_struct;
 	struct s_lexing *lex_struct;
 }				t_hold;
@@ -96,12 +104,19 @@ void	check_spaces(t_hold *hold);
 int32_t check_beginning_redir(t_hold *hold);
 int32_t	lex_redir(t_hold *hold, int32_t i);
 int32_t	lex_word(t_hold *hold, int32_t i);
-void	lexer(t_hold *hold);
+void create_env_list(t_hold *hold, char **env);
+void lexer(t_hold *hold, char **env);
 
 
 //		parser.c
-bool builtin(char *node);
+bool builtin_parser(char *node);
 void recognize_type(t_hold *hold);
 void parser(t_hold *hold);
+
+//		executer.c
+void init_args(t_hold *hold);
+void get_path(t_hold *hold, char **env, int32_t cmd_index);
+void executer(t_hold *hold, char **env);
+
 
 #endif

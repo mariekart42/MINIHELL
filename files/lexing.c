@@ -183,16 +183,30 @@ int32_t lex_word(t_hold *hold, int32_t i)
 
 	// put token into linked list
 	tmp = ft_substr(hold->line, i, end - i);
+	// printf("tmp: %s\n", tmp);
 	add_node_lex(hold, tmp);
+	// printf("node: %s\n", hold->lex_struct->item);
 	return (end - i - 1);
 }
 
+// void create_env_list(t_hold *hold, char **env)
+// {
+// 	int32_t env_len = 0;
+
+// 	while (env[env_len] != NULL)
+// 	{
+// 		// add_node_env()
+// 		env_len++;
+// 	}
+// }
+
 // devide chunks of commands etc in single linked list
-void lexer(t_hold *hold)
+void lexer(t_hold *hold, char **env)
 {
 	int32_t	i;
 	i = 0;
-
+	(void)env;
+	// create_env_list(hold, env);
 	check_spaces(hold);
 	closed_quotes(hold);
 	while (hold->line[i] != '\0' && hold->line[i] != '\n')
@@ -223,4 +237,5 @@ void lexer(t_hold *hold)
         }
 		i++;
 	}
+	// printf("lex: %s\n", hold->lex_struct->item);
 }

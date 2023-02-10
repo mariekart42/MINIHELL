@@ -1,6 +1,6 @@
 #include "../head/minishell.h"
 
-bool builtin(char *node)
+bool builtin_parser(char *node)
 {
 	if (ft_strncmp(node, "echo", 4) == 0)
 		return (true);
@@ -25,11 +25,12 @@ bool builtin(char *node)
 void recognize_type(t_hold *hold)
 {
 	t_lexing *tmp;
-
+	printf("check in rec\n");
+// printf("list: %s\n", hold->lex_struct->item);
 	tmp = hold->lex_struct;
 	while (tmp != NULL)
 	{
-		if (builtin(tmp->item) == true)
+		if (builtin_parser(tmp->item) == true)
 			tmp->macro = BUILTIN;
 		else if (ft_strncmp(tmp->item, "|", 1) == 0)
 			tmp->macro = PIPE;
@@ -56,4 +57,5 @@ void parser(t_hold *hold)
     if (hold->exit_code != 0)
         return ;
 	recognize_type(hold);
+
 }
