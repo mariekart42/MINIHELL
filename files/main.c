@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
+/*   Updated: 2023/02/12 15:31:18 by mmensing         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../head/minishell.h"
 
 // void env_builtin(t_hold *hold)
@@ -8,14 +20,45 @@
 // {
 
 // }
-// void pwd_builtin(t_hold *hold)
-// {
 
-// }
-// void cd_builtin(t_hold *hold)
-// {
 
-// }
+/* bash:	If the current working directory is a symbolic link that points to a 
+ * 			directory that no longer exists, the pwd command will fail with a 
+ * 			"No such file or directory" error								*/
+void pwd_builtin(t_hold *hold)
+{
+printf("pwd builtin\n");
+	char	path[PATH_MAX];
+	if (!getcwd(path, PATH_MAX))
+	{
+		exit_status(hold, RED"PWD: NO SUCH FILE OR DIRECTORY\n"RESET, 69);
+		return ;
+	}
+	write(2, path, ft_strlen(path));
+	write(2, "\n", 1);
+}
+
+void cd_builtin(t_hold *hold)
+{
+	if (hold->lex_struct->next->item == NULL)
+	{
+		printf(RED"adding homedirectory feature later!\nEXIT\n"RESET);
+		exit(0);
+	}
+	// get $HOME from own env list and give it to chrir as an argument
+	
+	if (chdir(hold->lex_struct->next->item) < 0)
+	{
+		ft_putstr_fd(RED"", 2); //just for making it red lol
+		write(2, hold->lex_struct->next->item, ft_strlen(hold->lex_struct->next->item));
+		exit_status(hold, ": NO SUCH FILE OR DIRECTORY\n"RESET, 69);
+
+		return ;
+	}
+
+}
+
+
 // void unset_builtin(t_hold *hold)
 // {
 
@@ -37,10 +80,10 @@ bool builtin(t_hold *hold)
 		// 	return (env_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)
 		// 	return (export_builtin(hold), true);
-		// else if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
-		// 	return (pwd_builtin(hold), true);
-		// else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
-		// 	return (cd_builtin(hold), true);
+		if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
+			return (pwd_builtin(hold), true);
+		else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
+			return (cd_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "unset", 5) == 0)
 		// 	return (unset_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "echo", 4) == 0)
@@ -67,17 +110,12 @@ int main(int32_t argc, char **argv, char **env)
 	if (!hold->lex_struct)
 		return (69);
 
-	hold->args_struct = (t_args*)malloc(sizeof(t_args));
-	if (!hold->args_struct)
+	hold->data_struct = (t_data*)malloc(sizeof(t_data));
+	if (!hold->data_struct)
 		return (69);
 
-	// hold->env_struct = (t_env*)malloc(sizeof(t_env));
-	// if (!hold->env_struct)
-	// 	return (69);
-
 	hold->lex_struct = NULL;
-	hold->args_struct = NULL;
-	// hold->env_struct = NULL;
+	hold->data_struct = NULL;
 
 	// using signal function here to catch signal if eg ctr-c is used
 
@@ -100,19 +138,18 @@ int main(int32_t argc, char **argv, char **env)
 
 		if (builtin(hold) == false)
 		{
+			printf(RED"NO BUILTIN: EXIT\n"RESET);
+			exit(0);
 			executer(hold, env);
 		}
 
 		free(hold->line);
 		free_list_lex(hold->lex_struct);
-		free_list_arg(hold->args_struct);
-		// free_list_arg(hold->env_struct);
+		free_list_data(hold->data_struct);
 		hold->lex_struct = NULL;
-		// hold->env_struct = NULL;
-		hold->args_struct = NULL;
+		hold->data_struct = NULL;
 
 	}
-	printf(RED"out of loop\n"RESET);
 	clear_history();
 	// here func to clear all memory
 }
@@ -141,12 +178,7 @@ int main(int32_t argc, char **argv, char **env)
 //		-> if first parameter is not a command, quit !! --> not real bash behaiviour (figure out what else it could be (eg redir sign))
 
 //!  EXECUTER:
-// - include pipex approach and test stuff
-//		-> execute:
-//			- ls  √
-//			- ls -l  √
-//			- touch test.txt  √
-//			- echo $?
+// - later: put builtin stuff into executer (not as bool in main!)
 
 // - builtins:
 //		- env 

@@ -26,7 +26,7 @@ void init_args(t_hold *hold)
 					break;
 				tmp_lex = tmp_lex->next;
 			}
-			add_node_args(hold, ft_split(tmp, ' '));
+			add_node_data(hold, ft_split(tmp, ' '), "arg");
 			free(tmp);
 			tmp = malloc(sizeof(char));
 			tmp = "\0";
@@ -54,7 +54,7 @@ void get_path(t_hold *hold, char **env, int32_t cmd_index)
 	while (splitted_path[k] != NULL)
 	{
 		splitted_path[k] = ft_strjoin(splitted_path[k], "/");
-		hold->valid_path = ft_strjoin(splitted_path[k], hold->args_struct->arg_array[cmd_index]);
+		hold->valid_path = ft_strjoin(splitted_path[k], hold->data_struct->arg_array[cmd_index]);
 		if (access(hold->valid_path, F_OK | X_OK) == 0)
 			break ;
 		free(hold->valid_path);
@@ -74,8 +74,8 @@ void executer(t_hold *hold, char **env)
 	if (hold->exit_code != 0)
 		return ;
 	init_args(hold);
-	printf("check exec\n");
-	print_args(hold);
+	// printf("check exec\n");
+	print_data(hold, "arg");
 
 	// cmd index defines which iteration of args, later implement in while loop
 	int32_t cmd_index = 0;
@@ -89,9 +89,9 @@ void executer(t_hold *hold, char **env)
 	if (pid == 0)
 	{
 		// execute shit
-		if (execve(hold->valid_path, hold->args_struct->arg_array, env) == -1)
+		if (execve(hold->valid_path, hold->data_struct->arg_array, env) == -1)
 		{
-			ft_putstr_fd(hold->args_struct->arg_array[cmd_index], 2);
+			ft_putstr_fd(hold->data_struct->arg_array[cmd_index], 2);
 			exit_status(hold, ":"RED" COMMAND NOT FOUND\n"RESET, 127);
 			return ;
 			// exit_status(hold, RED"COMMAND NOT FOUND: "RESET, 69);

@@ -25,7 +25,7 @@ bool builtin_parser(char *node)
 void recognize_type(t_hold *hold)
 {
 	t_lexing *tmp;
-	printf("check in rec\n");
+	// printf("check in rec\n");
 // printf("list: %s\n", hold->lex_struct->item);
 	tmp = hold->lex_struct;
 	while (tmp != NULL)

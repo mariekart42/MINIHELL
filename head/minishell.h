@@ -4,11 +4,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-
+#include <limits.h>	// for PATH_MAX macro
 #include <sys/stat.h> // for stat function
-
-#include <signal.h> // function fo rsignal funcs
-
+#include <signal.h> // function for signal funcs
 # include <stdbool.h>	// bool
 
 #include "../include/libft/libft.h"
@@ -46,17 +44,12 @@ typedef struct s_lexing
 	struct s_lexing	*next;
 }		t_lexing;
 
-typedef struct s_args
+typedef struct s_data
 {
 	char	**arg_array;
-	struct s_args	*next;
-}				t_args;
-
-// typedef struct s_env
-// {
-// 	char	*env_list;
-// 	struct s_data *next;
-// }				t_env;
+	char	**env_array;
+	struct s_data	*next;
+}				t_data;
 
 typedef struct s_hold
 {
@@ -69,8 +62,7 @@ typedef struct s_hold
 	char	*line;
 	int8_t	exit_code;
 
-	struct s_env	*env_struct;
-	struct s_args	*args_struct;
+	struct s_data	*data_struct;
 	struct s_lexing *lex_struct;
 }				t_hold;
 
@@ -79,20 +71,20 @@ typedef struct s_hold
 char *return_macro(int32_t m);
 void print_list(t_lexing *list, char *name);
 void print_macro_list(t_lexing *list);
-void print_args(t_hold *hold);
+void print_data(t_hold *hold, char *type);
 
 
 //		utils.c
 void free_list_lex(t_lexing* head);
-void free_list_arg(t_args* head);
+void free_list_data(t_data* head);
 void exit_status(t_hold *hold, char *message, int8_t exit_code_);
 void		add_node_lex(t_hold *hold, char *content);
 t_lexing	*last_node_lex(t_lexing *lst);
 t_lexing	*ft_lstnew_lex(void *content);
 t_lexing	*ft_lstlast_lex(t_lexing *lst);
 
-void add_node_args(t_hold *hold, char **content);
-t_args	*last_node_args(t_args *lst);
+void add_node_data(t_hold *hold, char **content, char	*type);
+t_data	*last_node_data(t_data *lst);
 
 
 //		lexing.c
