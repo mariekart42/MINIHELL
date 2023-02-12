@@ -41,7 +41,6 @@ void init_args(t_hold *hold)
 
 void get_path(t_hold *hold, char **env, int32_t cmd_index)
 {
-// CREATE COMMAND DOUBLE ARRAY
 	int32_t		i;
 	int32_t		k;
 	char		**splitted_path;

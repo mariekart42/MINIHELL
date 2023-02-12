@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/12 15:31:18 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/12 17:50:46 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,13 @@ int main(int32_t argc, char **argv, char **env)
 	if (!hold->data_struct)
 		return (69);
 
+	hold->env_list = (t_env*)malloc(sizeof(t_env));
+	if (!hold->env_list)
+		return (69);
+		
 	hold->lex_struct = NULL;
 	hold->data_struct = NULL;
+	hold->env_list = NULL;
 
 	// using signal function here to catch signal if eg ctr-c is used
 
@@ -131,6 +136,8 @@ int main(int32_t argc, char **argv, char **env)
 			add_history(hold->line);
 
 		lexer(hold, env);
+		printf("exit after lexer\n");
+		exit(0);
 		parser(hold);
 
 		if (hold->exit_code == 0)
@@ -155,13 +162,10 @@ int main(int32_t argc, char **argv, char **env)
 }
 
 //!!!NEXT:
-// - move around with cd
-// - exit with exit command -> returns 0
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 //!  GENERAL:
-// - add history stuff -> should work like this √
 // - move cursor bums
 // - create env/export list
 // - how to store prev return value for $? ?
@@ -183,8 +187,8 @@ int main(int32_t argc, char **argv, char **env)
 // - builtins:
 //		- env 
 //		- export
-//		- pwd 
-//		- cd
+//		- pwd √
+//		- cd √ (for now)
 //		- unset
 //		- echo
 //		- exit
@@ -193,5 +197,6 @@ int main(int32_t argc, char **argv, char **env)
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 //!  LATER:
 // - after main loop clear all memory
+// - exit with exit command -> returns 0
 // - signals shit
 // - transfer lexed list first to parsed list

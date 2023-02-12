@@ -47,9 +47,14 @@ typedef struct s_lexing
 typedef struct s_data
 {
 	char	**arg_array;
-	char	**env_array;
 	struct s_data	*next;
 }				t_data;
+
+typedef struct s_env
+{
+	char	 *item;
+	struct s_env	*next;
+}			t_env;
 
 typedef struct s_hold
 {
@@ -62,9 +67,15 @@ typedef struct s_hold
 	char	*line;
 	int8_t	exit_code;
 
+
+	struct s_env	*env_list;
+
 	struct s_data	*data_struct;
 	struct s_lexing *lex_struct;
 }				t_hold;
+
+t_env *new_node_env(char *content);
+
 
 
 //		delete_later.c
@@ -83,8 +94,12 @@ t_lexing	*last_node_lex(t_lexing *lst);
 t_lexing	*ft_lstnew_lex(void *content);
 t_lexing	*ft_lstlast_lex(t_lexing *lst);
 
-void add_node_data(t_hold *hold, char **content, char	*type);
+void add_node_data(t_hold *hold, char **content);
 t_data	*last_node_data(t_data *lst);
+void add_node_env(t_hold *hold, char *content);
+
+t_data	*last_node_env(t_data *lst);
+
 
 
 //		lexing.c
@@ -96,9 +111,9 @@ void	check_spaces(t_hold *hold);
 int32_t check_beginning_redir(t_hold *hold);
 int32_t	lex_redir(t_hold *hold, int32_t i);
 int32_t	lex_word(t_hold *hold, int32_t i);
-void create_env_list(t_hold *hold, char **env);
 void lexer(t_hold *hold, char **env);
 
+void create_env_list(t_env *env_list, char **ori_env);
 
 //		parser.c
 bool builtin_parser(char *node);

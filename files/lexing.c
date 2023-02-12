@@ -189,24 +189,53 @@ int32_t lex_word(t_hold *hold, int32_t i)
 	return (end - i - 1);
 }
 
-// void create_env_list(t_hold *hold, char **env)
-// {
-// 	int32_t env_len = 0;
+t_env *new_node_env(char *content)
+{
+	t_env *tmp;
 
-// 	while (env[env_len] != NULL)
-// 	{
-// 		// add_node_env()
-// 		env_len++;
-// 	}
-// }
+	tmp = (t_env*)malloc(sizeof(t_env));
+	tmp->item = ft_strdup(content);
+	tmp->next = NULL;
+	return (tmp);
+}
+
+void create_env_list(t_env *env_list, char **ori_env)
+{
+	int32_t env_len = 0;
+	t_env *tmp;
+	tmp = env_list;
+	while (ori_env[env_len] != NULL)
+	{
+		tmp = new_node_env(ori_env[env_len]);
+// printf("create env list\n");
+// 		printf(GRN"ori: %s\n"RESET, ori_env[env_len]);
+// 		printf("min: %s\n\n", env_list->item);
+		tmp = tmp->next;
+		env_len++;
+	}
+}
 
 // devide chunks of commands etc in single linked list
 void lexer(t_hold *hold, char **env)
 {
 	int32_t	i;
 	i = 0;
-	(void)env;
-	// create_env_list(hold, env);
+
+	create_env_list(hold->env_list, env);
+
+
+
+	int env_len = 0;
+	// while(hold->env_list != NULL)
+	// {
+		printf(GRN"ori: %s\n"RESET, env[env_len]);
+		printf("min: %s\n\n", hold->env_list->item);
+		hold->env_list = hold->env_list->next;
+		env_len++;
+	// }
+
+	printf("exit fter create env list\n");
+	exit(0);
 	check_spaces(hold);
 	closed_quotes(hold);
 	while (hold->line[i] != '\0' && hold->line[i] != '\n')

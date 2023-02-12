@@ -31,7 +31,6 @@ void add_node_lex(t_hold *hold, char *content)
 {
 	t_lexing *ptr;
 
-
 	ptr = (t_lexing *)malloc(sizeof(t_lexing));
 	if (!ptr)
 		return (exit_status(hold, "Error! Failed to malloc\n", 69));
@@ -59,10 +58,41 @@ t_lexing	*last_node_lex(t_lexing *lst)
 	return (lst);
 }
 
+// void add_node_env(t_hold *hold, char *content)
+// {
+// 	t_data	*ptr;
+
+// 	ptr = (t_data *)malloc(sizeof(ptr));
+// 	if (ptr == NULL)
+// 		return ;
+// 	ptr->env_list = content;
+// 	ptr->next = NULL;
+// 	if (hold->data_struct == NULL)
+// 		hold->data_struct = ptr;
+// 	else
+// 	{
+// 		while (hold->data_struct->next)
+// 			hold->data_struct = hold->data_struct->next;
+// 		(last_node_env(hold->data_struct))->next = ptr;
+// 	}
+
+// 	// return (ptr);
+// }
+
+// t_data	*last_node_env(t_env *lst)
+// {
+// 	if (!lst)
+// 		return (NULL);
+// 	while (lst->env_list->next)
+// 		lst->env_list = lst->env_list->next;
+// 	return (lst);
+// }
+
+
 //	- - - -  for ARGS struct  - - - - - - - - - - - - - - 
 /* function adds node at the end of 'lex_struct'
  * checks if list is NULL -> appends node at the beginning			*/
-void add_node_data(t_hold *hold, char **content, char	*type)
+void add_node_data(t_hold *hold, char **content)
 {
 	t_data *ptr;
 
@@ -70,10 +100,7 @@ void add_node_data(t_hold *hold, char **content, char	*type)
 	ptr = (t_data *)malloc(sizeof(t_data));
 	if (!ptr)
 		return (exit_status(hold, "Error! Failed to malloc\n", 69));
-	if(ft_strncmp(type, "arg", 3)==0)
-		ptr->arg_array = content;
-	else if(ft_strncmp(type, "env", 3)==0)
-		ptr->env_array = content;
+	ptr->arg_array = content;
 	ptr->next = NULL;
 	if (hold->data_struct == NULL)
 	{
@@ -95,6 +122,8 @@ t_data	*last_node_data(t_data *lst)
 		lst = lst->next;
 	return (lst);
 }
+
+
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 void exit_status(t_hold *hold, char *message, int8_t exit_code_)
 {
