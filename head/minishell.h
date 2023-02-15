@@ -100,6 +100,7 @@ t_env_export *add_node_env(t_hold *hold, char *content, char *type);
 t_env_export *new_node_env(void);
 
 void sort_export_list(t_hold *hold);
+void swap_nodes(t_hold **hold, char *p1, char *p2);
 
 
 //		lexing.c

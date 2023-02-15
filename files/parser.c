@@ -21,7 +21,7 @@ bool builtin_parser(char *node)
 }
 
 /* function appends specific macro to each node of 'lex_struct'
- * 	Macros: QUOTES, PIPE, (SINGLE-/DOUBLE) REDIRECTION */
+ * 	Macros: QUOTES, PIPE, (SINGLE-/DOUBLE) REDIRECTION, BUILTIN */
 void recognize_type(t_hold *hold)
 {
 	t_lexing *tmp;

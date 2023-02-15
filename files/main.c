@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/15 18:14:13 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/15 20:39:13 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void env_builtin(t_hold *hold)
 		tmp = tmp->next;
 	}
 }
+
 void export_builtin(t_hold *hold)
 {
 	t_env_export *tmp;
@@ -35,9 +36,7 @@ void export_builtin(t_hold *hold)
 		write(2, "\n", 1);
 		tmp = tmp->next;
 	}
-
 }
-
 
 /* bash:	If the current working directory is a symbolic link that points to a 
  * 			directory that no longer exists, the pwd command will fail with a 
@@ -97,7 +96,7 @@ bool builtin(t_hold *hold)
 			return (env_builtin(hold), true);
 		else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)
 			return (export_builtin(hold), true);
-		if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
+		else if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
 			return (pwd_builtin(hold), true);
 		else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
 			return (cd_builtin(hold), true);
@@ -168,7 +167,6 @@ int main(int32_t argc, char **argv, char **env)
 
 	// using signal function here to catch signal if eg ctr-c is used
 	create_env_export_list(hold, env);
-	
 
 	while (1)
 	{
@@ -186,17 +184,16 @@ int main(int32_t argc, char **argv, char **env)
 			
 			parser(hold);
 
-			// if (hold->exit_code == 0)
-			// 	print_macro_list(hold->lex_struct);
+			if (hold->exit_code == 0)
+				print_macro_list(hold->lex_struct);
 
 			if (builtin(hold) == false)
 			{
-				printf(RED"NO BUILTIN: EXIT\n"RESET);
-				exit(0);
+				// printf(RED"NO BUILTIN: EXIT\n"RESET);
+				// exit(0);
 				executer(hold, env);
 			}
 			free_content(hold);
-			
 			
 		}
 	}
@@ -212,7 +209,6 @@ int main(int32_t argc, char **argv, char **env)
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 //!  GENERAL:
 // - move cursor bums
-// - create env/export list
 // - how to store prev return value for $? ?
 // - handle also relativ paths
 

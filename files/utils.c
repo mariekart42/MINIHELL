@@ -115,6 +115,53 @@ t_env_export *add_node_env(t_hold *hold, char *content, char *type)
 	}
 }
 
+void swap_nodes(t_hold **hold, char *p1, char *p2)
+{
+	//----------------------------------------------------
+	// sort list alphabetically
+
+
+ 
+    // Search for x (keep track of prevX and currX)
+    t_env_export* prev_p1 = NULL;
+    t_env_export* curr_p1 = (*hold)->export_list;
+
+    while (curr_p1 != NULL && ft_strncmp(curr_p1->item, p1, 9999) != 0) {
+        prev_p1 = curr_p1;
+        curr_p1 = curr_p1->next;
+    }
+ 
+    // Search for y (keep track of prevY and currY)
+    t_env_export* prev_p2 = NULL;
+    t_env_export* curr_p2 =(*hold)->export_list;
+    while (curr_p2 != NULL && ft_strncmp(curr_p2->item, p2, 9999) != 0) {
+        prev_p2 = curr_p2;
+        curr_p2 = curr_p2->next;
+    }
+ 
+    // If either x or y is not present, nothing to do
+    if (curr_p1 == NULL || curr_p2 == NULL)
+        return;
+ 
+    // If x is not the head of the linked list
+    if (prev_p1 != NULL)
+        prev_p1->next = curr_p2;
+    else // Else make y the new head
+        (*hold)->export_list = curr_p2;
+ 
+    // If y is not the head of the linked list
+    if (prev_p2 != NULL)
+        prev_p2->next = curr_p1;
+    else // Else make x the new head
+        (*hold)->export_list = curr_p1;
+ 
+    // Swap next pointers
+    t_env_export* tmp = curr_p2->next;
+    curr_p2->next = curr_p1->next;
+    curr_p1->next = tmp;
+//----------------------------------------------------
+}
+
 void sort_export_list(t_hold *hold)
 {
 	t_env_export *tmp;
@@ -122,20 +169,21 @@ void sort_export_list(t_hold *hold)
 	// sort list alphabetically
 	t_env_export *p1;
 	t_env_export *p2;
-tmp = NULL;
+// tmp = malloc(sizeof(char));
+tmp = hold->export_list;
 p1 = hold->export_list;
 p2 = hold->export_list->next;
 	while (p1->next != NULL)
 	{
-		while (p2 != NULL)
+		while (p2->next != NULL)
 		{
 			if (ft_strncmp(p1->item, p2->item, ft_strlen(p2->item)) > 0)// means first is bigger then seccond
 			{
-				ft_strlcpy(tmp->item, p1->item, 9999);
-printf(GRN"check\n"RESET);
-exit(0);
-				ft_strlcpy(p1->item, p2->item, 9999);
-				ft_strlcpy(p2->item, tmp->item, 9999);
+				swap_nodes(&hold, p1->item, p2->item);
+				// ft_strlcpy(tmp->item, p1->item, 9999);
+// exit(0);
+				// ft_strlcpy(p1->item, p2->item, 9999);
+				// ft_strlcpy(p2->item, tmp->item, 9999);
 				// tmp->item = p1->item;
 				// p1->item = p2->item;
 				// p2->item = tmp->item;
@@ -144,10 +192,11 @@ exit(0);
 			}
 			p2 = p2->next;
 		}
-		p1 = p1->next;
+		p1 = hold->export_list;
 		p2 = p1->next;
 	}
 	
+printf(GRN"check\n"RESET);
 
 	tmp = hold->export_list;
 

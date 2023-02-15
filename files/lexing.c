@@ -187,25 +187,11 @@ int32_t lex_word(t_hold *hold, int32_t i)
 	return (end - i - 1);
 }
 
-// /* export has the same values as env in the beginning, but in alphabetically order
-//  * plus: 'declare -x' before the variable */
-// void create_export_list(t_hold *hold, char **env)
-// {
-// 	int32_t env_len = 0;
-
-// 	while (env[env_len] != NULL)
-// 	{
-// 		hold->export_list = add_node_env(hold, env)
-// 		env_len++;
-// 	}
-// }
-
 // devide chunks of commands etc in single linked list
 void lexer(t_hold *hold)
 {
 	int32_t	i;
 	i = 0;
-
 
 	check_spaces(hold);
 	closed_quotes(hold);
