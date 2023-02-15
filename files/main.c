@@ -6,16 +6,21 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/15 13:08:48 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/15 14:23:05 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../head/minishell.h"
 
-// void env_builtin(t_hold *hold)
-// {
-	
-// }
+void env_builtin(t_hold *hold)
+{
+	while (hold->env_list != NULL)
+	{
+		ft_putstr_fd(hold->env_list->item, 2);
+		write(2, "\n", 1);
+		hold->env_list = hold->env_list->next;
+	}
+}
 // void export_builtin(t_hold *hold)
 // {
 
@@ -27,8 +32,8 @@
  * 			"No such file or directory" error								*/
 void pwd_builtin(t_hold *hold)
 {
-printf("pwd builtin\n");
 	char	path[PATH_MAX];
+	
 	if (!getcwd(path, PATH_MAX))
 	{
 		exit_status(hold, RED"PWD: NO SUCH FILE OR DIRECTORY\n"RESET, 69);
@@ -52,7 +57,6 @@ void cd_builtin(t_hold *hold)
 		ft_putstr_fd(RED"", 2); //just for making it red lol
 		write(2, hold->lex_struct->next->item, ft_strlen(hold->lex_struct->next->item));
 		exit_status(hold, ": NO SUCH FILE OR DIRECTORY\n"RESET, 69);
-
 		return ;
 	}
 
@@ -76,8 +80,8 @@ bool builtin(t_hold *hold)
 {
 	if (hold->lex_struct->macro == BUILTIN)
 	{
-		// if (ft_strncmp(hold->lex_struct->item, "env", 3) == 0)
-		// 	return (env_builtin(hold), true);
+		if (ft_strncmp(hold->lex_struct->item, "env", 3) == 0)
+			return (env_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)
 		// 	return (export_builtin(hold), true);
 		if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
@@ -96,31 +100,45 @@ bool builtin(t_hold *hold)
 		return (false);
 }
 
+void free_content(t_hold *hold)
+{
+	free(hold->line);
+	free_list_lex(hold->lex_struct);
+	free_list_env(hold->env_list);
+	free_list_data(hold->data_struct);
+	hold->lex_struct = NULL;
+	hold->data_struct = NULL;
+	hold->env_list = NULL;
+}
+
+int32_t init_structs(t_hold **hold)
+{
+	(*hold) = (t_hold *)malloc(sizeof(t_hold));
+	if (!(*hold))
+		return (69);
+	(*hold)->lex_struct = (t_lexing*)malloc(sizeof(t_lexing));
+	if (!(*hold)->lex_struct)
+		return (69);
+	(*hold)->data_struct = (t_data*)malloc(sizeof(t_data));
+	if (!(*hold)->data_struct)
+		return (69);
+	(*hold)->env_list = (t_env*)malloc(sizeof(t_env));
+	if (!(*hold)->env_list)
+		return (69);
+	(*hold)->lex_struct = NULL;
+	(*hold)->data_struct = NULL;
+	(*hold)->env_list = NULL;
+	return (0);
+}
+
 int main(int32_t argc, char **argv, char **env)
 {
 	t_hold	*hold = NULL;
 	(void) argc;
 	(void) argv;
 
-	hold = (t_hold *)malloc(sizeof(t_hold));
-	if (!hold)
+	if (init_structs(&hold))
 		return (69);
-
-	hold->lex_struct = (t_lexing*)malloc(sizeof(t_lexing));
-	if (!hold->lex_struct)
-		return (69);
-
-	hold->data_struct = (t_data*)malloc(sizeof(t_data));
-	if (!hold->data_struct)
-		return (69);
-
-	hold->env_list = (t_env*)malloc(sizeof(t_env));
-	if (!hold->env_list)
-		return (69);
-		
-	hold->lex_struct = NULL;
-	hold->data_struct = NULL;
-	hold->env_list = NULL;
 
 	// using signal function here to catch signal if eg ctr-c is used
 
@@ -130,32 +148,29 @@ int main(int32_t argc, char **argv, char **env)
 		hold->line = readline(BLU"MINIHELL> "RESET);
 		if (!hold->line)
 			break ;
-
-		// add_history to update history with current line
+		
+		// if line is empty, bash returns 0 and does nothing
 		if (ft_strlen(hold->line) > 0)
+		{
 			add_history(hold->line);
 
-		lexer(hold, env);
-		
-		parser(hold);
+			lexer(hold, env);
+			
+			parser(hold);
 
-		if (hold->exit_code == 0)
-			print_macro_list(hold->lex_struct);
+			// if (hold->exit_code == 0)
+			// 	print_macro_list(hold->lex_struct);
 
-		if (builtin(hold) == false)
-		{
-			printf(RED"NO BUILTIN: EXIT\n"RESET);
-			exit(0);
-			executer(hold, env);
+			if (builtin(hold) == false)
+			{
+				printf(RED"NO BUILTIN: EXIT\n"RESET);
+				exit(0);
+				executer(hold, env);
+			}
+			free_content(hold);
+			
+			
 		}
-
-		free(hold->line);
-		free_list_lex(hold->lex_struct);
-		free_list_env(hold->env_list);
-		free_list_data(hold->data_struct);
-		hold->lex_struct = NULL;
-		hold->data_struct = NULL;
-
 	}
 	clear_history();
 	// here func to clear all memory
@@ -169,7 +184,6 @@ int main(int32_t argc, char **argv, char **env)
 // - move cursor bums
 // - create env/export list
 // - how to store prev return value for $? ?
-// - when just pressing enter (no input) do nothing and return 0
 // - handle also relativ paths
 
 
@@ -185,7 +199,7 @@ int main(int32_t argc, char **argv, char **env)
 // - later: put builtin stuff into executer (not as bool in main!)
 
 // - builtins:
-//		- env 
+//		- env √
 //		- export
 //		- pwd √
 //		- cd √ (for now)
