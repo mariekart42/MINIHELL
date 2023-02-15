@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/15 15:00:49 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/15 16:23:45 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,29 @@
 
 void env_builtin(t_hold *hold)
 {
-	while (hold->env_list != NULL)
+	t_env_export *tmp;
+	
+	tmp = hold->env_list;
+	while (tmp != NULL)
 	{
-		ft_putstr_fd(hold->env_list->item, 2);
+		ft_putstr_fd(tmp->item, 2);
 		write(2, "\n", 1);
-		hold->env_list = hold->env_list->next;
+		tmp = tmp->next;
 	}
 }
-// void export_builtin(t_hold *hold)
-// {
+void export_builtin(t_hold *hold)
+{
+	t_env_export *tmp;
+	
+	tmp = hold->export_list;
+	while (tmp != NULL)
+	{
+		ft_putstr_fd(tmp->item, 2);
+		write(2, "\n", 1);
+		tmp = tmp->next;
+	}
 
-// }
+}
 
 
 /* bash:	If the current working directory is a symbolic link that points to a 
@@ -83,8 +95,8 @@ bool builtin(t_hold *hold)
 		// printf(MAG"BUILTIN\n"RESET);
 		if (ft_strncmp(hold->lex_struct->item, "env", 3) == 0)
 			return (env_builtin(hold), true);
-		// else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)
-		// 	return (export_builtin(hold), true);
+		else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)
+			return (export_builtin(hold), true);
 		if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
 			return (pwd_builtin(hold), true);
 		else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
@@ -105,11 +117,10 @@ void free_content(t_hold *hold)
 {
 	free(hold->line);
 	free_list_lex(hold->lex_struct);
-	free_list_env(hold->env_list);
 	free_list_data(hold->data_struct);
 	hold->lex_struct = NULL;
 	hold->data_struct = NULL;
-	hold->env_list = NULL;
+
 }
 
 int32_t init_structs(t_hold **hold)
@@ -136,6 +147,16 @@ int32_t init_structs(t_hold **hold)
 	return (0);
 }
 
+void free_env_export(t_hold *hold)
+{
+	
+	free_list_env(hold->env_list);
+	free_list_env(hold->export_list);
+	hold->env_list = NULL;
+	hold->export_list = NULL;
+
+}
+
 int main(int32_t argc, char **argv, char **env)
 {
 	t_hold	*hold = NULL;
@@ -146,6 +167,7 @@ int main(int32_t argc, char **argv, char **env)
 		return (69);
 
 	// using signal function here to catch signal if eg ctr-c is used
+	create_env_export_list(hold, env);
 
 	while (1)
 	{
@@ -159,7 +181,7 @@ int main(int32_t argc, char **argv, char **env)
 		{
 			add_history(hold->line);
 
-			lexer(hold, env);
+			lexer(hold);
 			
 			parser(hold);
 
@@ -177,12 +199,13 @@ int main(int32_t argc, char **argv, char **env)
 			
 		}
 	}
+	free_env_export(hold);
 	clear_history();
 	// here func to clear all memory
 }
 
 //!!!NEXT:
-// - create export list -> look into getenv()
+// - export list: order alpahteically + add var_name to struct
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

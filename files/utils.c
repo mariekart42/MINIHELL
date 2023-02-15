@@ -80,36 +80,73 @@ t_env_export *new_node_env(void)
 	return (tmp);
 }
 
-t_env_export *add_node_env(t_hold *hold, char *content)
+t_env_export *add_node_env(t_hold *hold, char *content, char *type)
 {
 	t_env_export *tmp;
 	t_env_export *p;
 
 	tmp = new_node_env();
 	tmp->item = content;
-	if (hold->env_list == NULL)
-		hold->env_list = tmp;
+	if (ft_strncmp(type, "env", 3) == 0)
+	{
+		if (hold->env_list == NULL)
+			hold->env_list = tmp;
+		else
+		{
+			p = hold->env_list;
+			while(p->next != NULL)
+				p = p->next;
+			p->next = tmp;
+		}
+		return (hold->env_list);
+	}
 	else
 	{
-		p = hold->env_list;
-		while(p->next != NULL)
-			p = p->next;
-		p->next = tmp;
+		if (hold->export_list == NULL)
+			hold->export_list = tmp;
+		else
+		{
+			p = hold->export_list;
+			while(p->next != NULL)
+				p = p->next;
+			p->next = tmp;
+		}
+		return (hold->export_list);
 	}
-	return (hold->env_list);
 }
 
-void create_env_list(t_hold *hold, char **ori_env)
+void sort_export_list(t_hold *hold)
 {
-	int32_t env_len = 0;
 	t_env_export *tmp;
 
-	tmp = hold->env_list;
+	// sort list alphabetically
+	
+
+	tmp = hold->export_list;
+
+	// adding 'declare -x' infront of everything
+	while (tmp != NULL)
+	{
+		tmp->item = ft_strjoin("declare -x ", tmp->item);
+		tmp = tmp->next;
+	}
+}
+
+void create_env_export_list(t_hold *hold, char **ori_env)
+{
+	int32_t env_len = 0;
+	t_env_export *tmp_env;
+	t_env_export *tmp_export;
+
+	tmp_env = hold->env_list;
+	tmp_export = hold->export_list;
 	while (ori_env[env_len] != NULL)
 	{
-		hold->env_list = add_node_env(hold, ori_env[env_len]);
+		hold->env_list = add_node_env(hold, ori_env[env_len], "env");
+		hold->export_list = add_node_env(hold, ori_env[env_len], "export");
 		env_len++;
 	}
+	sort_export_list(hold);
 }
 
 //	- - - -  for ARGS struct  - - - - - - - - - - - - - - 

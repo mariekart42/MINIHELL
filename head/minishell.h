@@ -72,6 +72,7 @@ typedef struct s_hold
 }				t_hold;
 
 // t_env *new_node_env(char *content);
+void create_env_export_list(t_hold *hold, char **ori_env);
 
 
 
@@ -95,9 +96,10 @@ t_lexing	*ft_lstlast_lex(t_lexing *lst);
 
 void add_node_data(t_hold *hold, char **content);
 t_data	*last_node_data(t_data *lst);
-void create_env_list(t_hold *hold, char **ori_env);
-t_env_export *add_node_env(t_hold *hold, char *content);
+t_env_export *add_node_env(t_hold *hold, char *content, char *type);
 t_env_export *new_node_env(void);
+
+void sort_export_list(t_hold *hold);
 
 
 //		lexing.c
@@ -109,7 +111,9 @@ void	check_spaces(t_hold *hold);
 int32_t check_beginning_redir(t_hold *hold);
 int32_t	lex_redir(t_hold *hold, int32_t i);
 int32_t	lex_word(t_hold *hold, int32_t i);
-void lexer(t_hold *hold, char **env);
+void lexer(t_hold *hold);
+
+// void create_export_list(t_hold *hold, char **env);
 
 
 //		parser.c
