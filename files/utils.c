@@ -24,9 +24,9 @@ void free_list_data(t_data* head)
     }
 }
 
-void free_list_env(t_env* head)
+void free_list_env(t_env_export* head)
 {
-   t_env* tmp;
+   t_env_export* tmp;
 
    while (head != NULL)
     {
@@ -71,19 +71,19 @@ t_lexing	*last_node_lex(t_lexing *lst)
 }
 
 //	- - - -  for ENV struct  - - - - - - - - - - - - - - 
-t_env *new_node_env(void)
+t_env_export *new_node_env(void)
 {
-	t_env *tmp;
+	t_env_export *tmp;
 
-	tmp = (t_env*)malloc(sizeof(t_env));
+	tmp = (t_env_export*)malloc(sizeof(t_env_export));
 	tmp->next = NULL;
 	return (tmp);
 }
 
-t_env *add_node_env(t_hold *hold, char *content)
+t_env_export *add_node_env(t_hold *hold, char *content)
 {
-	t_env *tmp;
-	t_env *p;
+	t_env_export *tmp;
+	t_env_export *p;
 
 	tmp = new_node_env();
 	tmp->item = content;
@@ -102,7 +102,7 @@ t_env *add_node_env(t_hold *hold, char *content)
 void create_env_list(t_hold *hold, char **ori_env)
 {
 	int32_t env_len = 0;
-	t_env *tmp;
+	t_env_export *tmp;
 
 	tmp = hold->env_list;
 	while (ori_env[env_len] != NULL)

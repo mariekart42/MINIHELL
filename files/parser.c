@@ -31,7 +31,10 @@ void recognize_type(t_hold *hold)
 	while (tmp != NULL)
 	{
 		if (builtin_parser(tmp->item) == true)
+		{
+				// printf("builtin: %s\n", tmp->item);
 			tmp->macro = BUILTIN;
+		}
 		else if (ft_strncmp(tmp->item, "|", 1) == 0)
 			tmp->macro = PIPE;
 		else if (ft_strncmp(tmp->item, "'", 1) == 0)

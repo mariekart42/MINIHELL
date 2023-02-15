@@ -50,11 +50,11 @@ typedef struct s_data
 	struct s_data	*next;
 }				t_data;
 
-typedef struct s_env
+typedef struct s_env_export
 {
 	char	 *item;
-	struct s_env	*next;
-}			t_env;
+	struct s_env_export	*next;
+}			t_env_export;
 
 typedef struct s_hold
 {
@@ -64,7 +64,8 @@ typedef struct s_hold
 	int8_t	exit_code;
 
 
-	struct s_env	*env_list;
+	struct s_env_export	*export_list;
+	struct s_env_export	*env_list;
 
 	struct s_data	*data_struct;
 	struct s_lexing *lex_struct;
@@ -84,7 +85,7 @@ void print_args(t_hold *hold);
 //		utils.c
 void free_list_lex(t_lexing* head);
 void free_list_data(t_data* head);
-void free_list_env(t_env* head);
+void free_list_env(t_env_export* head);
 
 void exit_status(t_hold *hold, char *message, int8_t exit_code_);
 void		add_node_lex(t_hold *hold, char *content);
@@ -95,8 +96,8 @@ t_lexing	*ft_lstlast_lex(t_lexing *lst);
 void add_node_data(t_hold *hold, char **content);
 t_data	*last_node_data(t_data *lst);
 void create_env_list(t_hold *hold, char **ori_env);
-t_env *add_node_env(t_hold *hold, char *content);
-t_env *new_node_env(void);
+t_env_export *add_node_env(t_hold *hold, char *content);
+t_env_export *new_node_env(void);
 
 
 //		lexing.c

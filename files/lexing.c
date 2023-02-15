@@ -187,6 +187,11 @@ int32_t lex_word(t_hold *hold, int32_t i)
 	return (end - i - 1);
 }
 
+void create_export_list(t_hold *hold)
+{
+	
+}
+
 // devide chunks of commands etc in single linked list
 void lexer(t_hold *hold, char **env)
 {
@@ -194,6 +199,7 @@ void lexer(t_hold *hold, char **env)
 	i = 0;
 
 	create_env_list(hold, env);
+	create_export_list(hold);
 
 	check_spaces(hold);
 	closed_quotes(hold);

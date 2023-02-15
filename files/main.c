@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/15 14:23:05 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/15 15:00:49 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ bool builtin(t_hold *hold)
 {
 	if (hold->lex_struct->macro == BUILTIN)
 	{
+		// printf(MAG"BUILTIN\n"RESET);
 		if (ft_strncmp(hold->lex_struct->item, "env", 3) == 0)
 			return (env_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)
@@ -122,12 +123,16 @@ int32_t init_structs(t_hold **hold)
 	(*hold)->data_struct = (t_data*)malloc(sizeof(t_data));
 	if (!(*hold)->data_struct)
 		return (69);
-	(*hold)->env_list = (t_env*)malloc(sizeof(t_env));
+	(*hold)->env_list = (t_env_export*)malloc(sizeof(t_env_export));
 	if (!(*hold)->env_list)
+		return (69);
+	(*hold)->export_list = (t_env_export*)malloc(sizeof(t_env_export));
+	if (!(*hold)->export_list)
 		return (69);
 	(*hold)->lex_struct = NULL;
 	(*hold)->data_struct = NULL;
 	(*hold)->env_list = NULL;
+	(*hold)->export_list = NULL;
 	return (0);
 }
 
@@ -177,6 +182,7 @@ int main(int32_t argc, char **argv, char **env)
 }
 
 //!!!NEXT:
+// - create export list -> look into getenv()
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
