@@ -120,6 +120,33 @@ void sort_export_list(t_hold *hold)
 	t_env_export *tmp;
 
 	// sort list alphabetically
+	t_env_export *p1;
+	t_env_export *p2;
+tmp = NULL;
+p1 = hold->export_list;
+p2 = hold->export_list->next;
+	while (p1->next != NULL)
+	{
+		while (p2 != NULL)
+		{
+			if (ft_strncmp(p1->item, p2->item, ft_strlen(p2->item)) > 0)// means first is bigger then seccond
+			{
+				ft_strlcpy(tmp->item, p1->item, 9999);
+printf(GRN"check\n"RESET);
+exit(0);
+				ft_strlcpy(p1->item, p2->item, 9999);
+				ft_strlcpy(p2->item, tmp->item, 9999);
+				// tmp->item = p1->item;
+				// p1->item = p2->item;
+				// p2->item = tmp->item;
+				// tmp = NULL;
+				// swap
+			}
+			p2 = p2->next;
+		}
+		p1 = p1->next;
+		p2 = p1->next;
+	}
 	
 
 	tmp = hold->export_list;

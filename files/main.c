@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/15 16:23:45 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/15 18:14:13 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,7 @@ int main(int32_t argc, char **argv, char **env)
 
 	// using signal function here to catch signal if eg ctr-c is used
 	create_env_export_list(hold, env);
+	
 
 	while (1)
 	{
