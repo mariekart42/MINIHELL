@@ -26,7 +26,7 @@ void init_args(t_hold *hold)
 					break;
 				tmp_lex = tmp_lex->next;
 			}
-			add_node_data(hold, ft_split(tmp, ' '), "arg");
+			add_node_data(hold, ft_split(tmp, ' '));
 			free(tmp);
 			tmp = malloc(sizeof(char));
 			tmp = "\0";
@@ -73,8 +73,7 @@ void executer(t_hold *hold, char **env)
 	if (hold->exit_code != 0)
 		return ;
 	init_args(hold);
-	// printf("check exec\n");
-	print_data(hold, "arg");
+	print_args(hold);
 
 	// cmd index defines which iteration of args, later implement in while loop
 	int32_t cmd_index = 0;

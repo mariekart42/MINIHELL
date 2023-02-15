@@ -76,7 +76,7 @@ else
 printf("-- done --\n\n");
 }
 
-void print_data(t_hold *hold, char *type)
+void print_args(t_hold *hold)
 {
 int32_t i;
 int32_t k=0;
@@ -86,36 +86,17 @@ printf(YEL"ARGS ---------------\n"RESET);
 	{
 		i=0;
 		printf(MAG"[%d]"RESET, k);
-		if(ft_strncmp(type,"arg",3)==0)
+		while (tmp->arg_array[i] != NULL)
 		{
-			while (tmp->arg_array[i] != NULL)
-			{
-				if(i==0)
-					printf("\n");
-				printf("\t[%d]: %s\n",i,tmp->arg_array[i]);
-				i++;
-			}
+			if(i==0)
+				printf("\n");
+			printf("\t[%d]: %s\n",i,tmp->arg_array[i]);
+			i++;
 		}
-		else if(ft_strncmp(type,"env",3)==0)
-		{
-			while(tmp->env_array[i]!=NULL)
-			{
-				if(i==0)
-					printf("\n");
-				printf("\t[%d]: %s\n",i,tmp->env_array[i]);
-				i++;
-			}
-		}
-		if(ft_strncmp(type, "arg", 3)==0)
-		{
-			if (tmp->arg_array[i] == NULL)
-				printf(BLU"\t(NULL)\n"RESET);
-		}
-		else if(ft_strncmp(type, "env", 3)==0)
-		{
-			if (tmp->env_array[i] == NULL)
-				printf(BLU"\t(NULL)\n"RESET);
-		}
+
+
+		if (tmp->arg_array[i] == NULL)
+			printf(BLU"\t(NULL)\n"RESET);
 		tmp = tmp->next;
 		k++;
 	}

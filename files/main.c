@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/12 17:50:46 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/15 13:08:48 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,8 +136,7 @@ int main(int32_t argc, char **argv, char **env)
 			add_history(hold->line);
 
 		lexer(hold, env);
-		printf("exit after lexer\n");
-		exit(0);
+		
 		parser(hold);
 
 		if (hold->exit_code == 0)
@@ -152,6 +151,7 @@ int main(int32_t argc, char **argv, char **env)
 
 		free(hold->line);
 		free_list_lex(hold->lex_struct);
+		free_list_env(hold->env_list);
 		free_list_data(hold->data_struct);
 		hold->lex_struct = NULL;
 		hold->data_struct = NULL;

@@ -58,10 +58,6 @@ typedef struct s_env
 
 typedef struct s_hold
 {
-	// char *infile;
-	// char *outfile;
-
-
 	char *valid_path;
 
 	char	*line;
@@ -74,7 +70,7 @@ typedef struct s_hold
 	struct s_lexing *lex_struct;
 }				t_hold;
 
-t_env *new_node_env(char *content);
+// t_env *new_node_env(char *content);
 
 
 
@@ -82,12 +78,14 @@ t_env *new_node_env(char *content);
 char *return_macro(int32_t m);
 void print_list(t_lexing *list, char *name);
 void print_macro_list(t_lexing *list);
-void print_data(t_hold *hold, char *type);
+void print_args(t_hold *hold);
 
 
 //		utils.c
 void free_list_lex(t_lexing* head);
 void free_list_data(t_data* head);
+void free_list_env(t_env* head);
+
 void exit_status(t_hold *hold, char *message, int8_t exit_code_);
 void		add_node_lex(t_hold *hold, char *content);
 t_lexing	*last_node_lex(t_lexing *lst);
@@ -96,10 +94,9 @@ t_lexing	*ft_lstlast_lex(t_lexing *lst);
 
 void add_node_data(t_hold *hold, char **content);
 t_data	*last_node_data(t_data *lst);
-void add_node_env(t_hold *hold, char *content);
-
-t_data	*last_node_env(t_data *lst);
-
+void create_env_list(t_hold *hold, char **ori_env);
+t_env *add_node_env(t_hold *hold, char *content);
+t_env *new_node_env(void);
 
 
 //		lexing.c
@@ -113,7 +110,6 @@ int32_t	lex_redir(t_hold *hold, int32_t i);
 int32_t	lex_word(t_hold *hold, int32_t i);
 void lexer(t_hold *hold, char **env);
 
-void create_env_list(t_env *env_list, char **ori_env);
 
 //		parser.c
 bool builtin_parser(char *node);

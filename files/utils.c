@@ -24,6 +24,18 @@ void free_list_data(t_data* head)
     }
 }
 
+void free_list_env(t_env* head)
+{
+   t_env* tmp;
+
+   while (head != NULL)
+    {
+       tmp = head;
+       head = head->next;
+       free(tmp);
+    }
+}
+
 //	- - - -  for LEX struct  - - - - - - - - - - - - - - 
 /* function adds node at the end of 'lex_struct'
  * checks if list is NULL -> appends node at the beginning			*/
@@ -58,36 +70,47 @@ t_lexing	*last_node_lex(t_lexing *lst)
 	return (lst);
 }
 
-// void add_node_env(t_hold *hold, char *content)
-// {
-// 	t_data	*ptr;
+//	- - - -  for ENV struct  - - - - - - - - - - - - - - 
+t_env *new_node_env(void)
+{
+	t_env *tmp;
 
-// 	ptr = (t_data *)malloc(sizeof(ptr));
-// 	if (ptr == NULL)
-// 		return ;
-// 	ptr->env_list = content;
-// 	ptr->next = NULL;
-// 	if (hold->data_struct == NULL)
-// 		hold->data_struct = ptr;
-// 	else
-// 	{
-// 		while (hold->data_struct->next)
-// 			hold->data_struct = hold->data_struct->next;
-// 		(last_node_env(hold->data_struct))->next = ptr;
-// 	}
+	tmp = (t_env*)malloc(sizeof(t_env));
+	tmp->next = NULL;
+	return (tmp);
+}
 
-// 	// return (ptr);
-// }
+t_env *add_node_env(t_hold *hold, char *content)
+{
+	t_env *tmp;
+	t_env *p;
 
-// t_data	*last_node_env(t_env *lst)
-// {
-// 	if (!lst)
-// 		return (NULL);
-// 	while (lst->env_list->next)
-// 		lst->env_list = lst->env_list->next;
-// 	return (lst);
-// }
+	tmp = new_node_env();
+	tmp->item = content;
+	if (hold->env_list == NULL)
+		hold->env_list = tmp;
+	else
+	{
+		p = hold->env_list;
+		while(p->next != NULL)
+			p = p->next;
+		p->next = tmp;
+	}
+	return (hold->env_list);
+}
 
+void create_env_list(t_hold *hold, char **ori_env)
+{
+	int32_t env_len = 0;
+	t_env *tmp;
+
+	tmp = hold->env_list;
+	while (ori_env[env_len] != NULL)
+	{
+		hold->env_list = add_node_env(hold, ori_env[env_len]);
+		env_len++;
+	}
+}
 
 //	- - - -  for ARGS struct  - - - - - - - - - - - - - - 
 /* function adds node at the end of 'lex_struct'
