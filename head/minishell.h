@@ -75,7 +75,9 @@ typedef struct s_hold
 
 // t_env *new_node_env(char *content);
 void create_env_export_list(t_hold *hold, char **ori_env);
-
+void print_env(t_hold *hold);
+void swap_data(t_env_export **export_list);
+void sort_export_list(t_env_export **export_list);
 
 
 //		delete_later.c
@@ -101,7 +103,7 @@ t_data	*last_node_data(t_data *lst);
 t_env_export *add_node_env(t_hold *hold, char *content, char *type);
 t_env_export *new_node_env(void);
 
-void sort_export_list(t_hold *hold);
+// void sort_export_list(t_hold *hold);
 void swap_nodes(t_hold **hold, char *x_, char *y_);
 
 

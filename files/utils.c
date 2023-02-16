@@ -200,109 +200,118 @@ void swap_nodes(t_hold **hold, char *x_, char *y_)
 
 }
 
-// void sort_export_list(t_hold *hold)
-// {
-// 	t_env_export *tmp;
-
-// 	// sort list alphabetically
-// 	t_env_export *p1;
-// 	t_env_export *p2;
-
-
-
-// tmp = hold->export_list;
-// p1 = hold->export_list;
-// p2 = hold->export_list->next;
-// 	while (p1->next != NULL)
-// 	{
-// 		while (p2->next != NULL)
-// 		{
-// 			if (ft_strncmp(p1->item, p2->item, ft_strlen(p2->item)) > 0)// means first is bigger then seccond
-// 			{
-// 				swap_nodes(&hold, p1->item, p2->item);
-// 			}
-// 			p2 = p2->next;
-// 		}
-// 		p1 = p1->next;
-// 		p2 = p1->next;
-// 	}
-	
-// printf(GRN"check\n"RESET);
-
-
-// 	tmp = hold->export_list;
-
-// 	// adding 'declare -x' infront of everything
-// 	while (tmp != NULL)
-// 	{
-// 		tmp->item = ft_strjoin("declare -x ", tmp->item);
-// 		tmp = tmp->next;
-// 	}
-
-// t_env_export *print = hold->export_list;
-// 	printf("print in sort func\n");
-// 	while (print != NULL)
-// 	{
-// 		printf(CYN"%s\n"RESET, print->item);
-// 		print = print->next;
-// 	}
-// }
-
-void sort_export_list(t_hold *hold)
+void print_env(t_hold *hold)
 {
-	// init var name and value in struct
-	t_env_export *tmp;
-
-	tmp = hold->export_list;
+	t_env_export *tmp = hold->export_list;
 	while (tmp != NULL)
 	{
-		tmp->var_name = *(ft_split(tmp->item, '='));
-		tmp->var_value = *(ft_split(tmp->item, '=') + 1);
+		printf(RED"%s\n"RESET, tmp->item);
 		tmp = tmp->next;
 	}
+}
+
+// void sort_export_list(t_hold *hold)
+// {
+// 	// init var name and value in struct
+// 	t_env_export *tmp;
+
+// 	tmp = hold->export_list;
+// 	while (tmp != NULL)
+// 	{
+// 		tmp->var_name = *(ft_split(tmp->item, '='));
+// 		tmp->var_value = *(ft_split(tmp->item, '=') + 1);
+// 		tmp = tmp->next;
+// 	}
 	
-	t_env_export *x;
-	t_env_export *y;
+// 	t_env_export *x;
+// 	t_env_export *y;
 
-	x = hold->export_list;
-	y = hold->export_list->next;
-	while (x->next != NULL)
+// 	x = hold->export_list;
+// 	y = hold->export_list->next;
+// 	while (x->next != NULL)
+// 	{
+// 		while (y->next != NULL)
+// 		{
+// 			if (ft_strncmp(x->var_name, y->var_name, ft_strlen(y->var_name)) == -1)		// means y is smoler
+// 			{
+// 				// printf(GRN"before: \n");
+// 				// print_env(hold);
+// 				swap_nodes(&hold, x->var_name, y->var_name);
+// 				// printf(RED"after: \n\n");
+// 				// print_env(hold);
+// 				// printf(MAG"after: %s  >  %s\n"RESET, x->var_name, y->var_name);
+// 			}
+// 			y = y->next;
+// 		}
+// 		x = x->next;
+// 		y = x->next;
+// 	}
+
+// 		tmp = hold->export_list;
+
+// 		// adding 'declare -x' infront of everything
+// 		while (tmp != NULL)
+// 		{
+// 			tmp->item = ft_strjoin("declare -x ", tmp->item);
+// 			tmp = tmp->next;
+// 		}
+
+// 	t_env_export *print = hold->export_list;
+// 		printf("print in sort func\n");
+// 		while (print != NULL)
+// 		{
+// 			printf(CYN"%s\n"RESET, print->item);
+// 			print = print->next;
+// 		}
+// }
+
+void swap_data(t_env_export **export_list)
+{
+	// t_env_export *tmp = (*hold)->export_list;
+	char	*tmp_item;
+	char	*tmp_val;
+
+	tmp_item = ft_strdup((*export_list)->item);
+	tmp_val = ft_strdup((*export_list)->var_name);
+	free((*export_list)->item);
+	free((*export_list)->var_name);
+	(*export_list)->item = ft_strdup((*export_list)->next->item);
+	(*export_list)->var_name = ft_strdup((*export_list)->next->var_name);
+	free((*export_list)->next->item);
+	free((*export_list)->next->var_name);
+	(*export_list)->next->item = ft_strdup(tmp_item);
+	(*export_list)->next->var_name = ft_strdup(tmp_val);
+	free(tmp_item);
+	free(tmp_val);
+}
+
+void sort_export_list(t_env_export **export_list)
+{
+	t_env_export	*tmp;
+	tmp = *export_list;
+	while ((*export_list) != NULL && (*export_list)->next != NULL)
 	{
-		while (y != NULL)
+printf(MAG"nefore check\n"RESET);
+printf("var_name: %s\t\tnext var name: %s\n",(*export_list)->var_name, (*export_list)->next->var_name );
+printf(MAG"after check\n"RESET);
+		if (ft_strncmp((*export_list)->var_name, (*export_list)->next->var_name, 9) > 0)
 		{
-			if (ft_strncmp(x->var_name, y->var_name, 999) == 1)		// means y is smoler
-			{
-				printf(GRN"befor: %s  >  %s\n"RESET, x->var_name, y->var_name);
-				swap_nodes(&hold, x->var_name, y->var_name);
-				printf(MAG"after: %s  >  %s\n"RESET, x->var_name, y->var_name);
-			}
-			y = y->next;
+			swap_data((export_list));
+			(*export_list) = tmp;
 		}
-		x = x->next;
-		y = x->next;
+		else
+		{
+printf("else statement\n");
+			(*export_list) = (*export_list)->next;
+		}
 	}
-
-		tmp = hold->export_list;
-
-		// adding 'declare -x' infront of everything
-		while (tmp != NULL)
-		{
-			tmp->item = ft_strjoin("declare -x ", tmp->item);
-			tmp = tmp->next;
-		}
-
-	t_env_export *print = hold->export_list;
-		printf("print in sort func\n");
-		while (print != NULL)
-		{
-			printf(CYN"%s\n"RESET, print->item);
-			print = print->next;
-		}
+	(*export_list) = tmp;
 }
 
 void create_env_export_list(t_hold *hold, char **ori_env)
 {
 	int32_t env_len = 0;
+	t_env_export *head = hold->export_list;
 	t_env_export *tmp_env;
 	t_env_export *tmp_export;
 
@@ -310,19 +319,18 @@ void create_env_export_list(t_hold *hold, char **ori_env)
 	tmp_export = hold->export_list;
 	while (ori_env[env_len] != NULL)
 	{
-		hold->env_list = add_node_env(hold, ori_env[env_len], "env");
-		hold->export_list = add_node_env(hold, ori_env[env_len], "export");
+		// hold->env_list = add_node_env(hold, ori_env[env_len], "env");
+		// hold->export_list = add_node_env(hold, ori_env[env_len], "export");
+		tmp_env = add_node_env(hold, ori_env[env_len], "env");
+		tmp_export = add_node_env(hold, ori_env[env_len], "export");
 		env_len++;
 	}
-	sort_export_list(hold);
-
-		// t_env_export *print = hold->export_list;
-		// printf("print without sort func\n");
-		// while (print != NULL)
-		// {
-		// 	printf(CYN"%s\n"RESET, print->item);
-		// 	print = print->next;
-		// }
+	print_env(hold);
+	printf("before\n");
+	hold->export_list = head;
+	sort_export_list(&(hold->export_list));
+	printf(GRN"after yeee\n"RESET);
+	print_env(hold);
 }
 
 //	- - - -  for ARGS struct  - - - - - - - - - - - - - - 
