@@ -102,3 +102,12 @@ printf(YEL"ARGS ---------------\n"RESET);
 	}
 printf(YEL"---------------------\n"RESET);
 }
+void print_export(t_hold *hold)
+{
+	t_env_export *tmp = hold->export_list;
+	while (tmp != NULL)
+	{
+		printf(RED"%s\n"RESET, tmp->item);
+		tmp = tmp->next;
+	}
+}

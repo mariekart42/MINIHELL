@@ -12,6 +12,8 @@ LIBFT= include/libft/libft.a
 
 FILES=	files/main.c \
 		files/utils.c \
+		files/builtins/export.c \
+		files/builtins/builtins.c \
 		files/lexing.c \
 		files/parser.c \
 		files/executer.c \
