@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/16 18:33:42 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/16 18:54:12 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int main(int32_t argc, char **argv, char **env)
 }
 
 //!!!NEXT:
-// - export list: order alpahteically + add var_name to struct
+// - export: update path (as well for env)
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

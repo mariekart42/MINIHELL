@@ -55,20 +55,3 @@ void sort_export_list(t_hold *hold)
 	}
 	hold->export_list = tmp;
 }
-
-void create_env_export_list(t_hold *hold, char **ori_env)
-{
-	int32_t env_len = 0;
-	t_env_export *tmp_env;
-	t_env_export *tmp_export;
-
-	tmp_env = hold->env_list;
-	tmp_export = hold->export_list;
-	while (ori_env[env_len] != NULL)
-	{
-		tmp_env = add_node_env(hold, ori_env[env_len], "env");
-		tmp_export = add_node_env(hold, ori_env[env_len], "export");
-		env_len++;
-	}
-	sort_export_list(hold);
-}
