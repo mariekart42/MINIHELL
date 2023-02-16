@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/16 18:54:12 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/16 18:58:14 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ int main(int32_t argc, char **argv, char **env)
 			
 			parser(hold);
 
-			if (hold->exit_code == 0)
-				print_macro_list(hold->lex_struct);
+			// if (hold->exit_code == 0)
+			// 	print_macro_list(hold->lex_struct);
 
 			if (builtin(hold) == false)
 			{
@@ -106,6 +106,7 @@ int main(int32_t argc, char **argv, char **env)
 
 //!!!NEXT:
 // - export: update path (as well for env)
+// - print out export correctly and seperate creating in the beginning and as always caller 
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

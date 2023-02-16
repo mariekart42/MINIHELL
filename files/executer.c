@@ -65,7 +65,7 @@ void get_path(t_hold *hold, char **env, int32_t cmd_index)
 		// exit_status(hold, ":"RED" COMMAND NOT FOUND\n"RESET, 127);
 		return ;
 	}
-	printf("path: "GRN"%s\n"RESET, hold->valid_path);
+	// printf("path: "GRN"%s\n"RESET, hold->valid_path);
 }
 
 void executer(t_hold *hold, char **env)
@@ -73,7 +73,7 @@ void executer(t_hold *hold, char **env)
 	if (hold->exit_code != 0)
 		return ;
 	init_args(hold);
-	print_args(hold);
+	// print_args(hold);
 
 	// cmd index defines which iteration of args, later implement in while loop
 	int32_t cmd_index = 0;
