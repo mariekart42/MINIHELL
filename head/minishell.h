@@ -53,6 +53,8 @@ typedef struct s_data
 typedef struct s_env_export
 {
 	char	 *item;
+	char	*var_name;
+	char	*var_value;
 	struct s_env_export	*next;
 }			t_env_export;
 
@@ -100,7 +102,7 @@ t_env_export *add_node_env(t_hold *hold, char *content, char *type);
 t_env_export *new_node_env(void);
 
 void sort_export_list(t_hold *hold);
-void swap_nodes(t_hold **hold, char *p1, char *p2);
+void swap_nodes(t_hold **hold, char *x_, char *y_);
 
 
 //		lexing.c

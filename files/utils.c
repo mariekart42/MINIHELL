@@ -115,97 +115,189 @@ t_env_export *add_node_env(t_hold *hold, char *content, char *type)
 	}
 }
 
-void swap_nodes(t_hold **hold, char *p1, char *p2)
+// void swap_nodes(t_hold **hold, t_env_export *x_, t_env_export *y_)
+// {
+
+ 
+//     // Search for x (keep track of prevX and currX)
+//     t_env_export* prev_p1 = NULL;
+//     t_env_export* curr_p1 = (*hold)->export_list;
+
+//     while (curr_p1 != NULL && ft_strncmp(curr_p1->item, x_, 999) != 0) {
+//         prev_p1 = curr_p1;
+//         curr_p1 = curr_p1->next;
+//     }
+ 
+//     // Search for y (keep track of prevY and currY)
+//     t_env_export* prev_p2 = NULL;
+//     t_env_export* curr_p2 =(*hold)->export_list;
+//     while (curr_p2 != NULL && ft_strncmp(curr_p2->item, i, 999) != 0) {
+//         prev_p2 = curr_p2;
+//         curr_p2 = curr_p2->next;
+//     }
+ 
+//     // If either x or y is not present, nothing to do
+//     if (curr_p1 == NULL || curr_p2 == NULL)
+//         return;
+ 
+//     // If x is not the head of the linked list
+//     if (prev_p1 != NULL)
+//         prev_p1->next = curr_p2;
+//     else // Else make y the new head
+//         (*hold)->export_list = curr_p2;
+ 
+//     // If y is not the head of the linked list
+//     if (prev_p2 != NULL)
+//         prev_p2->next = curr_p1;
+//     else // Else make x the new head
+//         (*hold)->export_list = curr_p1;
+ 
+//     // Swap next pointers
+//     t_env_export* tmp = curr_p2->next;
+//     curr_p2->next = curr_p1->next;
+//     curr_p1->next = tmp;
+// //----------------------------------------------------
+// }
+
+void swap_nodes(t_hold **hold, char *x_, char *y_)
 {
-	//----------------------------------------------------
-	// sort list alphabetically
+	t_env_export *prev_x = NULL;
+	t_env_export *curr_x = (*hold)->export_list;
+	t_env_export *prev_y = NULL;
+	t_env_export *curr_y = (*hold)->export_list;
+	// t_env_export *tmp = (*hold)->exportcurr__list;
+
+	// search position for x
+	while (curr_x != NULL && ft_strncmp(curr_x->var_name, x_, 999) != 0)
+	{
+		prev_x = curr_x;
+		curr_x = curr_x->next;
+	}
+	// search position for y
+	while (curr_y != NULL && ft_strncmp(curr_y->var_name, y_, 999) != 0)
+	{
+		prev_y = curr_y;
+		curr_y = curr_y->next;
+	}
 
 
- 
-    // Search for x (keep track of prevX and currX)
-    t_env_export* prev_p1 = NULL;
-    t_env_export* curr_p1 = (*hold)->export_list;
-
-    while (curr_p1 != NULL && ft_strncmp(curr_p1->item, p1, 9999) != 0) {
-        prev_p1 = curr_p1;
-        curr_p1 = curr_p1->next;
-    }
- 
-    // Search for y (keep track of prevY and currY)
-    t_env_export* prev_p2 = NULL;
-    t_env_export* curr_p2 =(*hold)->export_list;
-    while (curr_p2 != NULL && ft_strncmp(curr_p2->item, p2, 9999) != 0) {
-        prev_p2 = curr_p2;
-        curr_p2 = curr_p2->next;
-    }
- 
-    // If either x or y is not present, nothing to do
-    if (curr_p1 == NULL || curr_p2 == NULL)
-        return;
- 
-    // If x is not the head of the linked list
-    if (prev_p1 != NULL)
-        prev_p1->next = curr_p2;
+//   If x is not the head of the linked list
+    if (prev_x != NULL)
+        prev_x->next = curr_y;
     else // Else make y the new head
-        (*hold)->export_list = curr_p2;
+        (*hold)->export_list = curr_y;
  
     // If y is not the head of the linked list
-    if (prev_p2 != NULL)
-        prev_p2->next = curr_p1;
+    if (prev_y != NULL)
+        prev_y->next = curr_x;
     else // Else make x the new head
-        (*hold)->export_list = curr_p1;
+        (*hold)->export_list = curr_x;
  
     // Swap next pointers
-    t_env_export* tmp = curr_p2->next;
-    curr_p2->next = curr_p1->next;
-    curr_p1->next = tmp;
-//----------------------------------------------------
+    t_env_export* tmp = curr_y->next;
+    curr_y->next = curr_x->next;
+    curr_x->next = tmp;
+
 }
+
+// void sort_export_list(t_hold *hold)
+// {
+// 	t_env_export *tmp;
+
+// 	// sort list alphabetically
+// 	t_env_export *p1;
+// 	t_env_export *p2;
+
+
+
+// tmp = hold->export_list;
+// p1 = hold->export_list;
+// p2 = hold->export_list->next;
+// 	while (p1->next != NULL)
+// 	{
+// 		while (p2->next != NULL)
+// 		{
+// 			if (ft_strncmp(p1->item, p2->item, ft_strlen(p2->item)) > 0)// means first is bigger then seccond
+// 			{
+// 				swap_nodes(&hold, p1->item, p2->item);
+// 			}
+// 			p2 = p2->next;
+// 		}
+// 		p1 = p1->next;
+// 		p2 = p1->next;
+// 	}
+	
+// printf(GRN"check\n"RESET);
+
+
+// 	tmp = hold->export_list;
+
+// 	// adding 'declare -x' infront of everything
+// 	while (tmp != NULL)
+// 	{
+// 		tmp->item = ft_strjoin("declare -x ", tmp->item);
+// 		tmp = tmp->next;
+// 	}
+
+// t_env_export *print = hold->export_list;
+// 	printf("print in sort func\n");
+// 	while (print != NULL)
+// 	{
+// 		printf(CYN"%s\n"RESET, print->item);
+// 		print = print->next;
+// 	}
+// }
 
 void sort_export_list(t_hold *hold)
 {
+	// init var name and value in struct
 	t_env_export *tmp;
 
-	// sort list alphabetically
-	t_env_export *p1;
-	t_env_export *p2;
-// tmp = malloc(sizeof(char));
-tmp = hold->export_list;
-p1 = hold->export_list;
-p2 = hold->export_list->next;
-	while (p1->next != NULL)
-	{
-		while (p2->next != NULL)
-		{
-			if (ft_strncmp(p1->item, p2->item, ft_strlen(p2->item)) > 0)// means first is bigger then seccond
-			{
-				swap_nodes(&hold, p1->item, p2->item);
-				// ft_strlcpy(tmp->item, p1->item, 9999);
-// exit(0);
-				// ft_strlcpy(p1->item, p2->item, 9999);
-				// ft_strlcpy(p2->item, tmp->item, 9999);
-				// tmp->item = p1->item;
-				// p1->item = p2->item;
-				// p2->item = tmp->item;
-				// tmp = NULL;
-				// swap
-			}
-			p2 = p2->next;
-		}
-		p1 = hold->export_list;
-		p2 = p1->next;
-	}
-	
-printf(GRN"check\n"RESET);
-
 	tmp = hold->export_list;
-
-	// adding 'declare -x' infront of everything
 	while (tmp != NULL)
 	{
-		tmp->item = ft_strjoin("declare -x ", tmp->item);
+		tmp->var_name = *(ft_split(tmp->item, '='));
+		tmp->var_value = *(ft_split(tmp->item, '=') + 1);
 		tmp = tmp->next;
 	}
+	
+	t_env_export *x;
+	t_env_export *y;
+
+	x = hold->export_list;
+	y = hold->export_list->next;
+	while (x->next != NULL)
+	{
+		while (y != NULL)
+		{
+			if (ft_strncmp(x->var_name, y->var_name, 999) == 1)		// means y is smoler
+			{
+				printf(GRN"befor: %s  >  %s\n"RESET, x->var_name, y->var_name);
+				swap_nodes(&hold, x->var_name, y->var_name);
+				printf(MAG"after: %s  >  %s\n"RESET, x->var_name, y->var_name);
+			}
+			y = y->next;
+		}
+		x = x->next;
+		y = x->next;
+	}
+
+		tmp = hold->export_list;
+
+		// adding 'declare -x' infront of everything
+		while (tmp != NULL)
+		{
+			tmp->item = ft_strjoin("declare -x ", tmp->item);
+			tmp = tmp->next;
+		}
+
+	t_env_export *print = hold->export_list;
+		printf("print in sort func\n");
+		while (print != NULL)
+		{
+			printf(CYN"%s\n"RESET, print->item);
+			print = print->next;
+		}
 }
 
 void create_env_export_list(t_hold *hold, char **ori_env)
@@ -223,6 +315,14 @@ void create_env_export_list(t_hold *hold, char **ori_env)
 		env_len++;
 	}
 	sort_export_list(hold);
+
+		// t_env_export *print = hold->export_list;
+		// printf("print without sort func\n");
+		// while (print != NULL)
+		// {
+		// 	printf(CYN"%s\n"RESET, print->item);
+		// 	print = print->next;
+		// }
 }
 
 //	- - - -  for ARGS struct  - - - - - - - - - - - - - - 
