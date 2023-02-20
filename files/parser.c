@@ -99,33 +99,35 @@ void create_parsed_list(t_hold *hold)
 			tmp_p = add_node_pars(hold);
 		else
 			(last_node_pars(tmp_p))->next = add_node_pars(hold);
-		if (tmp_l->macro == PIPE)
+		if (tmp_l->macro != PIPE)
 		{
-			tmp_p = tmp_p->next;
-			tmp_l = tmp_l->next;
-		}
-		else if (tmp_l->macro == SING_CLOSE_REDIR || tmp_l->macro == DOUBL_CLOSE_REDIR)
-		{
-			//redirect outfile
-			tmp_p->outfile = check_outfile(hold, tmp_l->next->item, tmp_l->macro);
-			tmp_l = tmp_l->next;
-			tmp_l = tmp_l->next;
-		}
-		else if (tmp_l->macro == DOUBL_OPEN_REDIR)	// herdoc function <<
-		{
-			printf(MAG"DOUBL_CLOSE_REDIR -> add later\n"RESET);
-			tmp_l = tmp_l->next;
-		}
-		else if (tmp_l->macro == SING_OPEN_REDIR) // add later
-		{
-			printf(MAG"SING_CLOSE_REDIR -> add later\n"RESET);
-			tmp_l = tmp_l->next;
+			if (tmp_l->macro == BUILTIN)
+			{
+				printf("HANDLE BUILTIN IN PARSER! -> add later\n");
+			}
+			else if (tmp_l->macro == SING_CLOSE_REDIR || tmp_l->macro == DOUBL_CLOSE_REDIR)
+			{
+				//redirect outfile
+				tmp_p->outfile = check_outfile(hold, tmp_l->next->item, tmp_l->macro);
+				tmp_l = tmp_l->next;
+			}
+			else if (tmp_l->macro == DOUBL_OPEN_REDIR)	// herdoc function <<
+			{
+				printf(MAG"DOUBL_CLOSE_REDIR -> add later\n"RESET);
+			}
+			else if (tmp_l->macro == SING_OPEN_REDIR) // add later
+			{
+				printf(MAG"SING_CLOSE_REDIR -> add later\n"RESET);
+			}
+			else
+			{
+				printf(MAG"command: %s\n"RESET, tmp_l->item);
+
+			}
+				tmp_l = tmp_l->next;
 		}
 		else
-		{
-			printf(MAG"should be a command: %s\n"RESET, tmp_l->item);
-			tmp_l = tmp_l->next;
-		}
+			tmp_p = tmp_p->next;
 	}
 	printf("pars done: EXIT\n\n");
 	// exit(0);

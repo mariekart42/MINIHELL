@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/20 17:18:44 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/20 17:33:33 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ printf("after executer\n");
 }
 
 //!!!NEXT:
-// - open file doesnt work in parser->check_outfile
+// - redirection in parser also for files in single or double quotes
 //( - export: update path (as well for env))
 //( - print out export correctly and seperate creating in the beginning and as always caller)
 
