@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/20 11:33:50 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/20 13:51:34 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,9 @@ int main(int32_t argc, char **argv, char **env)
 }
 
 //!!!NEXT:
-// - export: update path (as well for env)
-// - print out export correctly and seperate creating in the beginning and as always caller 
+// - open file doesnt work in parser->check_outfile
+//( - export: update path (as well for env))
+//( - print out export correctly and seperate creating in the beginning and as always caller)
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

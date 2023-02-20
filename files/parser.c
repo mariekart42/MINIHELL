@@ -61,18 +61,20 @@ void recognize_type(t_hold *hold)
 int32_t check_outfile(t_hold *hold, char *file_name, int32_t type)
 {
 	int32_t file_id;
-
+printf("file_name: %s\n", file_name);
 	// get rid of double or single quotes
 	if (type == SING_QUOTE || type == DOUBL_QUOTE)
 		file_name = ft_substr(file_name, 1, ft_strlen(file_name)-2); // should substract quote at the beginning and at the end
 
 	if (type == SING_CLOSE_REDIR)
 	{
-		file_id = open(file_name, O_CREAT | O_TRUNC);
+		printf("single\n");
+		file_id = open(file_name, O_CREAT | O_WRONLY | O_TRUNC , 0644);
 	}
 	else
 	{
-		file_id = open(file_name, O_CREAT);
+		printf("double\n");
+		file_id = open(file_name, O_CREAT, 0644);
 	}
 		if (file_id < 0)
 			exit_status(hold, "Error!: unable to open outfile (in check_outfile func)\n", 69);
@@ -92,18 +94,36 @@ void create_parsed_list(t_hold *hold)
 	while (tmp_l != NULL)
 	{
 		add_node_pars(hold);
-		while (tmp_l->macro != PIPE)
+		if (tmp_l->macro == PIPE)
 		{
-			if (tmp_l->macro == SING_CLOSE_REDIR || tmp_l->macro == DOUBL_CLOSE_REDIR)
-			{
-				//redirect outfile
-				tmp_p->outfile = check_outfile(hold, tmp_l->next->item, tmp_l->macro);
-				tmp_l = tmp_l->next;
-			}
+			tmp_p = tmp_p->next;
 			tmp_l = tmp_l->next;
 		}
-		// else
+		else if (tmp_l->macro == SING_CLOSE_REDIR || tmp_l->macro == DOUBL_CLOSE_REDIR)
+		{
+			//redirect outfile
+			tmp_p->outfile = check_outfile(hold, tmp_l->next->item, tmp_l->macro);
+			tmp_l = tmp_l->next;
+			// tmp_l = tmp_l->next;
+		}
+		else if (tmp_l->macro == DOUBL_OPEN_REDIR)	// herdoc function <<
+		{
+			printf(MAG"DOUBL_CLOSE_REDIR -> add later\n"RESET);
+			tmp_l = tmp_l->next;
+		}
+		else if (tmp_l->macro == SING_OPEN_REDIR) // add later
+		{
+			printf(MAG"SING_CLOSE_REDIR -> add later\n"RESET);
+			tmp_l = tmp_l->next;
+		}
+		else
+		{
+			printf(MAG"should be a command\n"RESET);
+			tmp_l = tmp_l->next;
+		}
 	}
+	printf("pars done: EXIT\n\n");
+	exit(0);
 }
 
 void parser(t_hold *hold)

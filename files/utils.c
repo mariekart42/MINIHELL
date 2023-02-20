@@ -184,12 +184,12 @@ void add_node_pars(t_hold *hold)
 	tmp->args = NULL;
 	tmp->cmd_path = NULL;
 	tmp->next = NULL;
-	tmp->infile = stdin;
-	tmp->outfile = stdout;
+	tmp->infile = STDIN_FILENO;
+	tmp->outfile = STDOUT_FILENO;
 	if (hold->parsed_list == NULL)
 		hold->parsed_list = tmp;
 	else
-		(last_node_data(hold->parsed_list))->next = tmp;
+		(last_node_pars(hold->parsed_list))->next = tmp;
 }
 t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst)
 {
