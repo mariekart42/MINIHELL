@@ -55,10 +55,63 @@ void recognize_type(t_hold *hold)
 	}
 }
 
+/* function checks and returns outfile 
+ * opens/creates file if it not exists
+ * check later for permission issues if the file already exists(how lol?) */
+int32_t check_outfile(t_hold *hold, char *file_name, int32_t type)
+{
+	int32_t file_id;
+
+	// get rid of double or single quotes
+	if (type == SING_QUOTE || type == DOUBL_QUOTE)
+		file_name = ft_substr(file_name, 1, ft_strlen(file_name)-2); // should substract quote at the beginning and at the end
+
+	if (type == SING_CLOSE_REDIR)
+	{
+		file_id = open(file_name, O_CREAT | O_TRUNC);
+	}
+	else
+	{
+		file_id = open(file_name, O_CREAT);
+	}
+		if (file_id < 0)
+			exit_status(hold, "Error!: unable to open outfile (in check_outfile func)\n", 69);
+		return (file_id);
+	
+}
+
+/* function creates 'parsed list' with the content of struct 'parsed_chunk'
+ * the content of one chunk is always a pipegroup, with in/outfile, arguments and commandpath */
+void create_parsed_list(t_hold *hold)
+{
+	t_lexing *tmp_l;
+	t_parsed_chunk *tmp_p;
+
+	tmp_l = hold->lex_struct;
+	tmp_p = hold->parsed_list;
+	while (tmp_l != NULL)
+	{
+		add_node_pars(hold);
+		while (tmp_l->macro != PIPE)
+		{
+			if (tmp_l->macro == SING_CLOSE_REDIR || tmp_l->macro == DOUBL_CLOSE_REDIR)
+			{
+				//redirect outfile
+				tmp_p->outfile = check_outfile(hold, tmp_l->next->item, tmp_l->macro);
+				tmp_l = tmp_l->next;
+			}
+			tmp_l = tmp_l->next;
+		}
+		// else
+	}
+}
+
 void parser(t_hold *hold)
 {
     if (hold->exit_code != 0)
         return ;
 	recognize_type(hold);
+
+	create_parsed_list(hold);
 
 }

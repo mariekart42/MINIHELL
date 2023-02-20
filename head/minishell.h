@@ -8,6 +8,7 @@
 #include <sys/stat.h> // for stat function
 #include <signal.h> // function for signal funcs
 # include <stdbool.h>	// bool
+#include <fcntl.h> // open function
 
 #include "../include/libft/libft.h"
 
@@ -58,6 +59,18 @@ typedef struct s_env_export
 	struct s_env_export	*next;
 }			t_env_export;
 
+
+// maybe include variable with macros later here
+typedef struct s_parsed_chunk
+{
+	char	**args;
+	char	*cmd_path;
+	int32_t	infile;
+	int32_t	outfile;
+
+	struct s_parsed_chunk	*next;
+}			t_parsed_chunk;
+
 typedef struct s_hold
 {
 	char *valid_path;
@@ -68,6 +81,8 @@ typedef struct s_hold
 
 	struct s_env_export	*export_list;
 	struct s_env_export	*env_list;
+
+	struct s_parsed_chunk	*parsed_list;
 
 	struct s_data	*data_struct;
 	struct s_lexing *lex_struct;
@@ -99,6 +114,9 @@ void		add_node_lex(t_hold *hold, char *content);
 t_lexing	*last_node_lex(t_lexing *lst);
 t_lexing	*ft_lstnew_lex(void *content);
 t_lexing	*ft_lstlast_lex(t_lexing *lst);
+
+void add_node_pars(t_hold *hold);
+t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst);
 
 void add_node_data(t_hold *hold, char **content);
 t_data	*last_node_data(t_data *lst);

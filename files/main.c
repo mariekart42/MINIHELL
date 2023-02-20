@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/16 18:58:14 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/20 11:33:50 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,14 @@ int32_t init_structs(t_hold **hold)
 	(*hold)->export_list = (t_env_export*)malloc(sizeof(t_env_export));
 	if (!(*hold)->export_list)
 		return (69);
+	(*hold)->parsed_list = (t_parsed_chunk*)malloc(sizeof(t_parsed_chunk));
+	if (!(*hold)->parsed_list)
+		return (69);
 	(*hold)->lex_struct = NULL;
 	(*hold)->data_struct = NULL;
 	(*hold)->env_list = NULL;
 	(*hold)->export_list = NULL;
+	(*hold)->parsed_list = NULL;
 	return (0);
 }
 
@@ -70,6 +74,9 @@ int main(int32_t argc, char **argv, char **env)
 	// using signal function here to catch signal if eg ctr-c is used
 	create_env_export_list(hold, env);
 
+			char *test;
+			test = getenv("PATH");
+			printf("getenv: %s\n", test);
 	while (1)
 	{
 		hold->exit_code = 0;
@@ -81,6 +88,7 @@ int main(int32_t argc, char **argv, char **env)
 		if (ft_strlen(hold->line) > 0)
 		{
 			add_history(hold->line);
+
 
 			lexer(hold);
 			
@@ -126,7 +134,7 @@ int main(int32_t argc, char **argv, char **env)
 
 //!  EXECUTER:
 // - later: put builtin stuff into executer (not as bool in main!)
-
+// - use getenv in get_path function
 // - builtins:
 //		- env √
 //		- export

@@ -1,0 +1,17 @@
+total 168
+-rw-r--r--   1 mmensing  2022_wolfsburg    691 Feb 16 18:37 Makefile
+-rw-r--r--   1 mmensing  2022_wolfsburg   1016 Feb 20 12:43 cat
+-rw-r--r--   1 mmensing  2022_wolfsburg      0 Feb 15 11:51 confused.txt
+drwxr-xr-x  15 mmensing  2022_wolfsburg    510 Feb 20 11:16 files
+drwxr-xr-x   9 mmensing  2022_wolfsburg    306 Feb 15 11:51 first_trys
+-rw-r--r--   1 mmensing  2022_wolfsburg    303 Feb 15 11:51 general_info.r
+drwxr-xr-x   3 mmensing  2022_wolfsburg    102 Feb 15 11:51 head
+-rw-r--r--   1 mmensing  2022_wolfsburg      0 Feb 15 11:51 hier
+-rw-r--r--   1 mmensing  2022_wolfsburg      0 Feb 15 11:51 hola
+drwxr-xr-x   3 mmensing  2022_wolfsburg    102 Feb 15 11:51 include
+-rw-r--r--   1 mmensing  2022_wolfsburg     90 Feb 15 11:51 lala
+-rw-r--r--   1 mmensing  2022_wolfsburg     99 Feb 20 12:43 ls
+-rwxr-xr-x   1 mmensing  2022_wolfsburg  57184 Feb 20 11:16 minishell
+-rw-r--r--   1 mmensing  2022_wolfsburg     99 Feb 20 12:42 new
+-rw-r--r--   1 mmensing  2022_wolfsburg      0 Feb 20 12:44 pwd
+-rw-r--r--   1 mmensing  2022_wolfsburg    952 Feb 20 12:43 ys
