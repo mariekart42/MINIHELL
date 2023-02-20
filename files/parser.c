@@ -76,9 +76,11 @@ printf("file_name: %s\n", file_name);
 		printf("double\n");
 		file_id = open(file_name, O_CREAT, 0644);
 	}
-		if (file_id < 0)
-			exit_status(hold, "Error!: unable to open outfile (in check_outfile func)\n", 69);
-		return (file_id);
+
+	if (file_id < 0)
+		exit_status(hold, "Error!: unable to open outfile (in check_outfile func)\n", 69);
+	printf("1 check\n");
+	return (file_id);
 	
 }
 
@@ -88,12 +90,16 @@ void create_parsed_list(t_hold *hold)
 {
 	t_lexing *tmp_l;
 	t_parsed_chunk *tmp_p;
+	// t_parsed_chunk *pars = hold->parsed_list; 
 
 	tmp_l = hold->lex_struct;
 	tmp_p = hold->parsed_list;
 	while (tmp_l != NULL)
 	{
-		add_node_pars(hold);
+		if (tmp_p == NULL)
+			tmp_p = add_node_pars(hold);
+		else
+			(last_node_pars(tmp_p))->next = add_node_pars(hold);
 		if (tmp_l->macro == PIPE)
 		{
 			tmp_p = tmp_p->next;
@@ -102,7 +108,8 @@ void create_parsed_list(t_hold *hold)
 		else if (tmp_l->macro == SING_CLOSE_REDIR || tmp_l->macro == DOUBL_CLOSE_REDIR)
 		{
 			//redirect outfile
-			tmp_p->outfile = check_outfile(hold, tmp_l->next->item, tmp_l->macro);
+			int32_t test = check_outfile(hold, tmp_l->next->item, tmp_l->macro);
+			tmp_p->outfile = test;
 			tmp_l = tmp_l->next;
 			// tmp_l = tmp_l->next;
 		}

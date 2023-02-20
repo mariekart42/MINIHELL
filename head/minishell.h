@@ -88,13 +88,23 @@ typedef struct s_hold
 	struct s_lexing *lex_struct;
 }				t_hold;
 
-// t_env *new_node_env(char *content);
-void create_env_export_list(t_hold *hold, char **ori_env);
-void print_export(t_hold *hold);
+//		main.c
+void free_content(t_hold *hold);
+int32_t init_structs(t_hold **hold);
+void free_env_export(t_hold *hold);
+
+
+//		builtins/builtins.c
+void env_builtin(t_hold *hold);
+void pwd_builtin(t_hold *hold);
+void cd_builtin(t_hold *hold);
+bool builtin(t_hold *hold);
+
+
+//		builtins/export.c
+void export_builtin(t_hold *hold);
 void swap_data(t_env_export *export_list);
 void sort_export_list(t_hold *hold);
-bool builtin(t_hold *hold);
-void export_builtin(t_hold *hold);
 
 
 //		delete_later.c
@@ -102,29 +112,27 @@ char *return_macro(int32_t m);
 void print_list(t_lexing *list, char *name);
 void print_macro_list(t_lexing *list);
 void print_args(t_hold *hold);
+void print_export(t_hold *hold);
 
 
 //		utils.c
 void free_list_lex(t_lexing* head);
 void free_list_data(t_data* head);
 void free_list_env(t_env_export* head);
-
-void exit_status(t_hold *hold, char *message, int8_t exit_code_);
 void		add_node_lex(t_hold *hold, char *content);
 t_lexing	*last_node_lex(t_lexing *lst);
-t_lexing	*ft_lstnew_lex(void *content);
-t_lexing	*ft_lstlast_lex(t_lexing *lst);
-
-void add_node_pars(t_hold *hold);
-t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst);
-
+t_env_export *new_node_env(void);
+t_env_export *add_node_env(t_hold *hold, char *content, char *type);
 void add_node_data(t_hold *hold, char **content);
 t_data	*last_node_data(t_data *lst);
-t_env_export *add_node_env(t_hold *hold, char *content, char *type);
-t_env_export *new_node_env(void);
+t_parsed_chunk *add_node_pars(t_hold *hold);
+t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst);
+void exit_status(t_hold *hold, char *message, int8_t exit_code_);
+void create_env_export_list(t_hold *hold, char **ori_env);
 
-// void sort_export_list(t_hold *hold);
-void swap_nodes(t_hold **hold, char *x_, char *y_);
+
+// t_lexing	*ft_lstnew_lex(void *content);
+// t_lexing	*ft_lstlast_lex(t_lexing *lst);
 
 
 //		lexing.c
@@ -138,13 +146,15 @@ int32_t	lex_redir(t_hold *hold, int32_t i);
 int32_t	lex_word(t_hold *hold, int32_t i);
 void lexer(t_hold *hold);
 
-// void create_export_list(t_hold *hold, char **env);
 
 
 //		parser.c
 bool builtin_parser(char *node);
 void recognize_type(t_hold *hold);
+int32_t check_outfile(t_hold *hold, char *file_name, int32_t type);
+void create_parsed_list(t_hold *hold);
 void parser(t_hold *hold);
+
 
 //		executer.c
 void init_args(t_hold *hold);

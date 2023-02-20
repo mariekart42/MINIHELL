@@ -148,48 +148,25 @@ t_data	*last_node_data(t_data *lst)
 		lst = lst->next;
 	return (lst);
 }
-// //	- - - -  for parser struct  - - - - - - - - - - - - - - 
-// /* function adds node at the end of 'lex_struct'
-//  * checks if list is NULL -> appends node at the beginning			*/
-// void add_node_pars(t_hold *hold, char **content)
-// {
-// 	t_data *ptr;
 
 
-// 	ptr = (t_parsed_chunk *)malloc(sizeof(t_parsed_chunk));
-// 	if (!ptr)
-// 		return (exit_status(hold, "Error! Failed to malloc\n", 69));
-// 	ptr->arg_array = content;
-// 	ptr->next = NULL;
-// 	if (hold->data_struct == NULL)
-// 	{
-// 		// printf(YEL"IS NULL\n"RESET);
-// 		hold->data_struct = ptr;
-// 	}
-// 	else
-// 	{
-// 		// printf(MAG"IS NOT NULL\n"RESET);
-// 		(last_node_data(hold->data_struct))->next = ptr;
-// 	}
-// }
-
-
-void add_node_pars(t_hold *hold)
+t_parsed_chunk *add_node_pars(t_hold *hold)
 {
 	t_parsed_chunk *tmp;
 
 	tmp = (t_parsed_chunk *)malloc(sizeof(t_parsed_chunk));
 	if (!tmp)
-		return (exit_status(hold, "Error! Failed to malloc\n", 69));
+		return (exit_status(hold, "Error! Failed to malloc\n", 69), (t_parsed_chunk*)NULL);
 	tmp->args = NULL;
 	tmp->cmd_path = NULL;
 	tmp->next = NULL;
 	tmp->infile = STDIN_FILENO;
 	tmp->outfile = STDOUT_FILENO;
-	if (hold->parsed_list == NULL)
-		hold->parsed_list = tmp;
-	else
-		(last_node_pars(hold->parsed_list))->next = tmp;
+	// if (hold->parsed_list == NULL)
+		return (tmp);
+	// else
+	// 	(last_node_pars(hold->parsed_list))->next = tmp;
+	// 	// hold->parsed_list = tmp;
 }
 t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst)
 {

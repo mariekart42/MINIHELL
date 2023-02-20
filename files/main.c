@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/20 13:51:34 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/20 16:33:21 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ int main(int32_t argc, char **argv, char **env)
 
 			// if (hold->exit_code == 0)
 			// 	print_macro_list(hold->lex_struct);
-
 			if (builtin(hold) == false)
 			{
 				// printf(RED"NO BUILTIN: EXIT\n"RESET);
