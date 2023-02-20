@@ -68,18 +68,17 @@ printf("file_name: %s\n", file_name);
 
 	if (type == SING_CLOSE_REDIR)
 	{
-		printf("single\n");
+		printf("single redir\n");
 		file_id = open(file_name, O_CREAT | O_WRONLY | O_TRUNC , 0644);
 	}
 	else
 	{
-		printf("double\n");
+		printf("double redir\n");
 		file_id = open(file_name, O_CREAT, 0644);
 	}
 
 	if (file_id < 0)
 		exit_status(hold, "Error!: unable to open outfile (in check_outfile func)\n", 69);
-	printf("1 check\n");
 	return (file_id);
 	
 }
@@ -108,10 +107,9 @@ void create_parsed_list(t_hold *hold)
 		else if (tmp_l->macro == SING_CLOSE_REDIR || tmp_l->macro == DOUBL_CLOSE_REDIR)
 		{
 			//redirect outfile
-			int32_t test = check_outfile(hold, tmp_l->next->item, tmp_l->macro);
-			tmp_p->outfile = test;
+			tmp_p->outfile = check_outfile(hold, tmp_l->next->item, tmp_l->macro);
 			tmp_l = tmp_l->next;
-			// tmp_l = tmp_l->next;
+			tmp_l = tmp_l->next;
 		}
 		else if (tmp_l->macro == DOUBL_OPEN_REDIR)	// herdoc function <<
 		{
@@ -125,12 +123,12 @@ void create_parsed_list(t_hold *hold)
 		}
 		else
 		{
-			printf(MAG"should be a command\n"RESET);
+			printf(MAG"should be a command: %s\n"RESET, tmp_l->item);
 			tmp_l = tmp_l->next;
 		}
 	}
 	printf("pars done: EXIT\n\n");
-	exit(0);
+	// exit(0);
 }
 
 void parser(t_hold *hold)
