@@ -172,26 +172,76 @@ int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
 // 	// exit(0);
 // }
 
-void create_parsed_list(t_hold **hold, t_lexing *lex)
+int32_t count_pipegroups(t_lexing *lex)
 {
-	int32_t pipegroups = 1;
-	t_lexing *tmp = lex;
+	t_lexing *tmp;
+	int32_t	pipegroup;
 
+	pipegroup = 1;
+	tmp = lex;
 	while (tmp != NULL)
 	{
 		if (tmp->macro == PIPE)
-			pipegroups++;
+			pipegroup++;
 		tmp = tmp->next;
 	}
+	return (pipegroup);
+}
+
+
+void create_parsed_list(t_hold **hold, t_lexing *lex)
+{
+	int32_t pipegroups;
+	int32_t tmp;
+
+	t_lexing *tmp_lex;
+	t_parsed_chunk *tmp_pars;;
+	tmp_pars = NULL;
+	// tmp_pars = (*hold)->parsed_list;
+	tmp_lex = lex;
+	pipegroups = count_pipegroups(lex);
+	tmp = pipegroups;
 	printf("amount pipegroups: %d\n", pipegroups);
 
 	// malloc amount of nodes as there are pipegroups:
 	while (pipegroups > 0)
 	{
 		add_node_pars(hold);
-		
 		pipegroups--;
 	}
+	pipegroups = tmp;
+
+// init list
+	tmp_pars = (*hold)->parsed_list;
+	while (pipegroups > 0)
+	{
+		while (tmp_lex->macro != PIPE)
+		{		
+			if (tmp_lex->macro == BUILTIN)
+			{
+				printf(MAG"BUILTIN -> add later\n"RESET);
+			}
+			else if (tmp_lex->macro == SING_CLOSE_REDIR || tmp_lex->macro == DOUBL_CLOSE_REDIR)
+			{
+// 				//redirect outfile
+				tmp_pars->outfile = check_outfile(*hold, tmp_lex->next, tmp_lex->macro);
+				printf("OUTFILE: %d %s\n",tmp_pars->outfile, tmp_lex->next->item);
+				tmp_lex = tmp_lex->next;
+			}
+			else
+			{
+				printf(MAG"BUILTIN -> add later\n"RESET);
+
+			}
+			if (tmp_lex->next == NULL)
+				break ;
+			tmp_lex = tmp_lex->next;
+		}
+		tmp_lex = tmp_lex->next;
+		tmp_pars = tmp_pars->next;
+		pipegroups--;	
+	}
+
 
 }
 

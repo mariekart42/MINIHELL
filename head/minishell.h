@@ -151,6 +151,7 @@ void lexer(t_hold *hold);
 //		parser.c
 bool builtin_parser(char *node);
 void recognize_type(t_hold *hold);
+int32_t count_pipegroups(t_lexing *lex);
 int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type);
 void create_parsed_list(t_hold **hold, t_lexing *lex);
 void parser(t_hold *hold);
