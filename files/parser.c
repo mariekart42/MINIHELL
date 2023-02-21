@@ -25,6 +25,9 @@ bool builtin_parser(char *node)
 void recognize_type(t_hold *hold)
 {
 	t_lexing *tmp;
+	// char *stupid = ft_substr("\"", 0, 2);
+	// printf(RED"stupid: %s\n"RESET, stupid);
+	// exit(0);
 	// printf("check in rec\n");
 // printf("list: %s\n", hold->lex_struct->item);
 	tmp = hold->lex_struct;
@@ -39,7 +42,7 @@ void recognize_type(t_hold *hold)
 			tmp->macro = PIPE;
 		else if (ft_strncmp(tmp->item, "'", 1) == 0)
 			tmp->macro = SING_QUOTE;
-		else if (ft_strncmp(tmp->item, """", 1) == 0)
+		else if (ft_strncmp(tmp->item, "\"", 1) == 0)
 			tmp->macro = DOUBL_QUOTE;
 		else if (ft_strncmp(tmp->item, "<<", 2) == 0)
 			tmp->macro = DOUBL_OPEN_REDIR;
@@ -58,23 +61,24 @@ void recognize_type(t_hold *hold)
 /* function checks and returns outfile 
  * opens/creates file if it not exists
  * check later for permission issues if the file already exists(how lol?) */
-int32_t check_outfile(t_hold *hold, char *file_name, int32_t type)
+int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
 {
 	int32_t file_id;
-printf("file_name: %s\n", file_name);
-	// get rid of double or single quotes
-	if (type == SING_QUOTE || type == DOUBL_QUOTE)
-		file_name = ft_substr(file_name, 1, ft_strlen(file_name)-2); // should substract quote at the beginning and at the end
 
+	// get rid of double or single quotes
+	if (file_node->macro == SING_QUOTE || file_node->macro == DOUBL_QUOTE)
+		file_node->item = ft_substr(file_node->item, 1, ft_strlen(file_node->item)-2);
+
+// not 100% sure about opening macros (in both open calls)
 	if (type == SING_CLOSE_REDIR)
 	{
-		printf("single redir\n");
-		file_id = open(file_name, O_CREAT | O_WRONLY | O_TRUNC , 0644);
+		// printf("single redir\n");
+		file_id = open(file_node->item, O_CREAT | O_WRONLY | O_TRUNC , 0644);
 	}
 	else
 	{
-		printf("double redir\n");
-		file_id = open(file_name, O_CREAT, 0644);
+		// printf("double redir\n");
+		file_id = open(file_node->item, O_CREAT, 0644);
 	}
 
 	if (file_id < 0)
@@ -89,7 +93,9 @@ void create_parsed_list(t_hold *hold)
 {
 	t_lexing *tmp_l;
 	t_parsed_chunk *tmp_p;
-	// t_parsed_chunk *pars = hold->parsed_list; 
+	char *args;
+	args = malloc(sizeof(char));
+	args = "\0";
 
 	tmp_l = hold->lex_struct;
 	tmp_p = hold->parsed_list;
@@ -108,7 +114,8 @@ void create_parsed_list(t_hold *hold)
 			else if (tmp_l->macro == SING_CLOSE_REDIR || tmp_l->macro == DOUBL_CLOSE_REDIR)
 			{
 				//redirect outfile
-				tmp_p->outfile = check_outfile(hold, tmp_l->next->item, tmp_l->macro);
+				tmp_p->outfile = check_outfile(hold, tmp_l->next, tmp_l->macro);
+				printf("OUTFILE: %s\n", tmp_l->next->item);
 				tmp_l = tmp_l->next;
 			}
 			else if (tmp_l->macro == DOUBL_OPEN_REDIR)	// herdoc function <<
@@ -121,7 +128,19 @@ void create_parsed_list(t_hold *hold)
 			}
 			else
 			{
-				printf(MAG"command: %s\n"RESET, tmp_l->item);
+
+
+				// char *tmp;
+				args = ft_strjoin(args, " ");
+				// if (args != NULL)
+				// 	free(args);
+				// args = NULL;
+				// args = ft_strjoin(args, " ");
+				args = ft_strjoin(args, tmp_l->item);
+				// free(tmp);
+				// tmp = NULL;
+				// printf(MAG"command: %s\n"RESET, tmp_l->item);
+				printf("ARGS: %s\n", args);
 
 			}
 				tmp_l = tmp_l->next;
@@ -129,8 +148,21 @@ void create_parsed_list(t_hold *hold)
 		else
 			tmp_p = tmp_p->next;
 	}
-	printf("pars done: EXIT\n\n");
-	// exit(0);
+	printf("args in struct:\n");
+	if (hold->parsed_list->outfile == 0)
+		printf("args is nULL\n");
+	// char **tmp = NULL;
+	// tmp = ft_split(args, ' ');
+	// printf("tmp: %s\n", tmp[0]);
+	// printf("tmp: %s\n", tmp[1]);
+	// printf("tmp: %s\n", tmp[2]);
+	// // hold->parsed_list->args = ft_s
+	// hold->parsed_list->args = ft_split(args, ' ');
+	// printf("%s\n", hold->parsed_list->args[0]);
+	// printf("%s\n", hold->parsed_list->args[1]);
+	// printf("%s\n", hold->parsed_list->args[2]);
+	printf("\npars done: EXIT\n\n");
+	exit(0);
 }
 
 void parser(t_hold *hold)
@@ -138,6 +170,8 @@ void parser(t_hold *hold)
     if (hold->exit_code != 0)
         return ;
 	recognize_type(hold);
+
+
 
 	create_parsed_list(hold);
 

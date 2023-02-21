@@ -151,7 +151,7 @@ void lexer(t_hold *hold);
 //		parser.c
 bool builtin_parser(char *node);
 void recognize_type(t_hold *hold);
-int32_t check_outfile(t_hold *hold, char *file_name, int32_t type);
+int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type);
 void create_parsed_list(t_hold *hold);
 void parser(t_hold *hold);
 

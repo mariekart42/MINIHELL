@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/20 17:33:33 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/21 13:13:37 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,13 +89,13 @@ int main(int32_t argc, char **argv, char **env)
 		{
 			add_history(hold->line);
 
-
 			lexer(hold);
 			
 			parser(hold);
-// printf("after parser\n");
+printf("after parser | EXIT\n\n");
+exit(0);
+				// print_macro_list(hold->lex_struct);
 			// if (hold->exit_code == 0)
-			// 	print_macro_list(hold->lex_struct);
 			if (builtin(hold) == false)
 			{
 				// printf(RED"NO BUILTIN: EXIT\n"RESET);
@@ -115,7 +115,8 @@ printf("after executer\n");
 }
 
 //!!!NEXT:
-// - redirection in parser also for files in single or double quotes
+// - struggle to create list in parser
+// - afterwards figure out commandpath
 //( - export: update path (as well for env))
 //( - print out export correctly and seperate creating in the beginning and as always caller)
 
