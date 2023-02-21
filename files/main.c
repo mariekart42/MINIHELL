@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/21 20:38:08 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/21 21:25:17 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,10 +116,10 @@ printf("after executer\n");
 
 //!!!NEXT:
 // - create parsed list, init parsed_chunk list 
-//		- outfile
+//		- outfile √
 //		- infile
 //		- commandpath
-//		- args
+//		- args -> can there be more then one arg in one pipegroup
 //( - export: update path (as well for env))
 //( - print out export correctly and seperate creating in the beginning and as always caller)
 
@@ -157,4 +157,3 @@ printf("after executer\n");
 // - after main loop clear all memory
 // - exit with exit command -> returns 0
 // - signals shit
-// - transfer lexed list first to parsed list

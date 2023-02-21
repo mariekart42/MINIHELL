@@ -143,33 +143,6 @@ int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
 // 			}
 // 		}
 
-// 		tmp_l = tmp_l->next;
-
-	
-// 		// tmp_p = tmp_p->next;
-// 	}
-// printf("tmp_p: %d\n", tmp_p->outfile);
-// 	// printf("ori1: %d\n", hold->parsed_list->outfile);
-
-// 	// exit(0);
-// 	// printf("args in struct:\n");
-// // printf("ori1: %s\n", hold->parsed_list->args[0]);
-// // printf("ori2: %d\n", hold->parsed_list->next->args[0]);
-// 	// printf("tmp: %s\n", tmp)
-// 	// if (hold->parsed_list->outfile == 0)
-// 	// 	printf("args is nULL\n");
-// 	// char **tmp = NULL;
-// 	// tmp = ft_split(args, ' ');
-// 	// printf("tmp: %s\n", tmp[0]);
-// 	// printf("tmp: %s\n", tmp[1]);
-// 	// printf("tmp: %s\n", tmp[2]);
-// 	// // hold->parsed_list->args = ft_s
-// 	// hold->parsed_list->args = ft_split(args, ' ');
-// 	// printf("%s\n", hold->parsed_list->args[0]);
-// 	// printf("%s\n", hold->parsed_list->args[1]);
-// 	// printf("%s\n", hold->parsed_list->args[2]);
-// 	// printf("\npars done: EXIT\n\n");
-// 	// exit(0);
 // }
 
 int32_t count_pipegroups(t_lexing *lex)
@@ -228,10 +201,14 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 				printf("OUTFILE: %d %s\n",tmp_pars->outfile, tmp_lex->next->item);
 				tmp_lex = tmp_lex->next;
 			}
+			else if (tmp_lex->macro == DOUBL_OPEN_REDIR)	// herdoc function <<
+				printf(MAG"DOUBL_CLOSE_REDIR -> add later\n"RESET);
+			else if (tmp_lex->macro == SING_OPEN_REDIR) // add later
+				printf(MAG"SING_CLOSE_REDIR -> add later\n"RESET);
 			else
 			{
-				printf(MAG"BUILTIN -> add later\n"RESET);
-
+				printf(MAG"ARG -> add later\n"RESET);
+				
 			}
 			if (tmp_lex->next == NULL)
 				break ;
