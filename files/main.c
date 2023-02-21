@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/21 21:25:17 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/21 21:34:27 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,13 @@ int main(int32_t argc, char **argv, char **env)
 		return (69);
 
 	// using signal function here to catch signal if eg ctr-c is used
+	
 	create_env_export_list(hold, env);
-
+			// important later
 			char *test;
 			test = getenv("PATH");
 			printf("getenv: %s\n", test);
+			
 	while (1)
 	{
 		hold->exit_code = 0;
@@ -94,16 +96,11 @@ int main(int32_t argc, char **argv, char **env)
 			parser(hold);
 printf("after parser | EXIT\n\n");
 exit(0);
-				// print_macro_list(hold->lex_struct);
 			// if (hold->exit_code == 0)
+			// 	print_macro_list(hold->lex_struct);
 			if (builtin(hold) == false)
 			{
-				// printf(RED"NO BUILTIN: EXIT\n"RESET);
-				// exit(0);
-printf("before executer | EXIT\n");
-	exit(0);
 				executer(hold, env);
-printf("after executer\n");
 			}
 			free_content(hold);
 			

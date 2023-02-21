@@ -35,8 +35,6 @@ void init_args(t_hold *hold)
 			break;
 		tmp_lex = tmp_lex->next;
 	}
-// print_args(hold);
-// exit(0);
 }
 
 void get_path(t_hold *hold, char **env, int32_t cmd_index)
@@ -60,11 +58,8 @@ void get_path(t_hold *hold, char **env, int32_t cmd_index)
 		k++;
 	}
 	if (access(hold->valid_path, F_OK | X_OK) != 0)
-	{
-		// ft_putstr_fd(hold->args_struct->arg_array[cmd_index], 2);
-		// exit_status(hold, ":"RED" COMMAND NOT FOUND\n"RESET, 127);
 		return ;
-	}
+
 	// printf("path: "GRN"%s\n"RESET, hold->valid_path);
 }
 
@@ -82,7 +77,6 @@ void executer(t_hold *hold, char **env)
 // printf(RED"EXIT in executer after get path\n"RESET);
 // exit(0);
 	// redirect shit
-
 	int pid = fork();
 	if (pid == 0)
 	{

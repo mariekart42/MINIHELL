@@ -25,19 +25,12 @@ bool builtin_parser(char *node)
 void recognize_type(t_hold *hold)
 {
 	t_lexing *tmp;
-	// char *stupid = ft_substr("\"", 0, 2);
-	// printf(RED"stupid: %s\n"RESET, stupid);
-	// exit(0);
-	// printf("check in rec\n");
-// printf("list: %s\n", hold->lex_struct->item);
+
 	tmp = hold->lex_struct;
 	while (tmp != NULL)
 	{
 		if (builtin_parser(tmp->item) == true)
-		{
-				// printf("builtin: %s\n", tmp->item);
 			tmp->macro = BUILTIN;
-		}
 		else if (ft_strncmp(tmp->item, "|", 1) == 0)
 			tmp->macro = PIPE;
 		else if (ft_strncmp(tmp->item, "'", 1) == 0)
@@ -84,67 +77,9 @@ int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
 	if (file_id < 0)
 		exit_status(hold, "Error!: unable to open outfile (in check_outfile func)\n", 69);
 	return (file_id);
-	
 }
 
-// /* function creates 'parsed list' with the content of struct 'parsed_chunk'
-//  * the content of one chunk is always a pipegroup, with in/outfile, arguments and commandpath */
-// void create_parsed_list(t_hold *hold)
-// {
-// 	t_lexing *tmp_l;
-// 	t_parsed_chunk *tmp_p;
-// 	char *args;
-// 	args = malloc(sizeof(char));
-// 	args = "\0";
-
-
-// 	tmp_l = hold->lex_struct;
-// 	tmp_p = hold->parsed_list;
-// 	while (tmp_l != NULL)
-// 	{
-// 		if (tmp_p == NULL)
-// 			tmp_p = add_node_pars();
-// 		else
-// 		{
-// 			// tmp_p = hold->parsed_list;
-// 			(last_node_pars(tmp_p))->next = add_node_pars();
-// 			// tmp_p = tmp_p->next;
-// 		}
-
-// 		// tmp_p->outfile = 69;
-// 		// printf("here: %d\n", tmp_p->outfile);
-// 		// hold->parsed_list = tmp_p;
-// 		// printf("here: %d\n", hold->parsed_list->outfile);
-// 		// exit(0);
-		
-// 		if (tmp_l->macro != PIPE)
-// 		{
-// 			if (tmp_l->macro == BUILTIN)
-// 			{
-// 				printf("BUILTIN -> add later\n");
-// 			}
-// 			else if (tmp_l->macro == SING_CLOSE_REDIR || tmp_l->macro == DOUBL_CLOSE_REDIR)
-// 			{
-// 				//redirect outfile
-// 				tmp_p->outfile = check_outfile(hold, tmp_l->next, tmp_l->macro);
-// 				printf("OUTFILE: %d %s\n",tmp_p->outfile, tmp_l->next->item);
-// 				tmp_l = tmp_l->next;
-// 			}
-// 			else if (tmp_l->macro == DOUBL_OPEN_REDIR)	// herdoc function <<
-// 				printf(YEL"DOUBL_CLOSE_REDIR -> add later\n"RESET);
-// 			else if (tmp_l->macro == SING_OPEN_REDIR) // add later
-// 				printf(YEL"SING_CLOSE_REDIR -> add later\n"RESET);
-// 			else
-// 			{
-// 				printf(YEL"ARG -> add later\n"RESET);
-// 				// args = ft_strjoin(args, " ");
-// 				// args = ft_strjoin(args, tmp_l->item);
-// 				// printf("ARGS: %s\n", args);
-// 			}
-// 		}
-
-// }
-
+/* function counts and returns amount of pipegroups in 'lexed_list' */
 int32_t count_pipegroups(t_lexing *lex)
 {
 	t_lexing *tmp;
@@ -161,16 +96,14 @@ int32_t count_pipegroups(t_lexing *lex)
 	return (pipegroup);
 }
 
-
 void create_parsed_list(t_hold **hold, t_lexing *lex)
 {
 	int32_t pipegroups;
 	int32_t tmp;
-
 	t_lexing *tmp_lex;
-	t_parsed_chunk *tmp_pars;;
+	t_parsed_chunk *tmp_pars;
+
 	tmp_pars = NULL;
-	// tmp_pars = (*hold)->parsed_list;
 	tmp_lex = lex;
 	pipegroups = count_pipegroups(lex);
 	tmp = pipegroups;
