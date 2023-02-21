@@ -125,8 +125,8 @@ t_env_export *new_node_env(void);
 t_env_export *add_node_env(t_hold *hold, char *content, char *type);
 void add_node_data(t_hold *hold, char **content);
 t_data	*last_node_data(t_data *lst);
-t_parsed_chunk *add_node_pars(t_hold *hold);
 t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst);
+void add_node_pars(t_hold **hold);
 void exit_status(t_hold *hold, char *message, int8_t exit_code_);
 void create_env_export_list(t_hold *hold, char **ori_env);
 
@@ -152,7 +152,7 @@ void lexer(t_hold *hold);
 bool builtin_parser(char *node);
 void recognize_type(t_hold *hold);
 int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type);
-void create_parsed_list(t_hold *hold);
+void create_parsed_list(t_hold **hold, t_lexing *lex);
 void parser(t_hold *hold);
 
 

@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/21 13:13:37 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/21 20:38:08 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,11 @@ printf("after executer\n");
 }
 
 //!!!NEXT:
-// - struggle to create list in parser
-// - afterwards figure out commandpath
+// - create parsed list, init parsed_chunk list 
+//		- outfile
+//		- infile
+//		- commandpath
+//		- args
 //( - export: update path (as well for env))
 //( - print out export correctly and seperate creating in the beginning and as always caller)
 

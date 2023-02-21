@@ -150,19 +150,22 @@ t_data	*last_node_data(t_data *lst)
 }
 
 
-t_parsed_chunk *add_node_pars(t_hold *hold)
+void add_node_pars(t_hold **hold)
 {
 	t_parsed_chunk *tmp;
 
 	tmp = (t_parsed_chunk *)malloc(sizeof(t_parsed_chunk));
-	if (!tmp)
-		return (exit_status(hold, "Error! Failed to malloc\n", 69), (t_parsed_chunk*)NULL);
+	// if (!tmp)
+	// 	return (exit_status(hold, "Error! Failed to malloc\n", 69), (t_parsed_chunk*)NULL);
 	tmp->args = NULL;
 	tmp->cmd_path = NULL;
 	tmp->next = NULL;
 	tmp->infile = STDIN_FILENO;
 	tmp->outfile = STDOUT_FILENO;
-	return (tmp);
+	if ((*hold)->parsed_list == NULL)
+		(*hold)->parsed_list = tmp;
+	else
+		(last_node_pars((*hold)->parsed_list))->next = tmp;
 }
 
 t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst)
