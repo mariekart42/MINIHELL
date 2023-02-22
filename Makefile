@@ -17,6 +17,7 @@ FILES=	files/main.c \
 		files/lexing.c \
 		files/parser.c \
 		files/executer.c \
+		files/syntax_errors.c \
 		files/delete_later.c
 
 O_FILES= $(FILES:%.c=%.o)

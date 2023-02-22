@@ -94,6 +94,9 @@ void free_content(t_hold *hold);
 int32_t init_structs(t_hold **hold);
 void free_env_export(t_hold *hold);
 
+//		syntax_errors.c
+int32_t check_syntax_errors(t_hold *hold);
+
 
 //		builtins/builtins.c
 void env_builtin(t_hold *hold);

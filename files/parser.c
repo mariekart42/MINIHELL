@@ -58,11 +58,6 @@ int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
 {
 	int32_t file_id;
 
-	if (file_node == NULL)
-	{
-		exit_status(hold, "syntax error near unexpected token 'newline'\n", 69);
-		exit(0);
-	}
 	// get rid of double or single quotes
 	if (file_node->macro == SING_QUOTE || file_node->macro == DOUBL_QUOTE)
 		file_node->item = ft_substr(file_node->item, 1, ft_strlen(file_node->item)-2);
