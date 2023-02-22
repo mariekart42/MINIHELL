@@ -96,6 +96,14 @@ int32_t count_pipegroups(t_lexing *lex)
 	return (pipegroup);
 }
 
+/* function appends command from 'parsed_list' at the end of
+ * each path of $PATH and checks for access
+ * in case of access, cmd_path in parsed_chunk gets updated		*/
+// void init_cmdpath(t_hold **hold)
+// {
+
+// }
+
 void create_parsed_list(t_hold **hold, t_lexing *lex)
 {
 	int32_t pipegroups;
@@ -158,6 +166,7 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 			exit(0);
 		}
 		tmp_pars->args = ft_split(tmp_arg, ' ');
+		// init_cmdpath(hold);
 		free(tmp_arg);
 		tmp_arg = "\0";
 		tmp_lex = tmp_lex->next;
@@ -176,10 +185,10 @@ void parser(t_hold *hold)
 	create_parsed_list(&hold, hold->lex_struct);
 	
 	printf("outfile 1: %d\n", hold->parsed_list->outfile);
-	printf("outfile 2: %d\n", hold->parsed_list->next->outfile);
+	// printf("outfile 2: %d\n", hold->parsed_list->next->outfile);
 	printf("args 1 [0]: %s\n", hold->parsed_list->args[0]);
 	printf("args 1 [1]: %s\n", hold->parsed_list->args[1]);
-	printf("args 2 [0]: %s\n", hold->parsed_list->next->args[0]);
-	printf("args 2 [1]: %s\n", hold->parsed_list->next->args[1]);
+	// printf("args 2 [0]: %s\n", hold->parsed_list->next->args[0]);
+	// printf("args 2 [1]: %s\n", hold->parsed_list->next->args[1]);
 exit(0);
 }

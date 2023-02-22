@@ -27,8 +27,8 @@ void pwd_builtin(t_hold *hold)
 		exit_status(hold, RED"PWD: NO SUCH FILE OR DIRECTORY\n"RESET, 69);
 		return ;
 	}
-	write(2, path, ft_strlen(path));
-	write(2, "\n", 1);
+	write(1, path, ft_strlen(path));
+	write(1, "\n", 1);
 }
 
 void cd_builtin(t_hold *hold)
@@ -43,7 +43,7 @@ void cd_builtin(t_hold *hold)
 	if (chdir(hold->lex_struct->next->item) < 0)
 	{
 		ft_putstr_fd(RED"", 2); //just for making it red lol
-		write(2, hold->lex_struct->next->item, ft_strlen(hold->lex_struct->next->item));
+		write(1, hold->lex_struct->next->item, ft_strlen(hold->lex_struct->next->item));
 		exit_status(hold, ": NO SUCH FILE OR DIRECTORY\n"RESET, 69);
 		return ;
 	}

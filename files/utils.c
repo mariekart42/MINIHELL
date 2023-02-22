@@ -12,18 +12,6 @@ void free_list_lex(t_lexing* head)
     }
 }
 
-void free_list_data(t_data* head)
-{
-   t_data* tmp;
-
-   while (head != NULL)
-    {
-       tmp = head;
-       head = head->next;
-       free(tmp);
-    }
-}
-
 void free_list_env(t_env_export* head)
 {
    t_env_export* tmp;
@@ -50,15 +38,9 @@ void add_node_lex(t_hold *hold, char *content)
 	ptr->next = NULL;
 
 	if (hold->lex_struct == NULL)
-	{
-		// printf(YEL"IS NULL\n"RESET);
 		hold->lex_struct = ptr;
-	}
 	else
-	{
-		// printf(MAG"IS NOT NULL\n"RESET);
 		(last_node_lex(hold->lex_struct))->next = ptr;
-	}
 }
 
 t_lexing	*last_node_lex(t_lexing *lst)
@@ -114,41 +96,6 @@ t_env_export *add_node_env(t_hold *hold, char *content, char *type)
 		return (hold->export_list);
 	}
 }
-
-//	- - - -  for ARGS struct  - - - - - - - - - - - - - - 
-/* function adds node at the end of 'lex_struct'
- * checks if list is NULL -> appends node at the beginning			*/
-void add_node_data(t_hold *hold, char **content)
-{
-	t_data *ptr;
-
-
-	ptr = (t_data *)malloc(sizeof(t_data));
-	if (!ptr)
-		return (exit_status(hold, "Error! Failed to malloc\n", 69));
-	ptr->arg_array = content;
-	ptr->next = NULL;
-	if (hold->data_struct == NULL)
-	{
-		// printf(YEL"IS NULL\n"RESET);
-		hold->data_struct = ptr;
-	}
-	else
-	{
-		// printf(MAG"IS NOT NULL\n"RESET);
-		(last_node_data(hold->data_struct))->next = ptr;
-	}
-}
-
-t_data	*last_node_data(t_data *lst)
-{
-	if (!lst)
-		return (NULL);
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
-}
-
 
 void add_node_pars(t_hold **hold)
 {

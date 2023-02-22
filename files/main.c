@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/22 13:15:15 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/22 21:37:59 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void free_content(t_hold *hold)
 {
 	free(hold->line);
 	free_list_lex(hold->lex_struct);
-	free_list_data(hold->data_struct);
+	// free_list_data(hold->data_struct);
 	hold->lex_struct = NULL;
-	hold->data_struct = NULL;
+	// hold->data_struct = NULL;
 
 }
 
@@ -32,9 +32,9 @@ int32_t init_structs(t_hold **hold)
 	(*hold)->lex_struct = (t_lexing*)malloc(sizeof(t_lexing));
 	if (!(*hold)->lex_struct)
 		return (69);
-	(*hold)->data_struct = (t_data*)malloc(sizeof(t_data));
-	if (!(*hold)->data_struct)
-		return (69);
+	// (*hold)->data_struct = (t_data*)malloc(sizeof(t_data));
+	// if (!(*hold)->data_struct)
+	// 	return (69);
 	(*hold)->env_list = (t_env_export*)malloc(sizeof(t_env_export));
 	if (!(*hold)->env_list)
 		return (69);
@@ -45,7 +45,7 @@ int32_t init_structs(t_hold **hold)
 	if (!(*hold)->parsed_list)
 		return (69);
 	(*hold)->lex_struct = NULL;
-	(*hold)->data_struct = NULL;
+	// (*hold)->data_struct = NULL;
 	(*hold)->env_list = NULL;
 	(*hold)->export_list = NULL;
 	(*hold)->parsed_list = NULL;
@@ -85,7 +85,7 @@ int main(int32_t argc, char **argv, char **env)
 		hold->line = readline(BLU"MINIHELL> "RESET);
 		if (!hold->line)
 			break ;
-		
+
 		// if line is empty, bash returns 0 and does nothing
 		if (ft_strlen(hold->line) > 0)
 		{
@@ -93,15 +93,12 @@ int main(int32_t argc, char **argv, char **env)
 
 			lexer(hold);
 			parser(hold);
+			if (hold->exit_code == 0)
+				print_macro_list(hold->lex_struct);
 printf("after parser | EXIT\n\n");
 exit(0);
 			executer(hold, env);
-			
-			// if (hold->exit_code == 0)
-			// 	print_macro_list(hold->lex_struct);
-			// if (builtin(hold) == false)
-			// {
-			// }
+
 			free_content(hold);
 			
 		}
@@ -112,12 +109,11 @@ exit(0);
 }
 
 //!!!NEXT:
-// - check syntax errors in parser, not lexer
-// - create parsed list, init parsed_chunk list 
+// - create parsed list:
 //		- outfile √
-//		- infile
-//		- commandpath
-//		- args -> is kinda working, but later args contain 
+//		- infile -> only redirs give info about it? '(<')
+//		- commandpath  NOW
+//		- args √
 //( - export: update path (as well for env))
 //( - print out export correctly and seperate creating in the beginning and as always caller)
 

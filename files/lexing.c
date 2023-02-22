@@ -53,9 +53,9 @@ void lex_pipe(t_hold *hold, int32_t i)
 	if (i == 0)
 		return (exit_status(hold, "syntax error near unexpected token '|'\n", 2));
 	i++;
-	while (hold->line[i] == 32)
+	while (hold->line[i] == ' ')
 		i++;
-	if (hold->line[i] == 124)
+	if (hold->line[i] == '|')
 		return (exit_status(hold, "syntax error near unexpected token '|'\n", 2));
 	add_node_lex(hold, "|");
 }
@@ -128,7 +128,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 			i = skip_spaces(hold->line, i);
 			if (hold->line[i] == '<')
             {
-				exit_status(hold, "syntax error near unexpected token '<'\n", 2);
+				exit_status(hold, "syntax error near unexpected token '<'\n", 69);
                 return (-1);
             }
 			return (i-1);
@@ -142,7 +142,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 		i = skip_spaces(hold->line, i);
 		if (hold->line[i] == '<')
         {
-			exit_status(hold, "syntax error near unexpected token '<'\n", 2);
+			exit_status(hold, "syntax error near unexpected token '<'\n", 69);
             return (-1);
         }
 		if (hold->line[i] == '>')
@@ -152,7 +152,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 			i = skip_spaces(hold->line, i);
 			if (hold->line[i] == '>' || hold->line[i] == '<')
             {
-				exit_status(hold, "syntax error near unexpected token '>'\n", 2);
+				exit_status(hold, "syntax error near unexpected token '>'\n", 69);
                 return (-1);
             }
 			return (i-1);
@@ -216,7 +216,7 @@ void lexer(t_hold *hold)
         {
 			i = lex_redir(hold, i);
         }
-		else if (hold->line[i] != 32)
+		else if (hold->line[i] != ' ')
         {
 			i += lex_word(hold, i);
         }

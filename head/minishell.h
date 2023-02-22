@@ -46,12 +46,6 @@ typedef struct s_lexing
 	struct s_lexing	*next;
 }		t_lexing;
 
-typedef struct s_data
-{
-	char	**arg_array;
-	struct s_data	*next;
-}				t_data;
-
 typedef struct s_env_export
 {
 	char	 *item;
@@ -59,7 +53,6 @@ typedef struct s_env_export
 	char	*var_value;
 	struct s_env_export	*next;
 }			t_env_export;
-
 
 // maybe include variable with macros later here
 typedef struct s_parsed_chunk
@@ -75,9 +68,9 @@ typedef struct s_parsed_chunk
 typedef struct s_hold
 {
 	char *valid_path;
-
+	char *env_path;
 	char	*line;
-	int8_t	exit_code;
+	int32_t	exit_code;
 
 
 	struct s_env_export	*export_list;
@@ -85,7 +78,6 @@ typedef struct s_hold
 
 	struct s_parsed_chunk	*parsed_list;
 
-	struct s_data	*data_struct;
 	struct s_lexing *lex_struct;
 }				t_hold;
 
@@ -93,6 +85,7 @@ typedef struct s_hold
 void free_content(t_hold *hold);
 int32_t init_structs(t_hold **hold);
 void free_env_export(t_hold *hold);
+
 
 //		syntax_errors.c
 int32_t check_syntax_errors(t_hold *hold);
@@ -115,28 +108,20 @@ void sort_export_list(t_hold *hold);
 char *return_macro(int32_t m);
 void print_list(t_lexing *list, char *name);
 void print_macro_list(t_lexing *list);
-void print_args(t_hold *hold);
 void print_export(t_hold *hold);
 
 
 //		utils.c
 void free_list_lex(t_lexing* head);
-void free_list_data(t_data* head);
 void free_list_env(t_env_export* head);
 void		add_node_lex(t_hold *hold, char *content);
 t_lexing	*last_node_lex(t_lexing *lst);
 t_env_export *new_node_env(void);
 t_env_export *add_node_env(t_hold *hold, char *content, char *type);
-void add_node_data(t_hold *hold, char **content);
-t_data	*last_node_data(t_data *lst);
 t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst);
 void add_node_pars(t_hold **hold);
 void exit_status(t_hold *hold, char *message, int8_t exit_code_);
 void create_env_export_list(t_hold *hold, char **ori_env);
-
-
-// t_lexing	*ft_lstnew_lex(void *content);
-// t_lexing	*ft_lstlast_lex(t_lexing *lst);
 
 
 //		lexing.c
@@ -157,6 +142,7 @@ bool builtin_parser(char *node);
 void recognize_type(t_hold *hold);
 int32_t count_pipegroups(t_lexing *lex);
 int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type);
+void init_cmdpath(t_hold **hold);
 void create_parsed_list(t_hold **hold, t_lexing *lex);
 void parser(t_hold *hold);
 

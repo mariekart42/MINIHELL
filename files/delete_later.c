@@ -75,33 +75,6 @@ else
 	printf("something wrong! (print_list function)\n");
 printf("-- done --\n\n");
 }
-
-void print_args(t_hold *hold)
-{
-int32_t i;
-int32_t k=0;
-t_data *tmp = hold->data_struct;
-printf(YEL"ARGS ---------------\n"RESET);
-	while(tmp != NULL)
-	{
-		i=0;
-		printf(MAG"[%d]"RESET, k);
-		while (tmp->arg_array[i] != NULL)
-		{
-			if(i==0)
-				printf("\n");
-			printf("\t[%d]: %s\n",i,tmp->arg_array[i]);
-			i++;
-		}
-
-
-		if (tmp->arg_array[i] == NULL)
-			printf(BLU"\t(NULL)\n"RESET);
-		tmp = tmp->next;
-		k++;
-	}
-printf(YEL"---------------------\n"RESET);
-}
 void print_export(t_hold *hold)
 {
 	t_env_export *tmp = hold->export_list;

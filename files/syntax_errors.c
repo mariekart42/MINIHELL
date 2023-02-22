@@ -11,7 +11,7 @@ int32_t check_syntax_errors(t_hold *hold)
 		(last_node_lex(hold->lex_struct))->macro == SING_OPEN_REDIR || \
 		(last_node_lex(hold->lex_struct))->macro == DOUBL_CLOSE_REDIR)
 	{
-		exit_status(hold, RED"syntax error near unexpected token 'newline'\n"RESET, 258);
+		exit_status(hold, RED"syntax error near unexpected token 'newline'\n"RESET, 69);
 		return (-1);
 	}
 	return (0);
