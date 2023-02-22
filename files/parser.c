@@ -168,11 +168,13 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 
 void parser(t_hold *hold)
 {
-    if (hold->exit_code != 0)
-        return ;
 	recognize_type(hold);
-	check_syntax_errors(hold);
+
+    if (hold->exit_code != 0 || check_syntax_errors(hold))
+        return ;
+
 	create_parsed_list(&hold, hold->lex_struct);
+	
 	printf("outfile 1: %d\n", hold->parsed_list->outfile);
 	printf("outfile 2: %d\n", hold->parsed_list->next->outfile);
 	printf("args 1 [0]: %s\n", hold->parsed_list->args[0]);
