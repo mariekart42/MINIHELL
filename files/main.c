@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/21 21:34:27 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/02/22 13:15:15 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,16 +92,16 @@ int main(int32_t argc, char **argv, char **env)
 			add_history(hold->line);
 
 			lexer(hold);
-			
 			parser(hold);
 printf("after parser | EXIT\n\n");
 exit(0);
+			executer(hold, env);
+			
 			// if (hold->exit_code == 0)
 			// 	print_macro_list(hold->lex_struct);
-			if (builtin(hold) == false)
-			{
-				executer(hold, env);
-			}
+			// if (builtin(hold) == false)
+			// {
+			// }
 			free_content(hold);
 			
 		}
@@ -112,11 +112,12 @@ exit(0);
 }
 
 //!!!NEXT:
+// - check syntax errors in parser, not lexer
 // - create parsed list, init parsed_chunk list 
 //		- outfile √
 //		- infile
 //		- commandpath
-//		- args -> can there be more then one arg in one pipegroup
+//		- args -> is kinda working, but later args contain 
 //( - export: update path (as well for env))
 //( - print out export correctly and seperate creating in the beginning and as always caller)
 

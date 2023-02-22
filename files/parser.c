@@ -58,6 +58,11 @@ int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
 {
 	int32_t file_id;
 
+	if (file_node == NULL)
+	{
+		exit_status(hold, "syntax error near unexpected token 'newline'\n", 69);
+		exit(0);
+	}
 	// get rid of double or single quotes
 	if (file_node->macro == SING_QUOTE || file_node->macro == DOUBL_QUOTE)
 		file_node->item = ft_substr(file_node->item, 1, ft_strlen(file_node->item)-2);
@@ -102,8 +107,12 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 	int32_t tmp;
 	t_lexing *tmp_lex;
 	t_parsed_chunk *tmp_pars;
+	char *tmp_arg;
 
+	tmp_arg = malloc(sizeof(char));
+	tmp_arg = "\0";
 	tmp_pars = NULL;
+	// tmp_arg = NULL;
 	tmp_lex = lex;
 	pipegroups = count_pipegroups(lex);
 	tmp = pipegroups;
@@ -122,16 +131,10 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 	while (pipegroups > 0)
 	{
 		while (tmp_lex->macro != PIPE)
-		{		
-			if (tmp_lex->macro == BUILTIN)
+		{
+			if (tmp_lex->macro == SING_CLOSE_REDIR || tmp_lex->macro == DOUBL_CLOSE_REDIR)
 			{
-				printf(MAG"BUILTIN -> add later\n"RESET);
-			}
-			else if (tmp_lex->macro == SING_CLOSE_REDIR || tmp_lex->macro == DOUBL_CLOSE_REDIR)
-			{
-// 				//redirect outfile
 				tmp_pars->outfile = check_outfile(*hold, tmp_lex->next, tmp_lex->macro);
-				printf("OUTFILE: %d %s\n",tmp_pars->outfile, tmp_lex->next->item);
 				tmp_lex = tmp_lex->next;
 			}
 			else if (tmp_lex->macro == DOUBL_OPEN_REDIR)	// herdoc function <<
@@ -140,19 +143,32 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 				printf(MAG"SING_CLOSE_REDIR -> add later\n"RESET);
 			else
 			{
-				printf(MAG"ARG -> add later\n"RESET);
+				if (tmp_arg == NULL)
+					tmp_arg = ft_strdup(tmp_lex->item);
+				else
+				{
+					tmp_arg = ft_strjoin(tmp_arg, " ");
+					tmp_arg = ft_strjoin(tmp_arg, tmp_lex->item); 
+				}
+				// printf(MAG"ARG -> add later\n"RESET);
 				
 			}
 			if (tmp_lex->next == NULL)
 				break ;
 			tmp_lex = tmp_lex->next;
 		}
+		if (ft_strlen(tmp_arg) == 0)
+		{
+			printf(RED"pipegroup doesnt conatin any commands: %s -> dunno what to do | EXIT\n"RESET, tmp_lex->item);
+			exit(0);
+		}
+		tmp_pars->args = ft_split(tmp_arg, ' ');
+		free(tmp_arg);
+		tmp_arg = "\0";
 		tmp_lex = tmp_lex->next;
 		tmp_pars = tmp_pars->next;
-		pipegroups--;	
+		pipegroups--;
 	}
-
-
 }
 
 void parser(t_hold *hold)
@@ -160,9 +176,13 @@ void parser(t_hold *hold)
     if (hold->exit_code != 0)
         return ;
 	recognize_type(hold);
-
+	check_syntax_errors(hold);
 	create_parsed_list(&hold, hold->lex_struct);
-	printf("ori1: %d\n", hold->parsed_list->outfile);
-	printf("ori2: %d\n", hold->parsed_list->next->outfile);
+	printf("outfile 1: %d\n", hold->parsed_list->outfile);
+	printf("outfile 2: %d\n", hold->parsed_list->next->outfile);
+	printf("args 1 [0]: %s\n", hold->parsed_list->args[0]);
+	printf("args 1 [1]: %s\n", hold->parsed_list->args[1]);
+	printf("args 2 [0]: %s\n", hold->parsed_list->next->args[0]);
+	printf("args 2 [1]: %s\n", hold->parsed_list->next->args[1]);
 exit(0);
 }

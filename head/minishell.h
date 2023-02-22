@@ -38,6 +38,7 @@
 # define WHT   "\x1B[37m"
 # define RESET "\x1B[0m"
 
+
 typedef struct s_lexing
 {
 	char		*item;
