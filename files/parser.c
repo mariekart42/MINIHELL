@@ -98,11 +98,29 @@ int32_t count_pipegroups(t_lexing *lex)
 
 /* function appends command from 'parsed_list' at the end of
  * each path of $PATH and checks for access
- * in case of access, cmd_path in parsed_chunk gets updated		*/
-// void init_cmdpath(t_hold **hold)
-// {
+ * in case of access, function returns path
+ * otherwise returns NULL		*/
+char *get_cmdpath(char *curr_cmd)
+{
+	char **env_path;
+	char *valid_path;
+	int32_t i = 0;
 
-// }
+	env_path = ft_split(getenv("PATH"), ':');
+	while (env_path[i] != NULL)
+	{
+		env_path[i] = ft_strjoin(env_path[i], "/");
+		valid_path = ft_strjoin(env_path[i], curr_cmd);
+		if (access(valid_path, F_OK | X_OK) == 0)
+			break ;
+		free(valid_path);
+		i++;
+	}
+	if (access(valid_path, F_OK | X_OK) != 0)
+		return (NULL);
+	else
+		return (valid_path);
+}
 
 void create_parsed_list(t_hold **hold, t_lexing *lex)
 {
@@ -115,7 +133,6 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 	tmp_arg = malloc(sizeof(char));
 	tmp_arg = "\0";
 	tmp_pars = NULL;
-	// tmp_arg = NULL;
 	tmp_lex = lex;
 	pipegroups = count_pipegroups(lex);
 	tmp = pipegroups;
@@ -135,6 +152,7 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 	{
 		while (tmp_lex->macro != PIPE)
 		{
+	printf("checl\n");
 			if (tmp_lex->macro == SING_CLOSE_REDIR || tmp_lex->macro == DOUBL_CLOSE_REDIR)
 			{
 				tmp_pars->outfile = check_outfile(*hold, tmp_lex->next, tmp_lex->macro);
@@ -166,7 +184,8 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 			exit(0);
 		}
 		tmp_pars->args = ft_split(tmp_arg, ' ');
-		// init_cmdpath(hold);
+		tmp_pars->cmd_path = get_cmdpath(tmp_pars->args[0]);
+	printf("checl\n");
 		free(tmp_arg);
 		tmp_arg = "\0";
 		tmp_lex = tmp_lex->next;
@@ -190,5 +209,6 @@ void parser(t_hold *hold)
 	printf("args 1 [1]: %s\n", hold->parsed_list->args[1]);
 	// printf("args 2 [0]: %s\n", hold->parsed_list->next->args[0]);
 	// printf("args 2 [1]: %s\n", hold->parsed_list->next->args[1]);
+	printf("cmdpath: %s\n", hold->parsed_list->cmd_path);
 exit(0);
 }

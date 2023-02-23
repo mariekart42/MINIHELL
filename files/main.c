@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/12 15:00:57 by mmensing          #+#    #+#             */
-/*   Updated: 2023/02/22 21:37:59 by mmensing         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../head/minishell.h"
 
 
@@ -93,8 +81,8 @@ int main(int32_t argc, char **argv, char **env)
 
 			lexer(hold);
 			parser(hold);
-			if (hold->exit_code == 0)
-				print_macro_list(hold->lex_struct);
+			// if (hold->exit_code == 0)
+			// 	print_macro_list(hold->lex_struct);
 printf("after parser | EXIT\n\n");
 exit(0);
 			executer(hold, env);

@@ -69,16 +69,17 @@ typedef struct s_hold
 {
 	char *valid_path;
 	char *env_path;
+
 	char	*line;
 	int32_t	exit_code;
 
+	struct s_lexing *lex_struct;
 
-	struct s_env_export	*export_list;
 	struct s_env_export	*env_list;
+	struct s_env_export	*export_list;
 
 	struct s_parsed_chunk	*parsed_list;
 
-	struct s_lexing *lex_struct;
 }				t_hold;
 
 //		main.c
@@ -142,7 +143,7 @@ bool builtin_parser(char *node);
 void recognize_type(t_hold *hold);
 int32_t count_pipegroups(t_lexing *lex);
 int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type);
-void init_cmdpath(t_hold **hold);
+char *get_cmdpath(char *curr_cmd);
 void create_parsed_list(t_hold **hold, t_lexing *lex);
 void parser(t_hold *hold);
 
