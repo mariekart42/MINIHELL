@@ -49,21 +49,3 @@ fclean: clean
 re: fclean all
 
 .PHONY: all re clean fclean
-
-# all: $(NAME)
-
-# $(NAME): $(O_FILES)
-# 	$(MAKE) -C include/libft
-# 	$(CC) $(CFLAGS) $(DEBUG) $(O_FILES) $(LIBFT) -lreadline -o $(NAME)
-
-# clean:
-# 	$(MAKE) clean -C include/libft
-# 	$(RM) $(O_FILES)
-	
-# fclean: clean
-# 	$(MAKE) fclean -C include/libft
-# 	$(RM) $(NAME)
-	
-# re: fclean all
-
-# .PHONY: all clean fclean re
