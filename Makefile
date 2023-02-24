@@ -40,6 +40,7 @@ $(LIB_F)/$(LIB):
 
 clean:
 	$(RM) $(OBJ_PATH)
+	@make clean -C $(LIB_F)
 
 fclean: clean
 	$(RM) $(NAME)
