@@ -21,25 +21,53 @@ void pwd_builtin(t_hold *hold)
 // Remove new line from the print out
 void echo_builtin(t_hold *hold)
 {
+	char	**args;
+	int		i;
+	int		j;
+	bool	is_nflag;
+
+	args = hold->parsed_list->args;
+	i = 1;
+	j = 1;
+	is_nflag = false;
 	// echo alone print new line
-	if (hold->parsed_list->args[1] == "-n") //strcmp!!!
+	if (args[1] = NULL)
 	{
-		// Iterate until args == NULL
-		ft_putstr_fd(hold->parsed_list->args[2], hold->parsed_list->outfile);
-		// exit with (0)
-		// return (0);
-	}
-	else 
-	{
-		// Iterate until args == NULL
-		// Spaces between
-		ft_putstr_fd(hold->parsed_list->args[1], hold->parsed_list->outfile);
 		ft_putstr_fd("\n", 1);
 		// exit with (0)
 		// return (0);
+		return ;
 	}
-	// exit with (69)
-	// return (69);
+	
+	if (ft_strncmp(args[1], "-n", 2) == 0)
+	{
+		while (args[1][j] != NULL)
+		{
+			if (args[1][j] == "n")
+			{
+				j++;
+				is_nflag = true;
+				i = 2;
+			}
+			else
+				break ;
+		}
+	}
+
+	while (args[i] != NULL)
+	{
+		ft_putstr_fd(args[i], hold->parsed_list->outfile);
+		if (args[i + 1] == NULL)
+			break ;
+		ft_putstr_fd(" ", hold->parsed_list->outfile);
+		i++
+	}
+
+	if (is_nflag == true)
+		ft_putstr_fd("\n", 1);
+	// exit with (0)
+	// return (0);
+	return ;
 }
 
 void env_builtin(t_hold *hold)
