@@ -21,17 +21,21 @@ void pwd_builtin(t_hold *hold)
 // Remove new line from the print out
 void echo_builtin(t_hold *hold)
 {
-	if (hold->parsed_list->args[1] == "-n")
+	// echo alone print new line
+	if (hold->parsed_list->args[1] == "-n") //strcmp!!!
 	{
-		ft_putstr_fd(hold->parsed_list->args[2], 1);
-		//exit with (0)
+		// Iterate until args == NULL
+		ft_putstr_fd(hold->parsed_list->args[2], hold->parsed_list->outfile);
+		// exit with (0)
 		// return (0);
 	}
 	else 
 	{
-		ft_putstr_fd(hold->parsed_list->args[1], 1);
+		// Iterate until args == NULL
+		// Spaces between
+		ft_putstr_fd(hold->parsed_list->args[1], hold->parsed_list->outfile);
 		ft_putstr_fd("\n", 1);
-		//exit with (0)
+		// exit with (0)
 		// return (0);
 	}
 	// exit with (69)
