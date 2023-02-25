@@ -16,6 +16,35 @@ void pwd_builtin(t_hold *hold)
 	write(1, "\n", 1);
 }
 
+bool echo_builtin_helper(t_hold *hold, int i, bool is_nflag) 
+{
+	char	**args;
+	int32_t	outfile;
+	int		j;
+
+	args = hold->parsed_list->args;
+	outfile = hold->parsed_list->outfile;
+	j = 1;
+	if (ft_strncmp(args[i], "-n", 2) == 0)
+	{
+		while (args[i][j] != NULL)
+		{
+			if (args[i][j] == "n")
+			{
+				j++;
+				is_nflag = true;
+			}
+			else
+			{
+				is_nflag = false;
+				break ;
+			}
+		}
+	}
+	if (!is_nflag)
+		ft_putstr_fd(args[i], outfile);
+	return (is_nflag);
+}
 
 // Need to add option of -n
 // Remove new line from the print out
@@ -23,12 +52,10 @@ void echo_builtin(t_hold *hold)
 {
 	char	**args;
 	int		i;
-	int		j;
 	bool	is_nflag;
 
 	args = hold->parsed_list->args;
 	i = 1;
-	j = 1;
 	is_nflag = false;
 	// echo alone print new line
 	if (args[1] = NULL)
@@ -39,19 +66,13 @@ void echo_builtin(t_hold *hold)
 		return ;
 	}
 	
-	if (ft_strncmp(args[1], "-n", 2) == 0)
+	// -n -n -n loop
+	while (args[i] != NULL)
 	{
-		while (args[1][j] != NULL)
-		{
-			if (args[1][j] == "n")
-			{
-				j++;
-				is_nflag = true;
-				i = 2;
-			}
-			else
-				break ;
-		}
+		is_nflag = echo_builtin_helper(hold, i, is_nflag);
+		i++;
+		if (!is_nflag)
+			break ;
 	}
 
 	while (args[i] != NULL)
@@ -60,10 +81,10 @@ void echo_builtin(t_hold *hold)
 		if (args[i + 1] == NULL)
 			break ;
 		ft_putstr_fd(" ", hold->parsed_list->outfile);
-		i++
+		i++;
 	}
 
-	if (is_nflag == true)
+	if (!is_nflag)
 		ft_putstr_fd("\n", 1);
 	// exit with (0)
 	// return (0);
