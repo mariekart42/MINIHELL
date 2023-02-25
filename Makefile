@@ -1,6 +1,7 @@
 NAME	= minishell
 CC		= gcc
 CFLAGS	= -Wall -Werror -Wextra -g
+# CFLAGS	= -Wall -Wextra -g
 # CFLAGS	= -Werror -Wall -Wextra -pthread -g -fsanitize=thread
 RM		= rm -rf
 
@@ -37,6 +38,7 @@ $(NAME): $(OBJS) $(LIB_F)/$(LIB)
 
 $(LIB_F)/$(LIB):
 	@make -C $(LIB_F)
+	@make bonus -C $(LIB_F)
 
 clean:
 	$(RM) $(OBJ_PATH)
