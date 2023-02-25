@@ -78,9 +78,8 @@ void echo_builtin(t_hold *hold)
 	while (args[i] != NULL)
 	{
 		ft_putstr_fd(args[i], hold->parsed_list->outfile);
-		if (args[i + 1] == NULL)
-			break ;
-		ft_putstr_fd(" ", hold->parsed_list->outfile);
+		if (args[i + 1] != NULL)
+			ft_putstr_fd(" ", hold->parsed_list->outfile);
 		i++;
 	}
 
