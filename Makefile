@@ -1,41 +1,53 @@
-NAME= minishell.a
+NAME	= minishell
+CC		= gcc
+CFLAGS	= -Wall -Werror -Wextra -g
+# CFLAGS	= -Wall -Wextra -g
+# CFLAGS	= -Werror -Wall -Wextra -pthread -g -fsanitize=thread
+RM		= rm -rf
 
-CC = gcc
-CFLAGS= -Wall -Werror -Wextra -g
-# -fsanitize=thread
-HEADER= minishell.h
-RM= rm -rf
-NAME = minishell
-#DEBUG = -fsanitize=address
+SRC_PATH = src/
+OBJ_PATH = obj/
+INC_PATH = inc/
 
-LIBFT= include/libft/libft.a
+LIB_F = libft
+LIB = libft.a
 
-FILES=	files/main.c \
-		files/utils.c \
-		files/builtins/export.c \
-		files/builtins/builtins.c \
-		files/lexing.c \
-		files/parser.c \
-		files/executer.c \
-		files/syntax_errors.c \
-		files/delete_later.c
+SRC		=	main.c \
+			utils.c \
+			lexing.c \
+			parser.c \
+			executer.c \
+			syntax_errors.c \
+			delete_later.c \
+			export.c \
+			builtins.c
 
-O_FILES= $(FILES:%.c=%.o)
+SRCS	= $(addprefix $(SRC_PATH), $(SRC))
+OBJ		= $(SRC:.c=.o)
+OBJS	= $(addprefix $(OBJ_PATH), $(OBJ))
+INC		= -I $(INC_PATH)
 
 all: $(NAME)
 
-$(NAME): $(O_FILES)
-	$(MAKE) -C include/libft
-	$(CC) $(CFLAGS) $(DEBUG) $(O_FILES) $(LIBFT) -lreadline -o $(NAME)
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c
+	@mkdir -p $(OBJ_PATH)
+	$(CC) $(CFLAGS) -c $< -o $@ $(INC)
+
+$(NAME): $(OBJS) $(LIB_F)/$(LIB)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIB_F)/$(LIB) -o $(NAME) -lreadline
+
+$(LIB_F)/$(LIB):
+	@make -C $(LIB_F)
+	@make bonus -C $(LIB_F)
 
 clean:
-	$(MAKE) clean -C include/libft
-	$(RM) $(O_FILES)
-	
+	$(RM) $(OBJ_PATH)
+	@make clean -C $(LIB_F)
+
 fclean: clean
-	$(MAKE) fclean -C include/libft
 	$(RM) $(NAME)
-	
+	@make fclean -C $(LIB_F)
+
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all re clean fclean
