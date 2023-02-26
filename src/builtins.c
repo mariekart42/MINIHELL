@@ -16,14 +16,14 @@ void pwd_builtin(t_hold *hold) // Receive pipe_node
 	write(1, "\n", 1);
 }
 
-bool echo_builtin_helper(t_hold *hold, int i, bool is_nflag) 
+bool echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag) 
 {
 	char	**args;
 	int32_t	outfile;
 	int		j;
 
-	args = hold->parsed_list->args;
-	outfile = hold->parsed_list->outfile;
+	args = parsed_node->args;
+	outfile = parsed_node->outfile;
 	j = 1;
 	if (ft_strncmp(args[i], "-n", 2) == 0)
 	{
@@ -46,9 +46,7 @@ bool echo_builtin_helper(t_hold *hold, int i, bool is_nflag)
 	return (is_nflag);
 }
 
-// Need to add option of -n
-// Remove new line from the print out
-void echo_builtin(t_parsed_chunk *parsed_node) // Can receive current pipe group node of parsed chunk
+void echo_builtin(t_parsed_chunk *parsed_node)
 {
 	char	**args;
 	int		i;
@@ -57,30 +55,29 @@ void echo_builtin(t_parsed_chunk *parsed_node) // Can receive current pipe group
 	args = parsed_node->args;
 	i = 1;
 	is_nflag = false;
-	// echo alone print new line
-	if (args[1] = NULL)
+	// echo alone print new line. No segfault?
+	if (args[1] == NULL)
 	{
 		ft_putstr_fd("\n", 1);
 		return ;
 	}
-	
 	// -n -n -n loop //Only consider for i = 1
+	// Question for Marie: How we handle echo -n Santiago Tena if not 
+	// many arguments possible
 	while (args[i] != NULL)
 	{
-		is_nflag = echo_builtin_helper(hold, i, is_nflag);
+		is_nflag = echo_builtin_helper(parsed_node, i, is_nflag);
 		i++;
 		if (!is_nflag)
 			break ;
 	}
-
 	while (args[i] != NULL)
 	{
-		ft_putstr_fd(args[i], hold->parsed_list->outfile);
+		ft_putstr_fd(args[i], parsed_node->outfile);
 		if (args[i + 1] != NULL)
-			ft_putstr_fd(" ", hold->parsed_list->outfile);
+			ft_putstr_fd(" ", parsed_node->outfile);
 		i++;
 	}
-
 	if (!is_nflag)
 		ft_putstr_fd("\n", 1);
 	return ;
