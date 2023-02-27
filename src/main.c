@@ -82,6 +82,8 @@ int main(int32_t argc, char **argv, char **env)
 
 			lexer(hold);
 			parser(hold);
+			echo_builtin(hold->parsed_list);
+			exit(0);
 			// if (hold->exit_code == 0)
 			// 	print_macro_list(hold->lex_struct);
 			// executer(hold);
@@ -140,3 +142,10 @@ int main(int32_t argc, char **argv, char **env)
 // - after main loop clear all memory
 // - exit with exit command -> returns 0
 // - signals shit
+
+// - - -
+//!  CONCERNINGSITUATIONS:
+//
+//
+//
+//
