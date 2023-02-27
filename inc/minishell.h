@@ -93,6 +93,7 @@ int32_t check_syntax_errors(t_hold *hold);
 
 
 //		builtins/builtins.c
+void echo_builtin(t_parsed_chunk *parsed_node);
 void env_builtin(t_hold *hold);
 void pwd_builtin(t_hold *hold);
 void cd_builtin(t_hold *hold);
@@ -156,4 +157,5 @@ void print_macro_list(t_lexing *list);
 void print_export(t_hold *hold);
 void print_parsed_list(t_parsed_chunk *pars);
 // -----------------------------------------
+
 #endif
