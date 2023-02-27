@@ -96,7 +96,9 @@ exit(0);
 }
 
 //!!!NEXT:
+// - executer: what if there is more then one outfile/infile? -> testing
 // - parser done for now, start executing (redirection, forking)
+// - look again into wait/-pid function
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

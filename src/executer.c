@@ -11,13 +11,17 @@ void executer(t_hold *hold)
 	pipegroups = count_pipegroups(hold->lex_struct);
 	printf("am pipes: %d\n", pipegroups);
 	// handle always one pipegroup
+
+	// create and malloc array with process-id's for forking
+	// open amount of pipes we need (one pipegroup = one pipe)
 	while (pipegroups > 0)
 	{
-		// open pipes
+		// fork, if pid is 0:
+			// redirection (dup2())
+			// close filediscriptors (pipes and files)
+			// execute command
 
-		// redirection
-
-		// fork
 		pipegroups--;
 	}
+	// loop where we wait for kiddos to finish
 }
