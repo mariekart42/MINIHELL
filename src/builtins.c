@@ -3,7 +3,7 @@
 /* bash:	If the current working directory is a symbolic link that points to a 
  * 			directory that no longer exists, the pwd command will fail with a 
  * 			"No such file or directory" error								*/
-void pwd_builtin(t_hold *hold) // Receive pipe_node // Does not need it
+void pwd_builtin(t_hold *hold)
 {
 	char	path[PATH_MAX];
 	
@@ -15,6 +15,23 @@ void pwd_builtin(t_hold *hold) // Receive pipe_node // Does not need it
 	write(1, path, ft_strlen(path));
 	write(1, "\n", 1);
 }
+
+// Plagiarims is fine when I do it
+// int	pwd(t_cmd *cmdnode)
+// {
+// 	char	*path;
+
+// 	if (cmdnode->cmd_arr[1])
+// 		return (msg_err("pwd", E_MANYARG, NULL), 1);
+// 	path = NULL;
+// 	path = getcwd(path, 0);
+// 	if (!path)
+// 		return (msg_err("pwd", E_NOFILDIR, NULL), 1);
+// 	write(cmdnode->fd_out, path, ft_strlen(path));
+// 	write(cmdnode->fd_out, "\n", 1);
+// 	free(path);
+// 	return (0);
+// }
 
 bool echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag) 
 {
@@ -102,9 +119,6 @@ void env_builtin(t_hold *hold)
 	}
 }
 
-
-
-
 void cd_builtin(t_hold *hold)
 {
 	if (hold->lex_struct->next->item == NULL)
@@ -145,12 +159,12 @@ bool builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		// printf(MAG"BUILTIN\n"RESET);
 		if (ft_strncmp(hold->lex_struct->item, "echo", 4) == 0)
 			return (echo_builtin(parsed_node), true);
+		else if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
+			return (pwd_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "env", 3) == 0)
 		// 	return (env_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)
 		// 	return (export_builtin(hold), true);
-		else if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
-			return (pwd_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
 		// 	return (cd_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "unset", 5) == 0)
