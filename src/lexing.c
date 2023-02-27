@@ -192,7 +192,6 @@ void lexer(t_hold *hold)
 {
 	int32_t	i;
 	i = 0;
-
 	check_spaces(hold);
 	closed_quotes(hold);
 	while (hold->line[i] != '\0' && hold->line[i] != '\n')
@@ -222,4 +221,5 @@ void lexer(t_hold *hold)
         }
 		i++;
 	}
+printf(CYN"lex, error code: %d\n"RESET, hold->exit_code);
 }

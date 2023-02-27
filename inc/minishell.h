@@ -70,6 +70,8 @@ typedef struct s_hold
 	char *valid_path;
 	char *env_path;
 
+	char	**my_env;
+
 	char	*line;
 	int32_t	exit_code;
 
@@ -83,7 +85,7 @@ typedef struct s_hold
 }				t_hold;
 
 //		main.c
-void free_content(t_hold *hold);
+void free_content(t_hold **hold);
 int32_t init_structs(t_hold **hold);
 void free_env_export(t_hold *hold);
 
@@ -131,13 +133,18 @@ void parser(t_hold *hold);
 
 
 //		executer.c
+void redirection(t_parsed_chunk *parsed_node);
+void open_pipefds(t_hold *hold, int32_t pipe_groups);
+void close_fds(t_parsed_chunk *parsed_node, int32_t pipegroups);
+char **list_to_char_array(t_env_export *env_node);
 void executer(t_hold *hold);
 
 
 
 //		utils.c
-void			free_list_lex(t_lexing* head);
-void			free_list_env(t_env_export* head);
+void free_list_pars(t_parsed_chunk* head);
+void free_list_lex(t_lexing* head);
+void free_list_env_export(t_env_export* head);
 void			add_node_lex(t_hold *hold, char *content);
 t_lexing		*last_node_lex(t_lexing *lst);
 t_env_export	*new_node_env(void);

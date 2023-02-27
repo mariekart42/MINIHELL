@@ -1,27 +1,61 @@
 #include "minishell.h"
 
+/* function frees all nodes of linked list 'parsed_chunk'
+ * and all its variables:
+ *	-> args, cmd_path 					*/
+void free_list_pars(t_parsed_chunk* head)
+{
+	t_parsed_chunk* tmp;
+	int32_t i;
+
+	i = 0;
+	while (head != NULL)
+	{
+		tmp = head;
+		head = head->next;
+		free(tmp->cmd_path);
+		while (tmp->args[i] != NULL)
+		{
+			free(tmp->args[i]);
+			i++;
+		}
+		i = 0;
+		free(tmp);
+	}
+}
+
+/* function frees all nodes of linked list 'lexed_list'
+ * and all its variables:
+ *	-> item 					*/
 void free_list_lex(t_lexing* head)
 {
-   t_lexing* tmp;
+   t_lexing *tmp;
 
-   while (head != NULL)
-    {
-       tmp = head;
-       head = head->next;
-       free(tmp);
+	while (head != NULL)
+	{
+		tmp = head;
+		head = head->next;
+		free(tmp->item);
+		free(tmp);
     }
 }
 
-void free_list_env(t_env_export* head)
+/* function frees all nodes of linked list 'env_list' or 'export_list'
+ * and all its variables:
+ *	-> item, var_name, var_value				*/
+void free_list_env_export(t_env_export* head)
 {
-   t_env_export* tmp;
+	t_env_export* tmp;
 
-   while (head != NULL)
-    {
-       tmp = head;
-       head = head->next;
-       free(tmp);
-    }
+	while (head != NULL)
+	{
+		tmp = head;
+		head = head->next;
+		free(tmp->item);
+		free(tmp->var_name);
+		free(tmp->var_value);
+		free(tmp);
+	}
 }
 
 //	- - - -  for LEX struct  - - - - - - - - - - - - - - 
@@ -127,6 +161,7 @@ t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst)
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 void exit_status(t_hold *hold, char *message, int8_t exit_code_)
 {
+	// printf(RED"calling exit_status: %d\n"RESET, exit_code_);
 	write(2, message, ft_strlen(message));
 	hold->exit_code = exit_code_;
 }
