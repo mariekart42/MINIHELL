@@ -90,7 +90,7 @@ void print_parsed_list(t_parsed_chunk *pars)
 	t_parsed_chunk *tmp_pars = pars;
 	int i = 0;
 	int k = 1;
-	printf(RED"\n--- print_parsed_list ---"RESET);
+	printf(RED"\n    print_parsed_list" RESET);
 	while (tmp_pars != NULL)
 	{
 		printf("\n - - - PIPEGROUP %d - - - \n", k);
@@ -101,8 +101,14 @@ void print_parsed_list(t_parsed_chunk *pars)
 			i++;
 		}
 		printf("\n");
-		printf(GRN"infile:   %d\n"RESET, tmp_pars->infile);
-		printf(CYN"outfile:  %d\n"RESET, tmp_pars->outfile);
+		if(tmp_pars->infile == 0)
+			printf(GRN"infile:   stdin\n"RESET);
+		else
+			printf(GRN"infile:   %d\n"RESET, tmp_pars->infile);
+		if(tmp_pars->outfile==1)
+			printf(CYN"outfile:   stdout\n"RESET);
+		else
+			printf(CYN"outfile:  %d\n"RESET, tmp_pars->outfile);
 		printf(MAG"cmdpath:  %s\n"RESET, tmp_pars->cmd_path);
 		i = 0;
 		k++;

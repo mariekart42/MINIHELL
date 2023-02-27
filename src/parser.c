@@ -58,9 +58,9 @@ int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
 {
 	int32_t file_id;
 
-	// get rid of double or single quotes
-	if (file_node->macro == SING_QUOTE || file_node->macro == DOUBL_QUOTE)
-		file_node->item = ft_substr(file_node->item, 1, ft_strlen(file_node->item)-2);
+	// // get rid of double or single quotes
+	// if (file_node->macro == SING_QUOTE || file_node->macro == DOUBL_QUOTE)
+	// 	file_node->item = ft_substr(file_node->item, 1, ft_strlen(file_node->item)-2);
 
 // not 100% sure about opening macros (in both open calls)
 	if (type == SING_CLOSE_REDIR)
@@ -86,9 +86,9 @@ int32_t check_infile(t_hold *hold, t_lexing *file_node)
 {
 	int32_t file_id;
 
-	// get rid of double or single quotes
-	if (file_node->macro == SING_QUOTE || file_node->macro == DOUBL_QUOTE)
-		file_node->item = ft_substr(file_node->item, 1, ft_strlen(file_node->item)-2);
+	// // get rid of double or single quotes
+	// if (file_node->macro == SING_QUOTE || file_node->macro == DOUBL_QUOTE)
+	// 	file_node->item = ft_substr(file_node->item, 1, ft_strlen(file_node->item)-2);
 
 // not 100% sure about opening macros
 	file_id = open(file_node->item, O_RDONLY);

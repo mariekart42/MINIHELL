@@ -117,13 +117,14 @@ exit(0);
 
 //!  PARSER:
 // - !do env/export shit in parser first
-// - throw error if redir signs at the very end --> do in parser
-// - check words for access to figure out if its a valid command (current path with appending word to the end)
-//		-> if first parameter is not a command, quit !! --> not real bash behaiviour (figure out what else it could be (eg redir sign))
+// - parser keeps all quote symbols -> need later?
+
 
 //!  EXECUTER:
+
+
+//!  BUILTINS:
 // - later: put builtin stuff into executer (not as bool in main!)
-// - use getenv in get_path function
 // - builtins:
 //		- env √
 //		- export
