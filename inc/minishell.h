@@ -110,6 +110,7 @@ char *return_macro(int32_t m);
 void print_list(t_lexing *list, char *name);
 void print_macro_list(t_lexing *list);
 void print_export(t_hold *hold);
+void print_parsed_list(t_parsed_chunk *pars);
 
 
 //		utils.c
@@ -143,6 +144,7 @@ bool builtin_parser(char *node);
 void recognize_type(t_hold *hold);
 int32_t count_pipegroups(t_lexing *lex);
 int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type);
+int32_t check_infile(t_hold *hold, t_lexing *file_node);
 char *get_cmdpath(char *curr_cmd);
 void create_parsed_list(t_hold **hold, t_lexing *lex);
 void parser(t_hold *hold);

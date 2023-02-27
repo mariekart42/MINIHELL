@@ -84,3 +84,29 @@ void print_export(t_hold *hold)
 		tmp = tmp->next;
 	}
 }
+
+void print_parsed_list(t_parsed_chunk *pars)
+{
+	t_parsed_chunk *tmp_pars = pars;
+	int i = 0;
+	int k = 1;
+	printf(RED"\n--- print_parsed_list ---"RESET);
+	while (tmp_pars != NULL)
+	{
+		printf("\n - - - PIPEGROUP %d - - - \n", k);
+		printf(YEL"args:     "RESET);
+		while (tmp_pars->args[i] != NULL)
+		{
+			printf(YEL"%s  "RESET, tmp_pars->args[i]);
+			i++;
+		}
+		printf("\n");
+		printf(GRN"infile:   %d\n"RESET, tmp_pars->infile);
+		printf(CYN"outfile:  %d\n"RESET, tmp_pars->outfile);
+		printf(MAG"cmdpath:  %s\n"RESET, tmp_pars->cmd_path);
+		i = 0;
+		k++;
+		tmp_pars = tmp_pars->next;
+	}
+	printf(RED"------------------------\n\n"RESET);
+}

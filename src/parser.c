@@ -51,7 +51,7 @@ void recognize_type(t_hold *hold)
 	}
 }
 
-/* function checks and returns outfile 
+/* function checks and returns outfile on success
  * opens/creates file if it not exists
  * check later for permission issues if the file already exists(how lol?) */
 int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
@@ -76,6 +76,24 @@ int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
 
 	if (file_id < 0)
 		exit_status(hold, "Error!: unable to open outfile (in check_outfile func)\n", 69);
+	return (file_id);
+}
+
+/* function checks and returns infile on success
+ * input file must exist and be readable by the user running the command
+ * file_node is the current node in parsed_list	*/
+int32_t check_infile(t_hold *hold, t_lexing *file_node)
+{
+	int32_t file_id;
+
+	// get rid of double or single quotes
+	if (file_node->macro == SING_QUOTE || file_node->macro == DOUBL_QUOTE)
+		file_node->item = ft_substr(file_node->item, 1, ft_strlen(file_node->item)-2);
+
+// not 100% sure about opening macros
+	file_id = open(file_node->item, O_RDONLY);
+	if (file_id < 0)
+		exit_status(hold, "Error!: unable to open infile (in check_infile func)\n", 69);
 	return (file_id);
 }
 
@@ -152,16 +170,18 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 	{
 		while (tmp_lex->macro != PIPE)
 		{
-	printf("checl\n");
 			if (tmp_lex->macro == SING_CLOSE_REDIR || tmp_lex->macro == DOUBL_CLOSE_REDIR)
 			{
 				tmp_pars->outfile = check_outfile(*hold, tmp_lex->next, tmp_lex->macro);
 				tmp_lex = tmp_lex->next;
 			}
+			else if (tmp_lex->macro == SING_OPEN_REDIR)
+			{
+				tmp_pars->infile = check_infile(*hold, tmp_lex->next);
+				tmp_lex = tmp_lex->next;
+			}
 			else if (tmp_lex->macro == DOUBL_OPEN_REDIR)	// herdoc function <<
 				printf(MAG"DOUBL_CLOSE_REDIR -> add later\n"RESET);
-			else if (tmp_lex->macro == SING_OPEN_REDIR) // add later
-				printf(MAG"SING_CLOSE_REDIR -> add later\n"RESET);
 			else
 			{
 				if (tmp_arg == NULL)
@@ -185,7 +205,6 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 		}
 		tmp_pars->args = ft_split(tmp_arg, ' ');
 		tmp_pars->cmd_path = get_cmdpath(tmp_pars->args[0]);
-	printf("checl\n");
 		free(tmp_arg);
 		tmp_arg = "\0";
 		tmp_lex = tmp_lex->next;
@@ -203,12 +222,14 @@ void parser(t_hold *hold)
 
 	create_parsed_list(&hold, hold->lex_struct);
 	
-	printf("outfile 1: %d\n", hold->parsed_list->outfile);
-	// printf("outfile 2: %d\n", hold->parsed_list->next->outfile);
-	printf("args 1 [0]: %s\n", hold->parsed_list->args[0]);
-	printf("args 1 [1]: %s\n", hold->parsed_list->args[1]);
-	// printf("args 2 [0]: %s\n", hold->parsed_list->next->args[0]);
-	// printf("args 2 [1]: %s\n", hold->parsed_list->next->args[1]);
-	printf("cmdpath: %s\n", hold->parsed_list->cmd_path);
+print_parsed_list(hold->parsed_list);
+
+	// printf("outfile 1: %d\n", hold->parsed_list->outfile);
+	// // printf("outfile 2: %d\n", hold->parsed_list->next->outfile);
+	// printf("args 1 [0]: %s\n", hold->parsed_list->args[0]);
+	// printf("args 1 [1]: %s\n", hold->parsed_list->args[1]);
+	// // printf("args 2 [0]: %s\n", hold->parsed_list->next->args[0]);
+	// // printf("args 2 [1]: %s\n", hold->parsed_list->next->args[1]);
+	// printf("cmdpath: %s\n", hold->parsed_list->cmd_path);
 exit(0);
 }

@@ -100,7 +100,7 @@ exit(0);
 // - create parsed list:
 //		- outfile √
 //		- infile -> only redirs give info about it? '(<')
-//		- commandpath  NOW
+//		- commandpath  √
 //		- args √
 //( - export: update path (as well for env))
 //( - print out export correctly and seperate creating in the beginning and as always caller)
