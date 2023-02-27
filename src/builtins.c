@@ -9,29 +9,12 @@ void pwd_builtin(t_hold *hold)
 	
 	if (!getcwd(path, PATH_MAX))
 	{
-		exit_status(hold, RED"PWD: NO SUCH FILE OR DIRECTORY\n"RESET, 69);
+		exit_status(hold, RED"No such file or directory\n"RESET, 69);
 		return ;
 	}
-	write(1, path, ft_strlen(path));
-	write(1, "\n", 1);
+	write(hold->parsed_list->outfile, path, ft_strlen(path));
+	write(hold->parsed_list->outfile, "\n", 1);
 }
-
-// Plagiarims is fine when I do it
-// int	pwd(t_cmd *cmdnode)
-// {
-// 	char	*path;
-
-// 	if (cmdnode->cmd_arr[1])
-// 		return (msg_err("pwd", E_MANYARG, NULL), 1);
-// 	path = NULL;
-// 	path = getcwd(path, 0);
-// 	if (!path)
-// 		return (msg_err("pwd", E_NOFILDIR, NULL), 1);
-// 	write(cmdnode->fd_out, path, ft_strlen(path));
-// 	write(cmdnode->fd_out, "\n", 1);
-// 	free(path);
-// 	return (0);
-// }
 
 bool echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag) 
 {
