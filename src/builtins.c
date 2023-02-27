@@ -25,28 +25,32 @@ bool echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag)
 	args = parsed_node->args;
 	outfile = parsed_node->outfile;
 	j = 1;
+	is_nflag = false;
 	if (ft_strncmp(args[i], "-n", 2) == 0)
 	{
-		while (args[i][j] != NULL)
+		while (args[i][j] != '\0')
 		{
-			if (args[i][j] == "n")
+			if (args[i][j] == 'n')
 			{
+				// ft_putstr_fd("one", outfile);  // deletus
 				j++;
 				is_nflag = true;
 			}
 			else
 			{
+				// ft_putstr_fd("two", outfile);  // deletus
 				is_nflag = false;
 				break ;
 			}
 		}
 	}
-	if (!is_nflag)
-	{
-		ft_putstr_fd(args[i], outfile);
-		if (args[i + 1] != NULL)
-			ft_putstr_fd(" ", parsed_node->outfile);
-	}
+	// if (!is_nflag)
+	// {
+	// 	ft_putstr_fd("three", outfile);  // deletus
+	// 	ft_putstr_fd(args[i], outfile);
+	// 	if (args[i + 1] != NULL)
+	// 		ft_putstr_fd(" ", parsed_node->outfile);
+	// }
 	return (is_nflag);
 }
 
@@ -55,6 +59,7 @@ void echo_builtin(t_parsed_chunk *parsed_node)
 	char	**args;
 	int		i;
 	bool	is_nflag;
+	bool 	temp_flag;
 
 	args = parsed_node->args;
 	i = 1;
@@ -64,13 +69,13 @@ void echo_builtin(t_parsed_chunk *parsed_node)
 		ft_putstr_fd("\n", 1);
 		return ;
 	}
-	// -n -n -n loop //Only consider for i = 1
 	while (args[i] != NULL)
 	{
-		is_nflag = echo_builtin_helper(parsed_node, i, is_nflag);
-		i++;
-		if (!is_nflag)
+		temp_flag = echo_builtin_helper(parsed_node, i, is_nflag);
+		if (!temp_flag)
 			break ;
+		is_nflag = temp_flag;
+		i++;
 	}
 	while (args[i] != NULL)
 	{
