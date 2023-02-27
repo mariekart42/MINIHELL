@@ -9,17 +9,33 @@ void redirection(t_parsed_chunk *parsed_node)
 	dup2(parsed_node->outfile, STDOUT_FILENO);
 }
 
-void open_pipefds(t_hold *hold)
+void open_pipefds(t_hold *hold, int32_t pipe_groups)
 {
-	
+	int32_t i;
+	i = 0;
+	while (i < pipe_groups)
+	{
+		if (pipe(hold->parsed_list->pipe_fds[i]) < 0)
+			exit_status(hold, "Error! Failed to open pipe fd's in open_pipefds()!\n", 69);
+		i++;
+	}
+}
+
+void close_fds(t_parsed_chunk *parsed_node)
+{
+	parsed_node->pipe_fds[0][0] = 69;
+	printf("%d\n", parsed_node->pipe_fds[0][0]);
+
 }
 
 void executer(t_hold *hold)
 {
+	printf("in executer\n");
 	int32_t *pids;
 	int32_t pipegroups;
 	int32_t	i;
 	t_parsed_chunk *parsed_node;
+	// int32_t pipe_fds[MAX_FD][2];
 
 	parsed_node = hold->parsed_list;
 	if (hold->exit_code != 0)
@@ -34,7 +50,7 @@ void executer(t_hold *hold)
 		return (exit_status(hold, "Error! Failed to malloc for pids (in executer())\n", 69));
 
 	// open amount of pipes we need (one pipegroup = one pipe)
-	open_pipefds(hold);
+	open_pipefds(hold, pipegroups);
 
 	i = 0;
 	while (pipegroups > 0)
@@ -46,7 +62,8 @@ void executer(t_hold *hold)
 			redirection(parsed_node);
 
 			// close filediscriptors (pipes and files)
-			
+			close_fds(parsed_node);
+
 			// execute command
 
 		}

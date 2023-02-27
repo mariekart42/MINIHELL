@@ -26,7 +26,7 @@
 # define DOUBL_OPEN_REDIR 7
 # define DOUBL_CLOSE_REDIR 8
 
-
+# define MAX_FD 1024
 
 //colour shit
 # define RED   "\x1B[31m"
@@ -61,7 +61,7 @@ typedef struct s_parsed_chunk
 	char	*cmd_path;
 	int32_t	infile;
 	int32_t	outfile;
-
+	int32_t pipe_fds[MAX_FD][2];
 	struct s_parsed_chunk	*next;
 }			t_parsed_chunk;
 
