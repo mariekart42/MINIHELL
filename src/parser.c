@@ -154,7 +154,7 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 	tmp_lex = lex;
 	pipegroups = count_pipegroups(lex);
 	tmp = pipegroups;
-	printf("amount pipegroups: %d\n", pipegroups);
+	// printf("amount pipegroups: %d\n", pipegroups);
 
 	// malloc amount of nodes as there are pipegroups:
 	while (pipegroups > 0)
@@ -222,14 +222,4 @@ void parser(t_hold *hold)
 
 	create_parsed_list(&hold, hold->lex_struct);
 	
-print_parsed_list(hold->parsed_list);
-
-	// printf("outfile 1: %d\n", hold->parsed_list->outfile);
-	// // printf("outfile 2: %d\n", hold->parsed_list->next->outfile);
-	// printf("args 1 [0]: %s\n", hold->parsed_list->args[0]);
-	// printf("args 1 [1]: %s\n", hold->parsed_list->args[1]);
-	// // printf("args 2 [0]: %s\n", hold->parsed_list->next->args[0]);
-	// // printf("args 2 [1]: %s\n", hold->parsed_list->next->args[1]);
-	// printf("cmdpath: %s\n", hold->parsed_list->cmd_path);
-exit(0);
 }

@@ -105,26 +105,6 @@ void swap_data(t_env_export *export_list);
 void sort_export_list(t_hold *hold);
 
 
-//		delete_later.c
-char *return_macro(int32_t m);
-void print_list(t_lexing *list, char *name);
-void print_macro_list(t_lexing *list);
-void print_export(t_hold *hold);
-void print_parsed_list(t_parsed_chunk *pars);
-
-
-//		utils.c
-void free_list_lex(t_lexing* head);
-void free_list_env(t_env_export* head);
-void		add_node_lex(t_hold *hold, char *content);
-t_lexing	*last_node_lex(t_lexing *lst);
-t_env_export *new_node_env(void);
-t_env_export *add_node_env(t_hold *hold, char *content, char *type);
-t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst);
-void add_node_pars(t_hold **hold);
-void exit_status(t_hold *hold, char *message, int8_t exit_code_);
-void create_env_export_list(t_hold *hold, char **ori_env);
-
 
 //		lexing.c
 int32_t	lex_quote(t_hold *hold, int32_t i);
@@ -151,9 +131,29 @@ void parser(t_hold *hold);
 
 
 //		executer.c
-void init_args(t_hold *hold);
-void get_path(t_hold *hold, char **env, int32_t cmd_index);
-void executer(t_hold *hold, char **env);
+void executer(t_hold *hold);
 
 
+
+//		utils.c
+void			free_list_lex(t_lexing* head);
+void			free_list_env(t_env_export* head);
+void			add_node_lex(t_hold *hold, char *content);
+t_lexing		*last_node_lex(t_lexing *lst);
+t_env_export	*new_node_env(void);
+t_env_export	*add_node_env(t_hold *hold, char *content, char *type);
+t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst);
+void			add_node_pars(t_hold **hold);
+void			exit_status(t_hold *hold, char *message, int8_t exit_code_);
+void			create_env_export_list(t_hold *hold, char **ori_env);
+
+
+// -----------------------------------------
+//		delete_later.c
+char *return_macro(int32_t m);
+void print_list(t_lexing *list, char *name);
+void print_macro_list(t_lexing *list);
+void print_export(t_hold *hold);
+void print_parsed_list(t_parsed_chunk *pars);
+// -----------------------------------------
 #endif

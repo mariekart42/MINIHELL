@@ -1,6 +1,7 @@
 #include "minishell.h"
 
 // KeinDrama
+// niemals
 
 void free_content(t_hold *hold)
 {
@@ -83,12 +84,10 @@ int main(int32_t argc, char **argv, char **env)
 			parser(hold);
 			// if (hold->exit_code == 0)
 			// 	print_macro_list(hold->lex_struct);
-printf("after parser | EXIT\n\n");
+			executer(hold);
+printf("after executer | EXIT\n\n");
 exit(0);
-			executer(hold, env);
-
 			free_content(hold);
-			
 		}
 	}
 	free_env_export(hold);
@@ -97,19 +96,13 @@ exit(0);
 }
 
 //!!!NEXT:
-// - create parsed list:
-//		- outfile √
-//		- infile -> only redirs give info about it? '(<')
-//		- commandpath  √
-//		- args √
-//( - export: update path (as well for env))
-//( - print out export correctly and seperate creating in the beginning and as always caller)
+// - parser done for now, start executing (redirection, forking)
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 //!  GENERAL:
 // - move cursor bums
-// - how to store prev return value for $? ?
+// - how to store prev return value for '$?' ?
 // - handle also relativ paths
 
 
@@ -117,19 +110,23 @@ exit(0);
 
 //!  PARSER:
 // - !do env/export shit in parser first
-// - parser keeps all quote symbols -> need later?
+// - parser keeps all quote symbols -> need later or should get removed/skipped in parser?
 
 
 //!  EXECUTER:
+//		- forking
+//		- redirections
+//		- executing
+//		- create pipes
 
 
 //!  BUILTINS:
 // - later: put builtin stuff into executer (not as bool in main!)
 // - builtins:
 //		- env √
-//		- export
+//		- export -> sorting works, add handling path-updating
 //		- pwd √
-//		- cd √ (for now)
+//		- cd -> add handling path-updating
 //		- unset
 //		- echo
 //		- exit
