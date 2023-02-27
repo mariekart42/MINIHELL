@@ -3,7 +3,7 @@
 /* bash:	If the current working directory is a symbolic link that points to a 
  * 			directory that no longer exists, the pwd command will fail with a 
  * 			"No such file or directory" error								*/
-void pwd_builtin(t_hold *hold) // Receive pipe_node
+void pwd_builtin(t_hold *hold) // Receive pipe_node // Does not need it
 {
 	char	path[PATH_MAX];
 	
@@ -16,84 +16,37 @@ void pwd_builtin(t_hold *hold) // Receive pipe_node
 	write(1, "\n", 1);
 }
 
-// bool echo_builtin_helper(t_hold *hold, int i, bool is_nflag) 
-// {
-// 	char	**args;
-// 	int32_t	outfile;
-// 	int		j;
+bool echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag) 
+{
+	char	**args;
+	int32_t	outfile;
+	int		j;
 
-// 	args = hold->parsed_list->args;
-// 	outfile = hold->parsed_list->outfile;
-// 	j = 1;
-// 	if (ft_strncmp(args[i], "-n", 2) == 0)
-// 	{
-// 		while (args[i][j] != NULL)
-// 		{
-// 			if (args[i][j] == "n")
-// 			{
-// 				j++;
-// 				is_nflag = true;
-// 			}
-// 			else
-// 			{
-// 				is_nflag = false;
-// 				break ;
-// 			}
-// 		}
-// 	}
-// 	if (!is_nflag)
-// 		ft_putstr_fd(args[i], outfile);
-// 	return (is_nflag);
-// }
+	args = parsed_node->args;
+	outfile = parsed_node->outfile;
+	j = 1;
+	if (ft_strncmp(args[i], "-n", 2) == 0)
+	{
+		while (args[i][j] != NULL)
+		{
+			if (args[i][j] == "n")
+			{
+				j++;
+				is_nflag = true;
+			}
+			else
+			{
+				is_nflag = false;
+				break ;
+			}
+		}
+	}
+	if (!is_nflag)
+		ft_putstr_fd(args[i], outfile);
+	return (is_nflag);
+}
 
-<<<<<<< HEAD
-// // Need to add option of -n
-// // Remove new line from the print out
-// void echo_builtin(t_hold *hold)
-// {
-// 	char	**args;
-// 	int		i;
-// 	bool	is_nflag;
-
-// 	args = hold->parsed_list->args;
-// 	i = 1;
-// 	is_nflag = false;
-// 	// echo alone print new line
-// 	if (args[1] = NULL)
-// 	{
-// 		ft_putstr_fd("\n", 1);
-// 		// exit with (0)
-// 		// return (0);
-// 		return ;
-// 	}
-	
-// 	// -n -n -n loop
-// 	while (args[i] != NULL)
-// 	{
-// 		is_nflag = echo_builtin_helper(hold, i, is_nflag);
-// 		i++;
-// 		if (!is_nflag)
-// 			break ;
-// 	}
-
-// 	while (args[i] != NULL)
-// 	{
-// 		ft_putstr_fd(args[i], hold->parsed_list->outfile);
-// 		if (args[i + 1] != NULL)
-// 			ft_putstr_fd(" ", hold->parsed_list->outfile);
-// 		i++;
-// 	}
-
-// 	if (!is_nflag)
-// 		ft_putstr_fd("\n", 1);
-// 	// exit with (0)
-// 	// return (0);
-// 	return ;
-// }
-=======
-// Need to add option of -n
-// Remove new line from the print out
-void echo_builtin(t_parsed_chunk *parsed_node) // Can receive current pipe group node of parsed chunk
+void echo_builtin(t_parsed_chunk *parsed_node)
 {
 	char	**args;
 	int		i;
@@ -102,35 +55,33 @@ void echo_builtin(t_parsed_chunk *parsed_node) // Can receive current pipe group
 	args = parsed_node->args;
 	i = 1;
 	is_nflag = false;
-	// echo alone print new line
-	if (args[1] = NULL)
+	// echo alone print new line. No segfault?
+	if (args[1] == NULL)
 	{
 		ft_putstr_fd("\n", 1);
 		return ;
 	}
-	
 	// -n -n -n loop //Only consider for i = 1
+	// Question for Marie: How we handle echo -n Santiago Tena if not 
+	// many arguments possible
 	while (args[i] != NULL)
 	{
-		is_nflag = echo_builtin_helper(hold, i, is_nflag);
+		is_nflag = echo_builtin_helper(parsed_node, i, is_nflag);
 		i++;
 		if (!is_nflag)
 			break ;
 	}
-
 	while (args[i] != NULL)
 	{
-		ft_putstr_fd(args[i], hold->parsed_list->outfile);
+		ft_putstr_fd(args[i], parsed_node->outfile);
 		if (args[i + 1] != NULL)
-			ft_putstr_fd(" ", hold->parsed_list->outfile);
+			ft_putstr_fd(" ", parsed_node->outfile);
 		i++;
 	}
-
 	if (!is_nflag)
 		ft_putstr_fd("\n", 1);
 	return ;
 }
->>>>>>> 03e7abc2b1f6326d66cf1318d64a96b521a7b115
 
 void env_builtin(t_hold *hold)
 {
@@ -181,23 +132,23 @@ void cd_builtin(t_hold *hold)
 
 // }
 
-bool builtin(t_hold *hold)
+bool builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
 	if (hold->lex_struct->macro == BUILTIN)
 	{
 		// printf(MAG"BUILTIN\n"RESET);
-		if (ft_strncmp(hold->lex_struct->item, "env", 3) == 0)
-			return (env_builtin(hold), true);
+		if (ft_strncmp(hold->lex_struct->item, "echo", 4) == 0)
+			return (echo_builtin(parsed_node), true);
+		// else if (ft_strncmp(hold->lex_struct->item, "env", 3) == 0)
+		// 	return (env_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)
 		// 	return (export_builtin(hold), true);
 		else if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
 			return (pwd_builtin(hold), true);
-		else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
-			return (cd_builtin(hold), true);
+		// else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
+		// 	return (cd_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "unset", 5) == 0)
 		// 	return (unset_builtin(hold), true);
-		// else if (ft_strncmp(hold->lex_struct->item, "echo", 4) == 0)
-		// 	return (echo_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "exit", 4) == 0)
 		// 	return (exit_builtin(hold), true);
 		return (true);
