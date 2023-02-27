@@ -84,9 +84,9 @@ int main(int32_t argc, char **argv, char **env)
 			parser(hold);
 			// if (hold->exit_code == 0)
 			// 	print_macro_list(hold->lex_struct);
-			executer(hold);
-printf("after executer | EXIT\n\n");
-exit(0);
+			// executer(hold);
+// printf("after executer | EXIT\n\n");
+// exit(0);
 			free_content(hold);
 		}
 	}
@@ -116,10 +116,11 @@ exit(0);
 
 
 //!  EXECUTER:
-//		- forking
-//		- redirections
+//		- forking √
+//		- wait 4 kiddos
+//		- redirections √ (guess thats it)
 //		- executing
-//		- create pipes
+//		- create pipes NEXT
 
 
 //!  BUILTINS:
