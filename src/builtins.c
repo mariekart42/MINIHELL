@@ -42,7 +42,11 @@ bool echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag)
 		}
 	}
 	if (!is_nflag)
+	{
 		ft_putstr_fd(args[i], outfile);
+		if (args[i + 1] != NULL)
+			ft_putstr_fd(" ", parsed_node->outfile);
+	}
 	return (is_nflag);
 }
 
@@ -55,15 +59,12 @@ void echo_builtin(t_parsed_chunk *parsed_node)
 	args = parsed_node->args;
 	i = 1;
 	is_nflag = false;
-	// echo alone print new line. No segfault?
 	if (args[1] == NULL)
 	{
 		ft_putstr_fd("\n", 1);
 		return ;
 	}
 	// -n -n -n loop //Only consider for i = 1
-	// Question for Marie: How we handle echo -n Santiago Tena if not 
-	// many arguments possible
 	while (args[i] != NULL)
 	{
 		is_nflag = echo_builtin_helper(parsed_node, i, is_nflag);
