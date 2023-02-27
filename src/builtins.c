@@ -3,7 +3,7 @@
 /* bash:	If the current working directory is a symbolic link that points to a 
  * 			directory that no longer exists, the pwd command will fail with a 
  * 			"No such file or directory" error								*/
-void pwd_builtin(t_hold *hold)
+void pwd_builtin(t_hold *hold) // Receive pipe_node
 {
 	char	path[PATH_MAX];
 	
@@ -46,6 +46,7 @@ void pwd_builtin(t_hold *hold)
 // 	return (is_nflag);
 // }
 
+<<<<<<< HEAD
 // // Need to add option of -n
 // // Remove new line from the print out
 // void echo_builtin(t_hold *hold)
@@ -89,6 +90,47 @@ void pwd_builtin(t_hold *hold)
 // 	// return (0);
 // 	return ;
 // }
+=======
+// Need to add option of -n
+// Remove new line from the print out
+void echo_builtin(t_parsed_chunk *parsed_node) // Can receive current pipe group node of parsed chunk
+{
+	char	**args;
+	int		i;
+	bool	is_nflag;
+
+	args = parsed_node->args;
+	i = 1;
+	is_nflag = false;
+	// echo alone print new line
+	if (args[1] = NULL)
+	{
+		ft_putstr_fd("\n", 1);
+		return ;
+	}
+	
+	// -n -n -n loop //Only consider for i = 1
+	while (args[i] != NULL)
+	{
+		is_nflag = echo_builtin_helper(hold, i, is_nflag);
+		i++;
+		if (!is_nflag)
+			break ;
+	}
+
+	while (args[i] != NULL)
+	{
+		ft_putstr_fd(args[i], hold->parsed_list->outfile);
+		if (args[i + 1] != NULL)
+			ft_putstr_fd(" ", hold->parsed_list->outfile);
+		i++;
+	}
+
+	if (!is_nflag)
+		ft_putstr_fd("\n", 1);
+	return ;
+}
+>>>>>>> 03e7abc2b1f6326d66cf1318d64a96b521a7b115
 
 void env_builtin(t_hold *hold)
 {
