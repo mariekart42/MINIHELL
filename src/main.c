@@ -8,7 +8,6 @@ void free_content(t_hold *hold)
 	free(hold->line);
 	free_list_lex(hold->lex_struct);
 	hold->lex_struct = NULL;
-
 }
 
 int32_t init_structs(t_hold **hold)
@@ -16,17 +15,19 @@ int32_t init_structs(t_hold **hold)
 	(*hold) = (t_hold *)malloc(sizeof(t_hold));
 	if (!(*hold))
 		return (69);
+	(*hold)->env_list = NULL;
+	(*hold)->parsed_list = NULL;
+	(*hold)->export_list = NULL;
+	(*hold)->lex_struct = NULL;
 	return (0);
 }
 
 void free_env_export(t_hold *hold)
 {
-	
 	free_list_env(hold->env_list);
 	free_list_env(hold->export_list);
 	hold->env_list = NULL;
 	hold->export_list = NULL;
-
 }
 
 int main(int32_t argc, char **argv, char **env)
@@ -34,7 +35,6 @@ int main(int32_t argc, char **argv, char **env)
 	t_hold	*hold = NULL;
 	(void) argc;
 	(void) argv;
-	(void) env;
 
 	if (init_structs(&hold))
 		return (69);
@@ -42,12 +42,6 @@ int main(int32_t argc, char **argv, char **env)
 	// using signal function here to catch signal if eg ctr-c is used
 	
 	create_env_export_list(hold, env);
-	printf("env: %s\n", hold->export_list->var_name);
-	printf("env: %s\n", hold->export_list->next->var_name);
-	printf("env: %s\n", hold->export_list->next->next->var_name);
-	printf("env: %s\n", hold->export_list->var_value);
-	printf("env: %s\n", hold->export_list->next->var_value);
-	printf("env: %s\n", hold->export_list->next->next->var_value);
 			// important later
 			// char *test;
 			// test = getenv("PATH");
@@ -137,6 +131,7 @@ int main(int32_t argc, char **argv, char **env)
 //		 .		-> 174 before loop 
 //		 .		-> 116 after freeing var_name &var_value in free_list_env
 //		 .		 	.		-> all in first while loop in sort_export_list
+//		344 -> all in swap_nodes
 
 // - in lexer:
 //		524

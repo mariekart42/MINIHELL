@@ -61,14 +61,16 @@ t_env_export *new_node_env(void)
 
 	tmp = (t_env_export*)malloc(sizeof(t_env_export));
 	tmp->next = NULL;
+	tmp->item = NULL;
+	tmp->var_name = NULL;
+	tmp->var_value = NULL;
 	return (tmp);
 }
 
-t_env_export *add_node_env(t_hold *hold, char *content, char *type)
+void add_node_env(t_hold *hold, char *content, char *type)
 {
 	t_env_export *tmp;
 	t_env_export *p;
-
 	tmp = new_node_env();
 	tmp->item = content;
 	if (ft_strncmp(type, "env", 3) == 0)
@@ -82,7 +84,7 @@ t_env_export *add_node_env(t_hold *hold, char *content, char *type)
 				p = p->next;
 			p->next = tmp;
 		}
-		return (hold->env_list);
+		return;
 	}
 	else
 	{
@@ -95,7 +97,7 @@ t_env_export *add_node_env(t_hold *hold, char *content, char *type)
 				p = p->next;
 			p->next = tmp;
 		}
-		return (hold->export_list);
+		return;
 	}
 }
 
@@ -137,15 +139,11 @@ void exit_status(t_hold *hold, char *message, int8_t exit_code_)
 void create_env_export_list(t_hold *hold, char **ori_env)
 {
 	int32_t env_len = 0;
-	t_env_export *tmp_env;
-	t_env_export *tmp_export;
 
-	tmp_env = hold->env_list;
-	tmp_export = hold->export_list;
 	while (ori_env[env_len] != NULL)
 	{
-		tmp_env = add_node_env(hold, ori_env[env_len], "env");
-		tmp_export = add_node_env(hold, ori_env[env_len], "export");
+		add_node_env(hold, ori_env[env_len], "env");
+		add_node_env(hold, ori_env[env_len], "export");
 		env_len++;
 	}
 	sort_export_list(hold);
