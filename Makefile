@@ -20,7 +20,8 @@ SRC		=	main.c \
 			syntax_errors.c \
 			delete_later.c \
 			export.c \
-			builtins.c
+			builtins.c \
+			builtins_cont.c
 
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRC:.c=.o)
