@@ -84,7 +84,7 @@ void pwd_builtin(t_hold *hold)
 	
 	if (!getcwd(path, PATH_MAX))
 	{
-		exit_status(hold, RED"No such file or directory\n"RESET, 69);
+		exit_status(hold, RED"minishell: pwd: No such file or directory\n"RESET, 69);
 		return ;
 	}
 	write(hold->parsed_list->outfile, path, ft_strlen(path));
