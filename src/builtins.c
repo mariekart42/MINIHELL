@@ -1,21 +1,5 @@
 #include "minishell.h"
 
-/* bash:	If the current working directory is a symbolic link that points to a 
- * 			directory that no longer exists, the pwd command will fail with a 
- * 			"No such file or directory" error								*/
-void pwd_builtin(t_hold *hold)
-{
-	char	path[PATH_MAX];
-	
-	if (!getcwd(path, PATH_MAX))
-	{
-		exit_status(hold, RED"No such file or directory\n"RESET, 69);
-		return ;
-	}
-	write(hold->parsed_list->outfile, path, ft_strlen(path));
-	write(hold->parsed_list->outfile, "\n", 1);
-}
-
 bool echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag) 
 {
 	char	**args;
@@ -32,25 +16,16 @@ bool echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag)
 		{
 			if (args[i][j] == 'n')
 			{
-				// ft_putstr_fd("one", outfile);  // deletus
 				j++;
 				is_nflag = true;
 			}
 			else
 			{
-				// ft_putstr_fd("two", outfile);  // deletus
 				is_nflag = false;
 				break ;
 			}
 		}
 	}
-	// if (!is_nflag)
-	// {
-	// 	ft_putstr_fd("three", outfile);  // deletus
-	// 	ft_putstr_fd(args[i], outfile);
-	// 	if (args[i + 1] != NULL)
-	// 		ft_putstr_fd(" ", parsed_node->outfile);
-	// }
 	return (is_nflag);
 }
 
@@ -89,17 +64,20 @@ void echo_builtin(t_parsed_chunk *parsed_node)
 	return ;
 }
 
-void env_builtin(t_hold *hold)
+/* bash:	If the current working directory is a symbolic link that points to a 
+ * 			directory that no longer exists, the pwd command will fail with a 
+ * 			"No such file or directory" error								*/
+void pwd_builtin(t_hold *hold)
 {
-	t_env_export *tmp;
+	char	path[PATH_MAX];
 	
-	tmp = hold->env_list;
-	while (tmp != NULL)
+	if (!getcwd(path, PATH_MAX))
 	{
-		ft_putstr_fd(tmp->item, 2);
-		write(2, "\n", 1);
-		tmp = tmp->next;
+		exit_status(hold, RED"No such file or directory\n"RESET, 69);
+		return ;
 	}
+	write(hold->parsed_list->outfile, path, ft_strlen(path));
+	write(hold->parsed_list->outfile, "\n", 1);
 }
 
 void cd_builtin(t_hold *hold)
@@ -119,6 +97,26 @@ void cd_builtin(t_hold *hold)
 		return ;
 	}
 
+// void exit_builtin(t_hold *hold)
+// {
+
+// }
+
+void env_builtin(t_hold *hold)
+{
+	t_env_export *tmp;
+	
+	tmp = hold->env_list;
+	while (tmp != NULL)
+	{
+		ft_putstr_fd(tmp->item, 2);
+		write(2, "\n", 1);
+		tmp = tmp->next;
+	}
+}
+
+
+
 }
 
 
@@ -126,14 +124,8 @@ void cd_builtin(t_hold *hold)
 // {
 
 // }
-// void echo_builtin(t_hold *hold)
-// {
 
-// }
-// void exit_builtin(t_hold *hold)
-// {
 
-// }
 
 bool builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
@@ -144,16 +136,16 @@ bool builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 			return (echo_builtin(parsed_node), true);
 		else if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
 			return (pwd_builtin(hold), true);
+		else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
+			return (cd_builtin(hold), true);
+		// else if (ft_strncmp(hold->lex_struct->item, "exit", 4) == 0)
+		// 	return (exit_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "env", 3) == 0)
 		// 	return (env_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)
 		// 	return (export_builtin(hold), true);
-		// else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
-		// 	return (cd_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "unset", 5) == 0)
 		// 	return (unset_builtin(hold), true);
-		// else if (ft_strncmp(hold->lex_struct->item, "exit", 4) == 0)
-		// 	return (exit_builtin(hold), true);
 		return (true);
 	}
 	else
