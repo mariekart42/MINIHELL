@@ -103,8 +103,8 @@ bool builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 			return (env_builtin(hold), true);
 		else if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
 			return (pwd_builtin(hold), true);
-		// else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
-		// 	return (cd_builtin(hold), true);
+		else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
+			return (cd_builtin(hold, parsed_node), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "exit", 4) == 0)
 		// 	return (exit_builtin(hold), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)

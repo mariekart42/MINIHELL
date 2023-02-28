@@ -1,5 +1,23 @@
 #include "minishell.h"
 
+// Good reference
+// https://man7.org/linux/man-pages/man1/cd.1p.html
+void cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
+{
+
+}
+
+// If no directory operand is given and the HOME environment
+// variable is empty or undefined, the default behavior is
+// implementation-defined and no further steps shall be taken.
+
+// If no directory operand is given and the HOME environment
+// variable is set to a non-empty value, the cd utility shall
+// behave as if the directory named in the HOME environment
+// variable was specified as the directory operand.
+
+///////////////////////////
+
 // void cd_builtin(t_hold *hold)
 // {
 // 	if (hold->lex_struct->next->item == NULL)
@@ -18,6 +36,9 @@
 // 	}
 // }
 
+
+///////////////////
+
 // void exit_builtin(t_hold *hold)
 // {
 
@@ -27,3 +48,4 @@
 // {
 
 // }
+

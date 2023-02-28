@@ -96,7 +96,7 @@ int32_t check_syntax_errors(t_hold *hold);
 void echo_builtin(t_parsed_chunk *parsed_node);
 void env_builtin(t_hold *hold);
 void pwd_builtin(t_hold *hold);
-// void cd_builtin(t_hold *hold);
+void cd_builtin(t_hold *hold);
 // void exit_builtin(t_hold *hold);
 // void export_builtin(t_hold *hold);
 // void unset_builtin(t_hold *hold);
