@@ -27,9 +27,9 @@ bool echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag)
 	j = 1;
 	if (ft_strncmp(args[i], "-n", 2) == 0)
 	{
-		while (args[i][j] != NULL)
+		while (args[i][j] != '\0')
 		{
-			if (args[i][j] == "n")
+			if (args[i][j] == 'n')
 			{
 				j++;
 				is_nflag = true;

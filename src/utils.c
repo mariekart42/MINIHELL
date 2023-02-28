@@ -2,14 +2,14 @@
 
 void free_list_lex(t_lexing* head)
 {
-   t_lexing* tmp;
+	t_lexing* tmp;
 
-   while (head != NULL)
-    {
-       tmp = head;
-       head = head->next;
-       free(tmp);
-    }
+	while (head != NULL)
+	{
+		tmp = head;
+		head = head->next;
+		free(tmp);
+	}
 }
 
 void free_list_env(t_env_export* head)
@@ -20,6 +20,8 @@ void free_list_env(t_env_export* head)
     {
        tmp = head;
        head = head->next;
+	   free(tmp->var_name);
+	   free(tmp->var_value);
        free(tmp);
     }
 }

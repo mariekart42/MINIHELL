@@ -9,10 +9,10 @@ void redirection(t_parsed_chunk *parsed_node)
 	dup2(parsed_node->outfile, STDOUT_FILENO);
 }
 
-void open_pipefds(t_hold *hold)
-{
+// void open_pipefds(t_hold *hold)
+// {
 	
-}
+// }
 
 void executer(t_hold *hold)
 {
@@ -34,7 +34,7 @@ void executer(t_hold *hold)
 		return (exit_status(hold, "Error! Failed to malloc for pids (in executer())\n", 69));
 
 	// open amount of pipes we need (one pipegroup = one pipe)
-	open_pipefds(hold);
+	// open_pipefds(hold);
 
 	i = 0;
 	while (pipegroups > 0)

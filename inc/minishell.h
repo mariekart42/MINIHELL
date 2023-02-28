@@ -92,14 +92,14 @@ void free_env_export(t_hold *hold);
 int32_t check_syntax_errors(t_hold *hold);
 
 
-//		builtins/builtins.c
+//		builtins.c
 void env_builtin(t_hold *hold);
 void pwd_builtin(t_hold *hold);
 void cd_builtin(t_hold *hold);
 bool builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 
 
-//		builtins/export.c
+//		export.c
 void export_builtin(t_hold *hold);
 void swap_data(t_env_export *export_list);
 void sort_export_list(t_hold *hold);
