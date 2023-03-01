@@ -42,7 +42,7 @@ void cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	tmp = hold->env_list;
 	while (tmp != NULL)
 	{
-		if (ft_strncmp(tmp->var_name, "HOME", 4) == 0)
+		if (ft_strncmp(tmp->var_name, "HOME", 5) == 0)
 			home = tmp->var_value;
 		tmp = tmp->next;
 	}
@@ -54,6 +54,7 @@ void cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		if (is_home)
 		{
 			chdir(home);
+			// Need to update env
 			return ;
 		}
 		else
@@ -70,15 +71,3 @@ void cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	}
 	return ;
 }
-
-// cd / -> / (Absolute directory)
-// cd or cd ~ -> HOME
-
-// if (ft_strncmp(args[1], ".", 2))
-	// 	return ;
-	// if (ft_strncmp(args[1], "..", 2))
-	// {
-	// 	// Go one level up
-	// 	// Handle in update_dir?
-	// 	return ;
-	// }
