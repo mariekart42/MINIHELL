@@ -61,7 +61,6 @@ typedef struct s_parsed_chunk
 	char	*cmd_path;
 	int32_t	infile;
 	int32_t	outfile;
-	int32_t pipe_fds[MAX_FD][2];
 	struct s_parsed_chunk	*next;
 }			t_parsed_chunk;
 
@@ -131,8 +130,9 @@ void parser(t_hold *hold);
 
 
 //		executer.c
-void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups);
-void open_pipefds(t_parsed_chunk *parsed_list, int32_t pipegroups);
+void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+void open_pipefds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
 void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env);
 void executer(t_hold *hold, char **ori_env);
 

@@ -3,10 +3,10 @@
 /* function changes the filedescriptors always
  * 		- from stdin to 'infile' in 'parsed_chunk'
  *		- and from stdout to 'outfile' in 'parsed_chunk' */
-void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups)
+void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
-	printf("file id: %d\n", parsed_node->outfile);
-	printf("pipegroups: %d\ni: %d\n", pipegroups, i);
+	// printf("file id: %d\n", parsed_node->outfile);
+	// printf("pipegroups: %d\ni: %d\n", pipegroups, i);
 	write(2, "\nREDIRECTION:\n", 14);
 	if (i == 0)
 	{
@@ -28,7 +28,7 @@ void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups)
 				exit(0);
 			}
 			write(2, "output: PIPE[1]-\n", 17);
-			dup2(parsed_node->pipe_fds[i][1], STDOUT_FILENO);
+			dup2(pipe_fds[i][1], STDOUT_FILENO);
 		}
 		else
 		{
@@ -48,7 +48,7 @@ void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups)
 		// char *brr = ;
 		write(2, ft_itoa(i), 1);
 		write(2, "\n", 1);
-		dup2(parsed_node->pipe_fds[i-1][0], STDIN_FILENO);
+		dup2(pipe_fds[i][0], STDIN_FILENO);
 		write(2, "input: PIPE[0]-\n", 16);
 
 		if (parsed_node->outfile != 1)
@@ -66,37 +66,37 @@ void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups)
 		if (parsed_node->infile != 0)
 		{
 			write(2, "input: PIPE[0]-\n", 16);
-			dup2(parsed_node->pipe_fds[i][0], STDIN_FILENO);
+			dup2(pipe_fds[i][0], STDIN_FILENO);
 		}
 		if (parsed_node->outfile != 1)
 		{
 			write(2, "output: PIPE[1]-\n", 17);
-			dup2(parsed_node->pipe_fds[i][1], STDOUT_FILENO);
+			dup2(pipe_fds[i][1], STDOUT_FILENO);
 		}
 	}
 write(2, "REDIRECTION DONE-\n\n", 19);
 
 }
 
-void open_pipefds(t_parsed_chunk *parsed_list, int32_t pipegroups)
+void open_pipefds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
 	int32_t i;
 
 	i = 1;
 	while (i < pipegroups)
 	{
-		if (pipe(parsed_list->pipe_fds[i]) < 0)
+		if (pipe(pipe_fds[i]) < 0)
 		{
 			// set error code
-			write(2, "Failed to malloc for pipe! EXIT\n", 35);
+			exit_status(hold, "Error! Failed to open pipe!\n", 69);
 			exit(0);
 		}
 		i++;
 	}
-	printf("opend %d pipes\n", i-1);
+	// printf("opend %d pipes\n", i-1);
 }
 
-void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups)
+void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
 	int32_t i;
 	t_parsed_chunk *tmp;
@@ -105,8 +105,8 @@ void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups)
 	tmp = parsed_list;
 	while (i < pipegroups)
 	{
-		close(parsed_list->pipe_fds[i][0]);
-		close(parsed_list->pipe_fds[i][1]);
+		close(pipe_fds[i][0]);
+		close(pipe_fds[i][1]);
 		i++;
 	}
 	while (tmp != NULL)
@@ -121,12 +121,15 @@ void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups)
 
 void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env)
 {
+	write(2, "before execve\n", 14);
 	if (execve(parsed_node->cmd_path, parsed_node->args, ori_env) == -1)
 	{
 		write(2, "Command not found: ", 19);
+		perror("Command not found: \n");
 		// ft_putstr_fd(ppx->av[3], 2);
 		exit(127);
 	}
+	write(2, "after execve\n", 14);
 	// free(path);
 }
 
@@ -136,6 +139,7 @@ void executer(t_hold *hold, char **ori_env)
 	int32_t pipegroups;
 	int32_t	i;
 	t_parsed_chunk *parsed_node;
+	int32_t pipe_fds[MAX_FD][2];
 
 	parsed_node = hold->parsed_list;
 	if (hold->exit_code != 0)
@@ -150,7 +154,7 @@ void executer(t_hold *hold, char **ori_env)
 		return (exit_status(hold, "Error! Failed to malloc for pids (in executer())\n", 69));
 
 	// open amount of pipes we need (one pipegroup = one pipe)
-	open_pipefds(hold->parsed_list, pipegroups);
+	open_pipefds(hold, pipegroups, pipe_fds);
 
 	i = 0;
 	while (i < pipegroups)
@@ -159,15 +163,29 @@ void executer(t_hold *hold, char **ori_env)
 		if (pids[i] == 0)
 		{
 			// redirection (dup2())
-			redirection(parsed_node, i, pipegroups);
+			redirection(parsed_node, i, pipegroups, pipe_fds);
+
+write(2, "YES\n", 4);
 
 			// close filediscriptors (pipes and files)
-			close_fds(parsed_node, pipegroups);
+			close_fds(parsed_node, pipegroups, pipe_fds);
+write(2, "2  YES\n", 7);
 			// execute command
 			execute_cmd(parsed_node, ori_env);
+write(2, "3  YES\n", 7);
 		}
+		write(2, "something\n", 10);
+		waitpid(pids[i], NULL, 0);
 		i++;
+		parsed_node = parsed_node->next;
 	}
-		waitpid(-1, NULL, 0);
 	// loop where we wait for kiddos to finish
+	// i=0;
+	// while ((i < pipegroups) && (pids[i]))
+	// {
+	// 	waitpid(pids[i], NULL, 0);
+	// 	i++;
+	// }
+	write(2, "end\n", 4);
+	free(pids);
 }

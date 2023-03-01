@@ -47,17 +47,17 @@ int main(int32_t argc, char **argv, char **env)
 			// test = getenv("PATH");
 			// printf("getenv: %s\n", test);
 			
-// 	// while (1)
-// 	// {
+	while (1)
+	{
 		hold->exit_code = 0;
 		hold->line = readline(BLU"MINIHELL> "RESET);
 		// hold->line = ft_strdup("ls -l");
-		// if (!hold->line)
-		// 	break ;
+		if (!hold->line)
+			break ;
 
 // 		// if line is empty, bash returns 0 and does nothing
-// 		if (ft_strlen(hold->line) > 0)
-// 		{
+		if (ft_strlen(hold->line) > 0)
+		{
 // 			// add_history(hold->line);
 
 			lexer(hold);
@@ -70,8 +70,8 @@ int main(int32_t argc, char **argv, char **env)
 // // printf("after executer | EXIT\n\n");
 // // exit(0);
 			free_content(hold);
-// 		}
-	// }
+		}
+	}
 	free_env_export(hold);
 	free(hold);
 	// clear_history();
@@ -100,6 +100,7 @@ int main(int32_t argc, char **argv, char **env)
 
 //!  EXECUTER:
 //	- douple redir not working yet(prolly wrong opening rights)
+// - change 'ori_env' to **char of own env list
 
 
 //!  BUILTINS:
