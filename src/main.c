@@ -51,7 +51,7 @@ int main(int32_t argc, char **argv, char **env)
 // 	// {
 // 		hold->exit_code = 0;
 // 		// hold->line = readline(BLU"MINIHELL> "RESET);
-// 		hold->line = ft_strdup("this is a > line lol");
+		hold->line = ft_strdup("if o");
 // 		// if (!hold->line)
 // 		// 	break ;
 
@@ -60,16 +60,16 @@ int main(int32_t argc, char **argv, char **env)
 // 		{
 // 			// add_history(hold->line);
 
-// 			lexer(hold);
-// 			print_list(hold->lex_struct, "lex");
-// 			// parser(hold);
-// 			// print_parsed_list(hold->parsed_list);
+			lexer(hold);
+			print_list(hold->lex_struct, "lex");
+			parser(hold);
+			print_parsed_list(hold->parsed_list);
 // 			// if (hold->exit_code == 0)
 // 			// 	print_macro_list(hold->lex_struct);
 // 			// executer(hold);
 // // printf("after executer | EXIT\n\n");
 // // exit(0);
-// 			free_content(hold);
+			free_content(hold);
 // 		}
 	// }
 	free_env_export(hold);
@@ -126,13 +126,6 @@ int main(int32_t argc, char **argv, char **env)
 
 
 // LEAKS
-//	- in create_parsed_list: ->> all in sort export list
-//		518 
-//		 .		-> 174 before loop 
-//		 .		-> 116 after freeing var_name &var_value in free_list_env
-//		 .		 	.		-> all in first while loop in sort_export_list
-//		344 -> all in swap_nodes
-
-// - in lexer:
-//		524
-//		
+// - in parser:
+//		around 20 leaks (more if using more nodes)
+//	-> deal with it later cause we need to restructure parser anyways a bit

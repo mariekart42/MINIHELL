@@ -8,6 +8,7 @@ void free_list_lex(t_lexing* head)
 	{
 		tmp = head;
 		head = head->next;
+		free(tmp->item);
 		free(tmp);
 	}
 }
@@ -36,7 +37,7 @@ void add_node_lex(t_hold *hold, char *content)
 	ptr = (t_lexing *)malloc(sizeof(t_lexing));
 	if (!ptr)
 		return (exit_status(hold, "Error! Failed to malloc\n", 69));
-	ptr->item = content;
+	ptr->item = ft_strdup(content);
 	ptr->next = NULL;
 
 	if (hold->lex_struct == NULL)

@@ -184,6 +184,7 @@ int32_t lex_word(t_hold *hold, int32_t i)
 	// put token into linked list
 	tmp = ft_substr(hold->line, i, end - i);
 	add_node_lex(hold, tmp);
+	free(tmp);
 	return (end - i - 1);
 }
 
