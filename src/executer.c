@@ -3,10 +3,79 @@
 /* function changes the filedescriptors always
  * 		- from stdin to 'infile' in 'parsed_chunk'
  *		- and from stdout to 'outfile' in 'parsed_chunk' */
-void redirection(t_parsed_chunk *parsed_node)
+void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups)
 {
-	dup2(parsed_node->infile, STDIN_FILENO);
-	dup2(parsed_node->outfile, STDOUT_FILENO);
+	printf("file id: %d\n", parsed_node->outfile);
+	printf("pipegroups: %d\ni: %d\n", pipegroups, i);
+	write(2, "\nREDIRECTION:\n", 14);
+	if (i == 0)
+	{
+		write(2, "start of pipegroup\n", 19);
+		if (parsed_node->infile != 0)
+		{
+			write(2, "input: infile-\n", 15);
+			dup2(parsed_node->infile, STDIN_FILENO);
+		}
+		else
+			write(2, "input: STDIN-\n", 14);
+
+		// there is another pipegroup afterwards
+		if (pipegroups > i+1)
+		{
+			if (parsed_node->outfile != 1)
+			{
+				write(2, "uhm outfile before pipe, duh? (how to handle redir?) | EXIT\n", 60);
+				exit(0);
+			}
+			write(2, "output: PIPE[1]-\n", 17);
+			dup2(parsed_node->pipe_fds[i][1], STDOUT_FILENO);
+		}
+		else
+		{
+			if (parsed_node->outfile != 1)
+			{
+				write(2, "output: outfile-\n", 17);
+				dup2(parsed_node->outfile, STDOUT_FILENO);
+			}
+			else
+			write(2, "output: STDOUT-\n", 16);
+		}
+	} // end of pipegroups
+	else if ((i+1) == pipegroups)
+	{	// reading from last pipe
+		write(2, "end of pipegroup\n", 17);
+		write(2, "i: ", 3);
+		// char *brr = ;
+		write(2, ft_itoa(i), 1);
+		write(2, "\n", 1);
+		dup2(parsed_node->pipe_fds[i-1][0], STDIN_FILENO);
+		write(2, "input: PIPE[0]-\n", 16);
+
+		if (parsed_node->outfile != 1)
+		{
+			write(2, "output: outfile-\n", 17);
+			dup2(parsed_node->outfile, STDOUT_FILENO);
+		}
+		else
+			write(2, "output: STDOUT-\n", 16);
+
+	}
+	else // in the middle of pipegroups
+	{
+		write(2, "middle of pipegroup\n", 20);
+		if (parsed_node->infile != 0)
+		{
+			write(2, "input: PIPE[0]-\n", 16);
+			dup2(parsed_node->pipe_fds[i][0], STDIN_FILENO);
+		}
+		if (parsed_node->outfile != 1)
+		{
+			write(2, "output: PIPE[1]-\n", 17);
+			dup2(parsed_node->pipe_fds[i][1], STDOUT_FILENO);
+		}
+	}
+write(2, "REDIRECTION DONE-\n\n", 19);
+
 }
 
 void open_pipefds(t_parsed_chunk *parsed_list, int32_t pipegroups)
@@ -36,8 +105,8 @@ void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups)
 	tmp = parsed_list;
 	while (i < pipegroups)
 	{
-		close(parsed_list->pipe_fds[0]);
-		close(parsed_list->pipe_fds[1]);
+		close(parsed_list->pipe_fds[i][0]);
+		close(parsed_list->pipe_fds[i][1]);
 		i++;
 	}
 	while (tmp != NULL)
@@ -84,20 +153,21 @@ void executer(t_hold *hold, char **ori_env)
 	open_pipefds(hold->parsed_list, pipegroups);
 
 	i = 0;
-	while (pipegroups > 0)
+	while (i < pipegroups)
 	{
 		pids[i] = fork();
 		if (pids[i] == 0)
 		{
 			// redirection (dup2())
-			redirection(parsed_node);
+			redirection(parsed_node, i, pipegroups);
 
 			// close filediscriptors (pipes and files)
 			close_fds(parsed_node, pipegroups);
 			// execute command
 			execute_cmd(parsed_node, ori_env);
 		}
-		pipegroups--;
+		i++;
 	}
+		waitpid(-1, NULL, 0);
 	// loop where we wait for kiddos to finish
 }

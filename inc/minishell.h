@@ -131,7 +131,7 @@ void parser(t_hold *hold);
 
 
 //		executer.c
-void redirection(t_parsed_chunk *parsed_node);
+void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups);
 void open_pipefds(t_parsed_chunk *parsed_list, int32_t pipegroups);
 void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env);
 void executer(t_hold *hold, char **ori_env);

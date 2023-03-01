@@ -99,11 +99,7 @@ int main(int32_t argc, char **argv, char **env)
 
 
 //!  EXECUTER:
-//		- forking √
-//		- wait 4 kiddos
-//		- redirections √ (guess thats it)
-//		- executing
-//		- create pipes NEXT
+//	- douple redir not working yet(prolly wrong opening rights)
 
 
 //!  BUILTINS:
@@ -125,7 +121,7 @@ int main(int32_t argc, char **argv, char **env)
 // - signals shit
 
 
-// LEAKS
+//!  LEAKS:
 // - in parser:
 //		around 20 leaks (more if using more nodes)
 //	-> deal with it later cause we need to restructure parser anyways a bit
