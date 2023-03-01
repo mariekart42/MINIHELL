@@ -49,11 +49,11 @@ int main(int32_t argc, char **argv, char **env)
 			
 // 	// while (1)
 // 	// {
-// 		hold->exit_code = 0;
-// 		// hold->line = readline(BLU"MINIHELL> "RESET);
-		hold->line = ft_strdup("if o");
-// 		// if (!hold->line)
-// 		// 	break ;
+		hold->exit_code = 0;
+		hold->line = readline(BLU"MINIHELL> "RESET);
+		// hold->line = ft_strdup("ls -l");
+		// if (!hold->line)
+		// 	break ;
 
 // 		// if line is empty, bash returns 0 and does nothing
 // 		if (ft_strlen(hold->line) > 0)
@@ -61,12 +61,12 @@ int main(int32_t argc, char **argv, char **env)
 // 			// add_history(hold->line);
 
 			lexer(hold);
-			print_list(hold->lex_struct, "lex");
+			// print_list(hold->lex_struct, "lex");
 			parser(hold);
-			print_parsed_list(hold->parsed_list);
+			// print_parsed_list(hold->parsed_list);
 // 			// if (hold->exit_code == 0)
 // 			// 	print_macro_list(hold->lex_struct);
-// 			// executer(hold);
+			executer(hold, env);
 // // printf("after executer | EXIT\n\n");
 // // exit(0);
 			free_content(hold);

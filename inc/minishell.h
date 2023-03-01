@@ -131,7 +131,7 @@ void parser(t_hold *hold);
 
 
 //		executer.c
-void executer(t_hold *hold);
+void executer(t_hold *hold, char **ori_env);
 
 
 

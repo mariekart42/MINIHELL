@@ -14,7 +14,18 @@ void redirection(t_parsed_chunk *parsed_node)
 	
 // }
 
-void executer(t_hold *hold)
+void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env)
+{
+	if (execve(parsed_node->cmd_path, parsed_node->args, ori_env) == -1)
+	{
+		write(2, "Command not found: ", 19);
+		// ft_putstr_fd(ppx->av[3], 2);
+		exit(127);
+	}
+	// free(path);
+}
+
+void executer(t_hold *hold, char **ori_env)
 {
 	int32_t *pids;
 	int32_t pipegroups;
@@ -46,12 +57,13 @@ void executer(t_hold *hold)
 			redirection(parsed_node);
 
 			// close filediscriptors (pipes and files)
-			
+			// close(hold->parsed_list->infile);
+			// close(hold->parsed_list->outfile);
+			// close(pids[0]);
+			// close(pids[1]);
 			// execute command
-
+			execute_cmd(parsed_node, ori_env);
 		}
-
-
 		pipegroups--;
 	}
 	// loop where we wait for kiddos to finish
