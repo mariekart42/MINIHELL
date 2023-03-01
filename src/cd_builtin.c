@@ -4,19 +4,21 @@
 // https://man7.org/linux/man-pages/man1/cd.1p.html
 // https://man7.org/linux/man-pages/man3/chdir.3p.html
 
-int	update_dir(t_hold *hold, t_parsed_chunk *parsed_node)
+int	update_dir(t_hold *hold, char **args)
 {
 	char	*old;
 	char	*new;
 	t_env_export *tmp;
 
-	old = getcwd(0, 256);
-	if (chdir(parsed_node->args[1]) == -1)
+	old = NULL;
+	old = getcwd(old, 0);
+	if (chdir(args[1]) == -1)
 	{
 		free(old);
 		return (-1);
 	}
-	new = getcwd(0, 256);
+	new = NULL;
+	new = getcwd(new, 0);
 	tmp = hold->env_list;
 	while (tmp != NULL)
 	{
@@ -38,23 +40,22 @@ void cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	bool	is_home;
 	t_env_export *tmp;
 	
-	is_home = true;
-	tmp = hold->env_list;
-	while (tmp != NULL)
-	{
-		if (ft_strncmp(tmp->var_name, "HOME", 5) == 0)
-			home = tmp->var_value;
-		tmp = tmp->next;
-	}
-	free(tmp);
-	if (home == NULL)
-		is_home = false;
 	if (parsed_node->args[1] == NULL)
 	{
+		is_home = true;
+		tmp = hold->env_list;
+		while (tmp != NULL)
+		{
+			if (ft_strncmp(tmp->var_name, "HOME", 5) == 0)
+				home = tmp->var_value;
+			tmp = tmp->next;
+		}
+		free(tmp);
+		if (home == NULL)
+			is_home = false;
 		if (is_home)
 		{
-			chdir(home);
-			// Need to update env
+			update_dir(hold, parsed_node->args);
 			return ;
 		}
 		else
@@ -63,7 +64,7 @@ void cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 			return ;
 		}
 	}
-	if (update_dir(hold, parsed_node) == -1)
+	if (update_dir(hold, parsed_node->args) == -1)
 	{
 		ft_putstr_fd(RED"minshell: cd: ", 2);
 		ft_putstr_fd(parsed_node->args[1], 2);
