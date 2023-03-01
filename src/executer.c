@@ -9,10 +9,46 @@ void redirection(t_parsed_chunk *parsed_node)
 	dup2(parsed_node->outfile, STDOUT_FILENO);
 }
 
-// void open_pipefds(t_hold *hold)
-// {
-	
-// }
+void open_pipefds(t_parsed_chunk *parsed_list, int32_t pipegroups)
+{
+	int32_t i;
+
+	i = 1;
+	while (i < pipegroups)
+	{
+		if (pipe(parsed_list->pipe_fds[i]) < 0)
+		{
+			// set error code
+			write(2, "Failed to malloc for pipe! EXIT\n", 35);
+			exit(0);
+		}
+		i++;
+	}
+	printf("opend %d pipes\n", i-1);
+}
+
+void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups)
+{
+	int32_t i;
+	t_parsed_chunk *tmp;
+
+	i = 1;
+	tmp = parsed_list;
+	while (i < pipegroups)
+	{
+		close(parsed_list->pipe_fds[0]);
+		close(parsed_list->pipe_fds[1]);
+		i++;
+	}
+	while (tmp != NULL)
+	{
+		if (parsed_list->infile != 0)
+			close(parsed_list->infile);
+		if (parsed_list->outfile != 1)
+			close(parsed_list->outfile);
+		tmp = tmp->next;
+	}
+}
 
 void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env)
 {
@@ -45,7 +81,7 @@ void executer(t_hold *hold, char **ori_env)
 		return (exit_status(hold, "Error! Failed to malloc for pids (in executer())\n", 69));
 
 	// open amount of pipes we need (one pipegroup = one pipe)
-	// open_pipefds(hold);
+	open_pipefds(hold->parsed_list, pipegroups);
 
 	i = 0;
 	while (pipegroups > 0)
@@ -57,10 +93,7 @@ void executer(t_hold *hold, char **ori_env)
 			redirection(parsed_node);
 
 			// close filediscriptors (pipes and files)
-			// close(hold->parsed_list->infile);
-			// close(hold->parsed_list->outfile);
-			// close(pids[0]);
-			// close(pids[1]);
+			close_fds(parsed_node, pipegroups);
 			// execute command
 			execute_cmd(parsed_node, ori_env);
 		}
