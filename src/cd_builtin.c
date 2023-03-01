@@ -46,9 +46,12 @@ void cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		tmp = hold->env_list;
 		while (tmp != NULL)
 		{
+			//Ask Marie why segfault?
+			write(1, "Hiello!1\n", 10);
 			if (ft_strncmp(tmp->var_name, "HOME", 5) == 0)
 				home = tmp->var_value;
 			tmp = tmp->next;
+			write(1, "Hiello!2\n", 10);
 		}
 		free(tmp);
 		if (home == NULL)
