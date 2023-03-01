@@ -82,7 +82,7 @@ int main(int32_t argc, char **argv, char **env)
 
 			lexer(hold);
 			parser(hold);
-			cd_builtin(hold, hold->parsed_list)
+			cd_builtin(hold, hold->parsed_list);
 			// exit(0);
 			// if (hold->exit_code == 0)
 			// 	print_macro_list(hold->lex_struct);
