@@ -19,13 +19,14 @@ int	update_dir(t_hold *hold, char **args)
 	}
 	new = NULL;
 	new = getcwd(new, 0);
-	tmp = hold->env_list;
+	// Use export_list instead of env_list
+	tmp = hold->export_list;
 	while (tmp != NULL)
 	{
 		write(1, "Hiello!3\n", 10);
-		if (ft_strncmp(tmp->var_name, "PWD", 4) == 0)
+		if (ft_strncmp(tmp->var_name, "PWD", 3) == 0)
 			tmp->var_value = new;
-		if (ft_strncmp(tmp->var_name, "OLDPWD", 7) == 0)
+		if (ft_strncmp(tmp->var_name, "OLDPWD", 6) == 0)
 			tmp->var_value = old;
 		tmp = tmp->next;
 	}
@@ -44,14 +45,13 @@ void cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	if (parsed_node->args[1] == NULL)
 	{
 		is_home = true;
-		tmp = hold->env_list;
+		// Use export_list instead of env_list
+		tmp = hold->export_list;
 		while (tmp != NULL)
 		{
-			//Ask Marie why segfault?
-			write(1, "Hiello!1\n", 10);
-			if (ft_strncmp(tmp->var_name, "HOME", 5) == 0)
+			if (tmp->var_name)
+			if (ft_strncmp(tmp->var_name, "HOME", 4) == 0)
 				home = tmp->var_value;
-			write(1, "Hiello!2\n", 10);
 			tmp = tmp->next;
 		}
 		free(tmp);
