@@ -1,8 +1,5 @@
 #include "minishell.h"
 
-// KeinDrama
-// niemals
-
 void free_content(t_hold *hold)
 {
 	free(hold->line);
@@ -42,6 +39,7 @@ int main(int32_t argc, char **argv, char **env)
 
 	// using signal function here to catch signal if eg ctr-c is used
 	
+	// Take a look here on how to create export
 	create_env_export_list(hold, env);
 			// important later
 			// char *test;
@@ -63,11 +61,12 @@ int main(int32_t argc, char **argv, char **env)
 
 			lexer(hold);
 			parser(hold);
+			builtin(hold, hold->parsed_list);
 			// print_list(hold->lex_struct, "lex");
-			print_parsed_list(hold->parsed_list);
+			// print_parsed_list(hold->parsed_list);
 // 			// if (hold->exit_code == 0)
 // 			// 	print_macro_list(hold->lex_struct);
-			// executer(hold, env);
+			// executer(hold, env); // Works now
 // // printf("after executer | EXIT\n\n");
 // // exit(0);
 			free_content(hold);
