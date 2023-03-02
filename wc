@@ -132,7 +132,3 @@ int main(int32_t argc, char **argv, char **env)
 // - in parser:
 //		around 20 leaks (more if using more nodes)
 //	-> deal with it later cause we need to restructure parser anyways a bit
-
-
-//!  PROBLEMOS:
-// ls | ls | wc bonjour  -> prints one ls and the wc bonjour content (multiple pipes) 

@@ -90,7 +90,7 @@ void open_pipefds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 		
 		i++;
 	}
-	printf("opend %d pipes\n", i);
+	printf(MAG"opend %d pipes\n"RESET, i);
 }
 
 void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
@@ -98,9 +98,9 @@ void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds
 	int32_t i;
 	t_parsed_chunk *tmp;
 
-	i = 1;
+	i = 0;
 	tmp = parsed_list;
-	while (i < pipegroups)
+	while ((i+1) < pipegroups)
 	{
 		close(pipe_fds[i][0]);
 		close(pipe_fds[i][1]);
@@ -116,9 +116,15 @@ void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds
 	}
 }
 
-void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env)
+void execute_cmd(t_hold *hold, t_parsed_chunk *parsed_node, char **ori_env)
 {
-	if (execve(parsed_node->cmd_path, parsed_node->args, ori_env) == -1)
+	printf("\n%s\n\n", parsed_node->args[0]);
+	if (builtin_parser(parsed_node->args[0]) == true)
+	{
+		printf(CYN"my builtin:\n"RESET);
+		builtin(hold, parsed_node);
+	}
+	else if (execve(parsed_node->cmd_path, parsed_node->args, ori_env) == -1)
 	{
 		write(2, "Command not found: [add here cmd]\n", 34);
 		// perror("Command not found: \n");
@@ -157,8 +163,10 @@ void executer(t_hold *hold, char **ori_env)
 	open_pipefds(hold, pipegroups, pipe_fds);
 
 	i = 0;
+	printf("i: %d\npipegroups: %d\n", i, pipegroups);
 	while (i < pipegroups)
 	{
+		write(2, GRN"eEEEEeeeEEEEEe\n"RESET, 15);
 		pids[i] = fork();
 		if (pids[i] == 0)
 		{
@@ -168,8 +176,10 @@ void executer(t_hold *hold, char **ori_env)
 
 			// close filediscriptors (pipes and files)
 			close_fds(parsed_node, pipegroups, pipe_fds);
+
+
 			// execute command
-			execute_cmd(parsed_node, ori_env);
+			execute_cmd(hold, parsed_node, ori_env);
 		}
 		// waitpid(pids[i], NULL, 0);
 		i++;
