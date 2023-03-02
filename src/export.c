@@ -16,32 +16,54 @@ void export_builtin(t_hold *hold)
 void swap_data(t_env_export *export_list)
 {
 	char	*tmp_item;
-	char	*tmp_val;
+	char	*tmp_value;
+	char	*tmp_name;
 
-	tmp_item = ft_strdup(export_list->item);
-	tmp_val = ft_strdup(export_list->var_name);
-	free(export_list->var_name); 
-	export_list->item = ft_strdup(export_list->next->item);
+	tmp_name = ft_strdup(export_list->var_name);
+	tmp_item = export_list->item;
+	tmp_value = ft_strdup(export_list->var_value);
+		free(export_list->var_name); 
+		free(export_list->var_value); 
+		// free(export_list->item); 
+
 	export_list->var_name = ft_strdup(export_list->next->var_name);
+	export_list->item = export_list->next->item;
+	export_list->var_value = ft_strdup(export_list->next->var_value);
 	free(export_list->next->var_name);
-	export_list->next->item = ft_strdup(tmp_item);
-	export_list->next->var_name = ft_strdup(tmp_val);
-	free(tmp_item);
-	free(tmp_val);
+	free(export_list->next->var_value);
+	// free(export_list->next->item);
+
+	export_list->next->var_name = tmp_name;
+	export_list->next->item = tmp_item;
+	export_list->next->var_value = tmp_value;
+	// free(tmp_item);
+	// free(tmp_name);
+	// free(tmp_value);
 }
 
 void sort_export_list(t_hold *hold)
 {
 	// init var name and value in struct
 	t_env_export *tmp;
+	char **tmp_tmp;
 
+	int i = 2;
 	tmp = hold->export_list;
 	while (tmp != NULL)
 	{
-		tmp->var_name = *(ft_split(tmp->item, '='));
-		tmp->var_value = *(ft_split(tmp->item, '=') + 1);
+		tmp_tmp = ft_split(tmp->item, '=');
+		tmp->var_name = tmp_tmp[0];
+		tmp->var_value = tmp_tmp[1];
+		while (tmp_tmp[i] != NULL)
+		{
+			tmp->var_value = ft_strjoin(tmp->var_value, tmp_tmp[i]);
+			i++;
+		}
+		free(tmp_tmp);
+		i = 2;
 		tmp = tmp->next;
 	}
+
 	tmp = hold->export_list;
 	while (hold->export_list != NULL && hold->export_list->next != NULL)
 	{

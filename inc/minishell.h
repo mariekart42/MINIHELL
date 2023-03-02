@@ -61,7 +61,6 @@ typedef struct s_parsed_chunk
 	char	*cmd_path;
 	int32_t	infile;
 	int32_t	outfile;
-	int32_t pipe_fds[MAX_FD][2];
 	struct s_parsed_chunk	*next;
 }			t_parsed_chunk;
 
@@ -94,14 +93,14 @@ void free_env_export(t_hold *hold);
 int32_t check_syntax_errors(t_hold *hold);
 
 
-//		builtins/builtins.c
+//		builtins.c
 void env_builtin(t_hold *hold);
 void pwd_builtin(t_hold *hold);
 void cd_builtin(t_hold *hold);
 bool builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 
 
-//		builtins/export.c
+//		export.c
 void export_builtin(t_hold *hold);
 void swap_data(t_env_export *export_list);
 void sort_export_list(t_hold *hold);
@@ -133,12 +132,11 @@ void parser(t_hold *hold);
 
 
 //		executer.c
-void redirection(t_parsed_chunk *parsed_node);
-void open_pipefds(t_hold *hold, int32_t pipe_groups);
-void close_fds(t_parsed_chunk *parsed_node, int32_t pipegroups);
-char **list_to_char_array(t_env_export *env_node);
-void executer(t_hold *hold);
-
+void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+void open_pipefds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env);
+void executer(t_hold *hold, char **ori_env);
 
 
 //		utils.c
@@ -148,7 +146,7 @@ void free_list_env_export(t_env_export* head);
 void			add_node_lex(t_hold *hold, char *content);
 t_lexing		*last_node_lex(t_lexing *lst);
 t_env_export	*new_node_env(void);
-t_env_export	*add_node_env(t_hold *hold, char *content, char *type);
+void	add_node_env(t_hold *hold, char *content, char *type);
 t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst);
 void			add_node_pars(t_hold **hold);
 void			exit_status(t_hold *hold, char *message, int8_t exit_code_);

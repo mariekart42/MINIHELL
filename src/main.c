@@ -18,22 +18,10 @@ int32_t init_structs(t_hold **hold)
 	(*hold) = (t_hold *)malloc(sizeof(t_hold));
 	if (!(*hold))
 		return (69);
-	(*hold)->lex_struct = (t_lexing*)malloc(sizeof(t_lexing));
-	if (!(*hold)->lex_struct)
-		return (69);
-	(*hold)->env_list = (t_env_export*)malloc(sizeof(t_env_export));
-	if (!(*hold)->env_list)
-		return (69);
-	(*hold)->export_list = (t_env_export*)malloc(sizeof(t_env_export));
-	if (!(*hold)->export_list)
-		return (69);
-	(*hold)->parsed_list = (t_parsed_chunk*)malloc(sizeof(t_parsed_chunk));
-	if (!(*hold)->parsed_list)
-		return (69);
-	(*hold)->lex_struct = NULL;
 	(*hold)->env_list = NULL;
-	(*hold)->export_list = NULL;
 	(*hold)->parsed_list = NULL;
+	(*hold)->export_list = NULL;
+	(*hold)->lex_struct = NULL;
 	return (0);
 }
 
@@ -44,6 +32,7 @@ void free_env_export(t_hold *hold)
 	hold->env_list = NULL;
 	hold->export_list = NULL;
 }
+
 
 int main(int32_t argc, char **argv, char **env)
 {
@@ -62,34 +51,34 @@ int main(int32_t argc, char **argv, char **env)
 			// test = getenv("PATH");
 			// printf("getenv: %s\n", test);
 			
-// 	while (1)
-// 	{
-// 		hold->exit_code = 0;
-// 		hold->line = readline(BLU"MINIHELL> "RESET);
-// 		if (!hold->line)
-// 			break ;
+	while (1)
+	{
+		hold->exit_code = 0;
+		hold->line = readline(BLU"MINIHELL> "RESET);
+		// hold->line = ft_strdup("ls -l");
+		if (!hold->line)
+			break ;
 
 // 		// if line is empty, bash returns 0 and does nothing
-// 		if (ft_strlen(hold->line) > 0)
-// 		{
-// 			add_history(hold->line);
+		if (ft_strlen(hold->line) > 0)
+		{
+			add_history(hold->line);
 
-// 			lexer(hold);
-// 		printf(MAG"in main, error_code: %d\n"RESET, hold->exit_code);
-// 		exit(0);
-// 			parser(hold);
-// // printf(GRN"check\n"RESET);
+			lexer(hold);
+			// print_list(hold->lex_struct, "lex");
+			parser(hold);
+			// print_parsed_list(hold->parsed_list);
+
 // 			// if (hold->exit_code == 0)
 // 			// 	print_macro_list(hold->lex_struct);
-// 			executer(hold);
-// // printf("after executer | EXIT\n\n");
-// // exit(0);
-// 			free_content(&hold);
-// 		}
-// 	}
+
+			executer(hold, env);
+			free_content(&hold);
+		}
+	}
 	free_env_export(hold);
+	free(hold);
 	clear_history();
-	// here func to clear all memory
 }
 
 
@@ -116,11 +105,8 @@ int main(int32_t argc, char **argv, char **env)
 
 
 //!  EXECUTER:
-//		- forking √
-//		- wait 4 kiddos
-//		- redirections √ (guess thats it)
-//		- executing
-//		- create pipes NEXT
+//	- douple redir not working yet(prolly wrong opening rights)
+// - change 'ori_env' to **char of own env list
 
 
 //!  BUILTINS:
@@ -140,3 +126,9 @@ int main(int32_t argc, char **argv, char **env)
 // - after main loop clear all memory
 // - exit with exit command -> returns 0
 // - signals shit
+
+
+//!  LEAKS:
+// - in parser:
+//		around 20 leaks (more if using more nodes)
+//	-> deal with it later cause we need to restructure parser anyways a bit

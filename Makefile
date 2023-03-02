@@ -1,8 +1,7 @@
 NAME	= minishell
 CC		= gcc
 CFLAGS	= -Wall -Werror -Wextra -g
-# CFLAGS	= -Wall -Wextra -g
-# CFLAGS	= -Werror -Wall -Wextra -pthread -g -fsanitize=thread
+# CFLAGS	=  -fsanitize=address
 RM		= rm -rf
 
 SRC_PATH = src/
