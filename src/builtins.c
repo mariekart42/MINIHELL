@@ -1,21 +1,5 @@
 #include "minishell.h"
 
-/* bash:	If the current working directory is a symbolic link that points to a 
- * 			directory that no longer exists, the pwd command will fail with a 
- * 			"No such file or directory" error								*/
-void pwd_builtin(t_hold *hold) // Receive pipe_node // Does not need it
-{
-	char	path[PATH_MAX];
-	
-	if (!getcwd(path, PATH_MAX))
-	{
-		exit_status(hold, RED"PWD: NO SUCH FILE OR DIRECTORY\n"RESET, 69);
-		return ;
-	}
-	write(1, path, ft_strlen(path));
-	write(1, "\n", 1);
-}
-
 bool echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag) 
 {
 	char	**args;
@@ -25,6 +9,7 @@ bool echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag)
 	args = parsed_node->args;
 	outfile = parsed_node->outfile;
 	j = 1;
+	is_nflag = false;
 	if (ft_strncmp(args[i], "-n", 2) == 0)
 	{
 		while (args[i][j] != '\0')
@@ -41,8 +26,6 @@ bool echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag)
 			}
 		}
 	}
-	if (!is_nflag)
-		ft_putstr_fd(args[i], outfile);
 	return (is_nflag);
 }
 
@@ -51,25 +34,23 @@ void echo_builtin(t_parsed_chunk *parsed_node)
 	char	**args;
 	int		i;
 	bool	is_nflag;
+	bool 	temp_flag;
 
 	args = parsed_node->args;
 	i = 1;
 	is_nflag = false;
-	// echo alone print new line. No segfault?
 	if (args[1] == NULL)
 	{
 		ft_putstr_fd("\n", 1);
 		return ;
 	}
-	// -n -n -n loop //Only consider for i = 1
-	// Question for Marie: How we handle echo -n Santiago Tena if not 
-	// many arguments possible
 	while (args[i] != NULL)
 	{
-		is_nflag = echo_builtin_helper(parsed_node, i, is_nflag);
-		i++;
-		if (!is_nflag)
+		temp_flag = echo_builtin_helper(parsed_node, i, is_nflag);
+		if (!temp_flag)
 			break ;
+		is_nflag = temp_flag;
+		i++;
 	}
 	while (args[i] != NULL)
 	{
@@ -90,47 +71,26 @@ void env_builtin(t_hold *hold)
 	tmp = hold->env_list;
 	while (tmp != NULL)
 	{
-		ft_putstr_fd(tmp->item, 2);
+		ft_putstr_fd(tmp->item, hold->parsed_list->outfile);
 		write(2, "\n", 1);
 		tmp = tmp->next;
 	}
+	free(tmp);
 }
 
-
-
-
-void cd_builtin(t_hold *hold)
+void pwd_builtin(t_hold *hold)
 {
-	if (hold->lex_struct->next->item == NULL)
-	{
-		printf(RED"adding homedirectory feature later!\nEXIT\n"RESET);
-		exit(0);
-	}
-	// get $HOME from own env list and give it to chrir as an argument
+	char	path[PATH_MAX];
 	
-	if (chdir(hold->lex_struct->next->item) < 0)
+	if (!getcwd(path, PATH_MAX))
 	{
-		ft_putstr_fd(RED"", 2); //just for making it red lol
-		write(1, hold->lex_struct->next->item, ft_strlen(hold->lex_struct->next->item));
-		exit_status(hold, ": NO SUCH FILE OR DIRECTORY\n"RESET, 69);
+		exit_status(hold, RED"minishell: pwd: No such file or directory\n"RESET, 69);
 		return ;
 	}
-
+	write(hold->parsed_list->outfile, path, ft_strlen(path));
+	write(hold->parsed_list->outfile, "\n", 1);
 }
 
-
-// void unset_builtin(t_hold *hold)
-// {
-
-// }
-// void echo_builtin(t_hold *hold)
-// {
-
-// }
-// void exit_builtin(t_hold *hold)
-// {
-
-// }
 
 bool builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
@@ -139,18 +99,18 @@ bool builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		// printf(MAG"BUILTIN\n"RESET);
 		if (ft_strncmp(hold->lex_struct->item, "echo", 4) == 0)
 			return (echo_builtin(parsed_node), true);
-		// else if (ft_strncmp(hold->lex_struct->item, "env", 3) == 0)
-		// 	return (env_builtin(hold), true);
-		// else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)
-		// 	return (export_builtin(hold), true);
+		else if (ft_strncmp(hold->lex_struct->item, "env", 3) == 0)
+			return (env_builtin(hold), true);
 		else if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
 			return (pwd_builtin(hold), true);
-		// else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
-		// 	return (cd_builtin(hold), true);
-		// else if (ft_strncmp(hold->lex_struct->item, "unset", 5) == 0)
-		// 	return (unset_builtin(hold), true);
+		else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
+			return (cd_builtin(hold, parsed_node), true);
 		// else if (ft_strncmp(hold->lex_struct->item, "exit", 4) == 0)
 		// 	return (exit_builtin(hold), true);
+		// else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)
+		// 	return (export_builtin(hold), true);
+		// else if (ft_strncmp(hold->lex_struct->item, "unset", 5) == 0)
+		// 	return (unset_builtin(hold), true);
 		return (true);
 	}
 	else
