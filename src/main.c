@@ -30,6 +30,7 @@ void free_env_export(t_hold *hold)
 	hold->export_list = NULL;
 }
 
+
 int main(int32_t argc, char **argv, char **env)
 {
 	t_hold	*hold = NULL;
@@ -61,12 +62,12 @@ int main(int32_t argc, char **argv, char **env)
 // 			// add_history(hold->line);
 
 			lexer(hold);
-			// print_list(hold->lex_struct, "lex");
 			parser(hold);
-			// print_parsed_list(hold->parsed_list);
+			// print_list(hold->lex_struct, "lex");
+			print_parsed_list(hold->parsed_list);
 // 			// if (hold->exit_code == 0)
 // 			// 	print_macro_list(hold->lex_struct);
-			executer(hold, env);
+			// executer(hold, env);
 // // printf("after executer | EXIT\n\n");
 // // exit(0);
 			free_content(hold);
