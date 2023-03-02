@@ -23,7 +23,7 @@ int	update_dir(t_hold *hold, char **args)
 	tmp = hold->export_list;
 	while (tmp != NULL)
 	{
-		// write(1, "Hiello!\n", 9);
+		// write(1, "Hiello2\n", 9);
 		if (ft_strncmp(tmp->var_name, "PWD", 3) == 0)
 			tmp->var_value = new;
 		if (ft_strncmp(tmp->var_name, "OLDPWD", 6) == 0)
@@ -49,7 +49,7 @@ void cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		tmp = hold->export_list;
 		while (tmp != NULL)
 		{
-			// write(1, "Hiello!\n", 9);
+			// write(1, "Hiello1\n", 9);
 			if (tmp->var_name)
 			if (ft_strncmp(tmp->var_name, "HOME", 4) == 0)
 				home = tmp->var_value;

@@ -40,6 +40,7 @@ int main(int32_t argc, char **argv, char **env)
 	// using signal function here to catch signal if eg ctr-c is used
 	
 	// Take a look here on how to create export
+	// Found in utils.c
 	create_env_export_list(hold, env);
 			// important later
 			// char *test;
@@ -66,7 +67,9 @@ int main(int32_t argc, char **argv, char **env)
 			// print_parsed_list(hold->parsed_list);
 // 			// if (hold->exit_code == 0)
 // 			// 	print_macro_list(hold->lex_struct);
-			// executer(hold, env); // Works now
+
+			executer(hold, env); // Important for testing
+
 // // printf("after executer | EXIT\n\n");
 // // exit(0);
 			free_content(hold);
