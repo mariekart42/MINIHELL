@@ -101,6 +101,8 @@ void cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 // void unset_builtin(t_hold *hold);
 bool builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 
+//		cd_builtin_cont.c
+void	add_to_env(t_hold *hold, char *add);
 
 //		export.c
 void export_builtin(t_hold *hold);
