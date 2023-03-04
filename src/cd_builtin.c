@@ -4,6 +4,46 @@
 // https://man7.org/linux/man-pages/man1/cd.1p.html
 // https://man7.org/linux/man-pages/man3/chdir.3p.html
 
+void add_pwd(t_hold *hold, char *old) 
+{
+	t_env_export	*new;
+	t_env_export	*tmp;
+
+	new = NULL;
+	new->item = old;
+	tmp = hold->env_list;
+
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	tmp->next = new;
+	free(tmp);
+}
+
+void update_env(t_hold *hold, char *old, char *new)
+{
+	t_env_export	*tmp;
+	bool			is_oldpwd;
+
+	is_oldpwd = false;
+    old = ft_strjoin("OLDPWD=", old);
+	new = ft_strjoin("PWD=", new);
+    tmp = hold->env_list;
+    while (tmp != NULL)
+    {
+        if (ft_strncmp(tmp->item, "PWD", 3) == 0)
+            tmp->item = new;
+        if (ft_strncmp(tmp->item, "OLDPWD", 6) == 0)
+		{
+            tmp->item = old;
+			is_oldpwd = true;
+		}
+        tmp = tmp->next;
+    }
+	if (!is_oldpwd)
+		add_pwd(hold, old);
+	free(tmp);
+}
+
 int	update_dir(t_hold *hold, char **args)
 {
 	char	*old;
@@ -19,17 +59,16 @@ int	update_dir(t_hold *hold, char **args)
 	}
 	new = NULL;
 	new = getcwd(new, 0);
-	// Use export_list instead of env_list
 	tmp = hold->export_list;
 	while (tmp != NULL)
 	{
-		// write(1, "Hiello2\n", 9);
 		if (ft_strncmp(tmp->var_name, "PWD", 3) == 0)
 			tmp->var_value = new;
 		if (ft_strncmp(tmp->var_name, "OLDPWD", 6) == 0)
 			tmp->var_value = old;
 		tmp = tmp->next;
 	}
+    update_env(hold, old, new);
 	free(tmp);
 	free(old);
 	free(new);
@@ -45,11 +84,9 @@ void cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	if (parsed_node->args[1] == NULL)
 	{
 		is_home = true;
-		// Use export_list instead of env_list
 		tmp = hold->export_list;
 		while (tmp != NULL)
 		{
-			// write(1, "Hiello1\n", 9);
 			if (tmp->var_name)
 			if (ft_strncmp(tmp->var_name, "HOME", 4) == 0)
 				home = tmp->var_value;
