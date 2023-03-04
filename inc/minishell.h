@@ -107,11 +107,14 @@ void	add_to_env(t_hold *hold, char *add);
 //		echo_builtin.c
 void	echo_builtin(t_parsed_chunk *parsed_node);
 
+//		exit.c
+void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
+
+
 //		export.c
 void export_builtin(t_hold *hold);
 void swap_data(t_env_export *export_list);
 void sort_export_list(t_hold *hold);
-
 
 
 //		lexing.c
@@ -124,7 +127,6 @@ int32_t check_beginning_redir(t_hold *hold);
 int32_t	lex_redir(t_hold *hold, int32_t i);
 int32_t	lex_word(t_hold *hold, int32_t i);
 void lexer(t_hold *hold);
-
 
 
 //		parser.c
