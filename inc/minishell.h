@@ -104,6 +104,9 @@ bool builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 //		cd_builtin_cont.c
 void	add_to_env(t_hold *hold, char *add);
 
+//		echo_builtin.c
+void	echo_builtin(t_parsed_chunk *parsed_node);
+
 //		export.c
 void export_builtin(t_hold *hold);
 void swap_data(t_env_export *export_list);
