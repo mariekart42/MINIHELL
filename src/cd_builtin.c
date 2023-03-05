@@ -1,38 +1,18 @@
 #include "minishell.h"
 
-void	update_env(t_hold *hold, char *old, char *new, char *structure)
-{
-	t_env_export	*tmp;
-	bool			is_oldpwd;
-
-	is_oldpwd = false;
-	old = ft_strjoin("OLDPWD=", old);
-	new = ft_strjoin("PWD=", new);
-	if (ft_strncmp(structure, "env", 3) == 0)
-		tmp = hold->env_list;
-	if (ft_strncmp(structure, "export", 6) == 0)
-		tmp = hold->export_list;
-	while (tmp != NULL)
-	{
-		if (ft_strncmp(tmp->item, "PWD", 3) == 0)
-			tmp->item = new;
-		if (ft_strncmp(tmp->item, "OLDPWD", 6) == 0)
-		{
-			tmp->item = old;
-			is_oldpwd = true;
-		}
-		tmp = tmp->next;
-	}
-	if (!is_oldpwd)
-		add_to_env(hold, old);
-	free(tmp);
-}
-
 void	free_vars(t_env_export *tmp, char *old, char *new)
 {
 	free(tmp);
 	free(old);
 	free(new);
+}
+
+void	update_dir_cont(t_hold *hold, char *old, char *new, t_env_export *tmp)
+{
+	update_var_value(hold, old, new, "export");
+	update_env(hold, old, new, "env");
+	update_env(hold, old, new, "export");
+	free_vars(tmp, old, new);
 }
 
 int	update_dir(t_hold *hold, char **args)
@@ -53,15 +33,13 @@ int	update_dir(t_hold *hold, char **args)
 	tmp = hold->export_list;
 	while (tmp != NULL)
 	{
-		if (ft_strncmp(tmp->var_name, "PWD", 3) == 0) // Change item
+		if (ft_strncmp(tmp->var_name, "PWD", 3) == 0)
 			tmp->var_value = new;
 		if (ft_strncmp(tmp->var_name, "OLDPWD", 6) == 0)
 			tmp->var_value = old;
 		tmp = tmp->next;
 	}
-	update_env(hold, old, new, "env");
-	update_env(hold, old, new, "export");
-	free_vars(tmp, old, new);
+	update_dir_cont(hold, old, new, tmp);
 	return (0);
 }
 
