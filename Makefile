@@ -23,7 +23,8 @@ SRC		=	main.c \
 			builtins_cont.c \
 			cd_builtin.c \
 			cd_builtin_cont.c \
-			echo_builtin.c
+			echo_builtin.c \
+			exit_builtin.c
 
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRC:.c=.o)
