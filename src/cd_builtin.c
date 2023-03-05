@@ -1,18 +1,13 @@
 #include "minishell.h"
 
-void	free_vars(t_env_export *tmp, char *old, char *new)
-{
-	free(tmp);
-	free(old);
-	free(new);
-}
-
 void	update_dir_cont(t_hold *hold, char *old, char *new, t_env_export *tmp)
 {
 	update_var_value(hold, old, new, "export");
 	update_env(hold, old, new, "env");
 	update_env(hold, old, new, "export");
-	free_vars(tmp, old, new);
+	free(tmp);
+	free(old);
+	free(new);
 }
 
 int	update_dir(t_hold *hold, char **args)
