@@ -20,11 +20,11 @@ SRC		=	main.c \
 			delete_later.c \
 			export.c \
 			builtins.c \
-			builtins_cont.c \
 			cd_builtin.c \
 			cd_builtin_cont.c \
 			echo_builtin.c \
-			exit_builtin.c
+			exit_builtin.c \
+			unset_builtin.c
 
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRC:.c=.o)

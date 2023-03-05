@@ -91,30 +91,20 @@ void free_env_export(t_hold *hold);
 int32_t check_syntax_errors(t_hold *hold);
 
 
-//		builtins/builtins.c
-void echo_builtin(t_parsed_chunk *parsed_node);
-void env_builtin(t_hold *hold);
-void pwd_builtin(t_hold *hold);
-void cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
-// void exit_builtin(t_hold *hold);
-// void export_builtin(t_hold *hold);
-// void unset_builtin(t_hold *hold);
-bool builtin(t_hold *hold, t_parsed_chunk *parsed_node);
+//		builtins
+void	echo_builtin(t_parsed_chunk *parsed_node);
+void	env_builtin(t_hold *hold);
+void	pwd_builtin(t_hold *hold);
+void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
+void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
+void 	unset_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
+bool 	builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 
 //		cd_builtin_cont.c
 void	add_to_env(t_hold *hold, char *add, char *structure);
 void	update_env(t_hold *hold, char *old, char *new, char *structure);
 void	add_to_var(t_hold *hold, char *add, char *structure);
 void	update_var_value(t_hold *hold, char *old, char *new, char *structure);
-
-//		echo_builtin.c
-void	echo_builtin(t_parsed_chunk *parsed_node);
-
-//		exit.c
-void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
-
-//		unset.c
-void unset_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 
 //		export.c
 void export_builtin(t_hold *hold);
