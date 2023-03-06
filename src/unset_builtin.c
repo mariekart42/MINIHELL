@@ -2,15 +2,15 @@
 
 // https://man7.org/linux/man-pages/man1/unset.1p.html
 
-void	delete_var (t_hold *hold, char *var) 
+void	delete_var (t_hold **hold, char *var) 
 {
 	t_env_export	*tmp;
 	t_env_export	*prev;
 
-	tmp = hold->env_list;
+	tmp = (*hold)->env_list;
 	if (tmp != NULL && (ft_strncmp(tmp->item, var, ft_strlen(var)) == 0))
 	{
-		hold->env_list = tmp->next;
+		(*hold)->env_list = tmp->next;
 		free(tmp);
 		return ;
 	}
@@ -37,7 +37,7 @@ bool	find_var(t_hold *hold, char *var)
 		if (ft_strncmp(tmp->item, var, ft_strlen(var)) == 0)
 		{
 			var_exist = true;
-			delete_var(hold, var);
+			delete_var(&hold, var);
 		}
 		tmp = tmp->next;
 	}
@@ -57,9 +57,9 @@ void unset_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	{
 		if (find_var(hold, args[i]) == false)
 		{
-			ft_putstr_fd(RED"minshell: unset: ", 2);
-			ft_putstr_fd(args[i], 2);
-			exit_status(hold, ": not a valid identifier\n"RESET, 69);
+			// ft_putstr_fd(RED"minshell: unset: ", 2);
+			// ft_putstr_fd(args[i], 2);
+			// exit_status(hold, ": not a valid identifier\n"RESET, 69);
 			return ;
 		}
 		i++;

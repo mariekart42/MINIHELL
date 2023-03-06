@@ -71,8 +71,8 @@ int main(int32_t argc, char **argv, char **env)
 // 			// if (hold->exit_code == 0)
 // 			// 	print_macro_list(hold->lex_struct);
 
-			// executer(hold, env);
-			builtin(hold, hold->parsed_list); // Add for testing
+			executer(hold, env);
+			// builtin(hold, hold->parsed_list); // Add for testing
 			free_content(&hold);
 		}
 	}
