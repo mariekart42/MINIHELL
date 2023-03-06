@@ -176,15 +176,10 @@ void executer(t_hold *hold, char **ori_env)
 
 			// close filediscriptors (pipes and files)
 			close_fds(parsed_node, pipegroups, pipe_fds);
-<<<<<<< HEAD
-
 
 			// execute command
 			execute_cmd(hold, parsed_node, ori_env);
-=======
-			// execute command
-			execute_cmd(parsed_node, ori_env);
->>>>>>> 2968fb4d1607060321b3cd715803f5ba68f748c6
+
 		}
 		// waitpid(pids[i], NULL, 0);
 		i++;

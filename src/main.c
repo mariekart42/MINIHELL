@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void free_content(t_hold *hold)
+void free_content(t_hold **hold)
 {
 	free((*hold)->line);
 	free_list_lex((*hold)->lex_struct);
