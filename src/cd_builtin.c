@@ -1,14 +1,20 @@
 #include "minishell.h"
 
-// Reference
-// https://man7.org/linux/man-pages/man1/cd.1p.html
-// https://man7.org/linux/man-pages/man3/chdir.3p.html
+void	update_dir_cont(t_hold *hold, char *old, char *new, t_env_export *tmp)
+{
+	update_var_value(hold, old, new, "export");
+	update_env(hold, old, new, "env");
+	update_env(hold, old, new, "export");
+	free(tmp);
+	free(old);
+	free(new);
+}
 
 int	update_dir(t_hold *hold, char **args)
 {
-	char	*old;
-	char	*new;
-	t_env_export *tmp;
+	char			*old;
+	char			*new;
+	t_env_export	*tmp;
 
 	old = NULL;
 	old = getcwd(old, 0);
@@ -19,54 +25,53 @@ int	update_dir(t_hold *hold, char **args)
 	}
 	new = NULL;
 	new = getcwd(new, 0);
-	tmp = hold->env_list;
+	tmp = hold->export_list;
 	while (tmp != NULL)
 	{
-		write(1, "Hiello!3\n", 10);
-		if (ft_strncmp(tmp->var_name, "PWD", 4) == 0)
+		if (ft_strncmp(tmp->var_name, "PWD", 3) == 0)
 			tmp->var_value = new;
-		if (ft_strncmp(tmp->var_name, "OLDPWD", 7) == 0)
+		if (ft_strncmp(tmp->var_name, "OLDPWD", 6) == 0)
 			tmp->var_value = old;
 		tmp = tmp->next;
 	}
-	free(tmp);
-	free(old);
-	free(new);
+	update_dir_cont(hold, old, new, tmp);
 	return (0);
 }
 
-void cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
+void	change_to_home(t_hold *hold)
 {
-	char	*home;
-	bool	is_home;
-	t_env_export *tmp;
-	
+	bool			is_home;
+	t_env_export	*tmp;
+	char			*home;
+	char			*args[2];
+
+	is_home = true;
+	tmp = hold->export_list;
+	while (tmp != NULL)
+	{
+		if (ft_strncmp(tmp->var_name, "HOME", 4) == 0)
+			home = tmp->var_value;
+		tmp = tmp->next;
+	}
+	free(tmp);
+	if (home == NULL)
+		is_home = false;
+	if (is_home)
+	{
+		args[0] = NULL;
+		args[1] = home;
+		update_dir(hold, args);
+	}
+	else
+		exit_status(hold, RED"minishell: cd: HOME not set\n"RESET, 69);
+}
+
+void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
+{
 	if (parsed_node->args[1] == NULL)
 	{
-		is_home = true;
-		tmp = hold->env_list;
-		while (tmp != NULL)
-		{
-			//Ask Marie why segfault?
-			write(1, "Hiello!1\n", 10);
-			if (ft_strncmp(tmp->var_name, "HOME", 5) == 0)
-				home = tmp->var_value;
-			write(1, "Hiello!2\n", 10);
-			tmp = tmp->next;
-		}
-		free(tmp);
-		if (home == NULL)
-			is_home = false;
-		if (is_home)
-		{
-			update_dir(hold, parsed_node->args);
-			return ;
-		}
-		else
-		{
-			exit_status(hold, RED"minishell: cd: HOME not set\n"RESET, 69);
-			return ;
-		}
+		change_to_home(hold);
+		return ;
 	}
 	if (update_dir(hold, parsed_node->args) == -1)
 	{
