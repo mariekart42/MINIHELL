@@ -5,6 +5,13 @@
  *		- and from stdout to 'outfile' in 'parsed_chunk' */
 void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
+	write(2, RED"\nls | wc case:\n"RESET, 20);
+	write(2, "infile: ", 8);
+	write(2, ft_itoa(parsed_node->infile), 2);
+	write(2, "\n", 1);
+	write(2, "outfile: ", 9);
+	write(2, ft_itoa(parsed_node->outfile), 2);
+	write(2, "\n", 1);
 	// printf("file id: %d\n", parsed_node->outfile);
 	// printf("pipegroups: %d\ni: %d\n", pipegroups, i);
 	write(2, "\nREDIRECTION:\n", 14);
@@ -58,17 +65,25 @@ void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups, int
 	}
 	else // in the middle of pipegroups
 	{
-		write(2, "middle of pipegroup\n", 20);
-		if (parsed_node->infile != 0)
-		{
 			write(2, "input: PIPE[0]-\n", 16);
-			dup2(pipe_fds[i-1][0], STDIN_FILENO);
-		}
-		if (parsed_node->outfile != 1)
-		{
+			dup2(pipe_fds[i][0], parsed_node->infile);
 			write(2, "output: PIPE[1]-\n", 17);
-			dup2(pipe_fds[i][1], STDOUT_FILENO);
-		}
+			dup2(pipe_fds[i][1], parsed_node->outfile);
+		// write(2, "middle of pipegroup\n", 20);
+		// if (parsed_node->infile != 0)
+		// {
+		// 	write(2, "input: PIPE[0]-\n", 16);
+		// 	dup2(pipe_fds[i-1][0], STDIN_FILENO);
+		// }
+		// else
+		// 	write(2, "input: STDIN\n", 13);
+		// if (parsed_node->outfile != 1)
+		// {
+		// 	write(2, "output: PIPE[1]-\n", 17);
+		// 	dup2(pipe_fds[i][1], STDOUT_FILENO);
+		// }
+		// else
+		// 	write(2, "output: STDOU\n", 14);
 	}
 // write(2, "REDIRECTION DONE-\n\n", 19);
 
@@ -126,10 +141,19 @@ void execute_cmd(t_hold *hold, t_parsed_chunk *parsed_node, char **ori_env)
 	}
 	else if (execve(parsed_node->cmd_path, parsed_node->args, ori_env) == -1)
 	{
-		write(2, "Command not found: [add here cmd]\n", 34);
-		// perror("Command not found: \n");
-		// ft_putstr_fd(ppx->av[3], 2);
-		exit(127);
+		write(2, "Command not found: ", 19);
+
+		// not sure when to print all commands that failing
+		int32_t i = 0;
+		// while (parsed_node->args[i] != NULL)
+		// {
+			write(2, parsed_node->args[i], ft_strlen(parsed_node->args[i]));
+		// 	i++;
+		// }
+		write(2, "\n", 1);
+
+		// using exit here?
+		// exit(127);
 	}
 	// free(path);
 }
@@ -163,28 +187,39 @@ void executer(t_hold *hold, char **ori_env)
 	open_pipefds(hold, pipegroups, pipe_fds);
 
 	i = 0;
-	printf("i: %d\npipegroups: %d\n", i, pipegroups);
+	printf("\npipegroups: %d\n", pipegroups);
 	while (i < pipegroups)
 	{
-		write(2, GRN"eEEEEeeeEEEEEe\n"RESET, 15);
+		// write(2, GRN"eEEEEeeeEEEEEe\n"RESET, 15);
 		pids[i] = fork();
 		if (pids[i] == 0)
 		{
-			// redirection (dup2())
 			redirection(parsed_node, i, pipegroups, pipe_fds);
-
 
 			// close filediscriptors (pipes and files)
 			close_fds(parsed_node, pipegroups, pipe_fds);
 
-			// execute command
 			execute_cmd(hold, parsed_node, ori_env);
-
+		}
+		else
+		{
+			close(pipe_fds[i][1]);
+			if (i != 0)
+				close(pipe_fds[i-1][0]);
+			// close(pipe_fds[i][0]);
+			if (parsed_node->infile != 0)
+				close(parsed_node->infile);
+			if (parsed_node->outfile != 1)
+				close(parsed_node->outfile);
+			// close_fds(parsed_node, pipegroups, pipe_fds);
+			// waitpid(pids[i], NULL, 0);
 		}
 		// waitpid(pids[i], NULL, 0);
 		i++;
 		parsed_node = parsed_node->next;
 	}
+	close(pipe_fds[i-1][0]); // not sure which 
+	close(pipe_fds[i][0]); // one of these two
 
 	// loop where we wait for kiddos to finish
 	i=0;
