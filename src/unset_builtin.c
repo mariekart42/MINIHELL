@@ -1,8 +1,6 @@
 #include "minishell.h"
 
-// https://man7.org/linux/man-pages/man1/unset.1p.html
-
-void	delete_var (t_hold **hold, char *var) 
+void	delete_var(t_hold **hold, char *var)
 {
 	t_env_export	*tmp;
 	t_env_export	*prev;
@@ -20,7 +18,7 @@ void	delete_var (t_hold **hold, char *var)
 		tmp = tmp->next;
 	}
 	if (tmp == NULL)
-		return;
+		return ;
 	prev->next = tmp->next;
 	free(tmp);
 }
@@ -45,8 +43,7 @@ bool	find_var(t_hold *hold, char *var)
 	return (var_exist);
 }
 
-
-void unset_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
+void	unset_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
 	char	**args;
 	int		i;
