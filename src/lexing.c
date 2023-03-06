@@ -41,7 +41,7 @@ void closed_quotes(t_hold *hold)
 		i++;
 	}
 	if (single_quotes % 2 != 0 || double_quotes % 2 != 0)
-		exit_status(hold, "syntax error: quotes are unclosed!\n", 69);
+		exit_status(hold, RED"minihell: syntax error: quotes are unclosed!\n"RESET, 69);
 }
 
 /* function adds pipe symbol as a new node to the 'lex_struct'
@@ -51,12 +51,12 @@ void closed_quotes(t_hold *hold)
 void lex_pipe(t_hold *hold, int32_t i)
 {
 	if (i == 0)
-		return (exit_status(hold, "syntax error near unexpected token '|'\n", 2));
+		return (exit_status(hold, "minihell: syntax error near unexpected token '|'\n", 2));
 	i++;
 	while (hold->line[i] == ' ')
 		i++;
 	if (hold->line[i] == '|')
-		return (exit_status(hold, "syntax error near unexpected token '|'\n", 2));
+		return (exit_status(hold, "minihell: syntax error near unexpected token '|'\n", 2));
 	add_node_lex(hold, "|");
 }
 
@@ -101,7 +101,7 @@ int32_t check_beginning_redir(t_hold *hold)
 			return (0);
 		i++;		
 	}
-	exit_status(hold, "syntax error near unexpected token 'newline'\n", 2);
+	exit_status(hold, RED"minihell: syntax error near unexpected token 'newline'\n"RESET, 2);
     return (-1);
 }
 
@@ -128,7 +128,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 			i = skip_spaces(hold->line, i);
 			if (hold->line[i] == '<')
             {
-				exit_status(hold, "syntax error near unexpected token '<'\n", 69);
+				exit_status(hold, RED"minihell: syntax error near unexpected token '<'\n"RESET, 69);
                 return (-1);
             }
 			return (i-1);
@@ -142,7 +142,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 		i = skip_spaces(hold->line, i);
 		if (hold->line[i] == '<')
         {
-			exit_status(hold, "syntax error near unexpected token '<'\n", 69);
+			exit_status(hold, RED"minihell: syntax error near unexpected token '<'\n"RESET, 69);
             return (-1);
         }
 		if (hold->line[i] == '>')
@@ -152,7 +152,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 			i = skip_spaces(hold->line, i);
 			if (hold->line[i] == '>' || hold->line[i] == '<')
             {
-				exit_status(hold, "syntax error near unexpected token '>'\n", 69);
+				exit_status(hold, RED"minihell: syntax error near unexpected token '>'\n"RESET, 69);
                 return (-1);
             }
 			return (i-1);
@@ -222,5 +222,4 @@ void lexer(t_hold *hold)
         }
 		i++;
 	}
-printf(CYN"lex, error code: %d\n"RESET, hold->exit_code);
 }
