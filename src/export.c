@@ -7,7 +7,7 @@ void export_builtin(t_hold *hold)
 	tmp = hold->export_list;
 	while (tmp != NULL)
 	{
-		ft_putstr_fd(tmp->item, 2);
+		ft_putstr_fd(tmp->item, hold->parsed_list->outfile);
 		write(2, "\n", 1);
 		tmp = tmp->next;
 	}
