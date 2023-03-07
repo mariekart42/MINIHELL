@@ -71,7 +71,8 @@ int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
 	else
 	{
 		// printf("double redir\n");
-		file_id = open(file_node->item, O_CREAT, 0644);
+		// file_id = open(file_node->item, O_CREAT, 0644); // used this before
+		file_id = open(file_node->item, O_CREAT | O_WRONLY | O_APPEND); // check if its right
 	}
 
 	if (file_id < 0)
@@ -144,6 +145,18 @@ char *get_cmdpath(char *curr_cmd)
 		return (valid_path);
 }
 
+
+// // infile is a tmp created file -> how to delete later?
+// void handle_heredoc()
+// {
+// 	char *delim;
+
+// 	printf("items: %s\n", )
+
+
+// 	// create tmp file where to put in content of these: >
+// 	while (ft_strncmp())	// while input is not the delimiter
+// }
 void create_parsed_list(t_hold **hold, t_lexing *lex)
 {
 	int32_t pipegroups;
@@ -185,7 +198,10 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 				tmp_lex = tmp_lex->next;
 			}
 			else if (tmp_lex->macro == DOUBL_OPEN_REDIR)	// herdoc function <<
+			{
 				printf(MAG"DOUBL_CLOSE_REDIR -> add later\n"RESET);
+				// handle_heredoc();
+			}
 			else
 			{
 				if (tmp_arg == NULL)
@@ -194,9 +210,7 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 				{
 					tmp_arg = ft_strjoin(tmp_arg, " ");
 					tmp_arg = ft_strjoin(tmp_arg, tmp_lex->item); 
-				}
-				// printf(MAG"ARG -> add later\n"RESET);
-				
+				}				
 			}
 			if (tmp_lex->next == NULL)
 				break ;

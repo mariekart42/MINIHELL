@@ -142,6 +142,8 @@ int main(int32_t argc, char **argv, char **env)
 //				-  pwd --p				-> wrong output
 //				-  echo | echo			-> free stuff error
 //				-  echo hello | rev		-> gets stuck
+//				-  cd src obj			-> should give error, but goes to src
+//				-  cd ~					-> with space between wrong output
 
 //!			MY:
 //				-  cat Makefile | cat -e | cat -e		-> gets stuck
