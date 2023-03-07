@@ -116,7 +116,7 @@ void 			swap_data(t_env_export *export_list);
 void 			sort_export_list(t_hold *hold);
 
 //		export_builtin.c
-void 			export_builtin(t_hold *hold);
+void 			export_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 
 //		lexing.c
 int32_t	lex_quote(t_hold *hold, int32_t i);

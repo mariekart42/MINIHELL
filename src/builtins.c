@@ -44,7 +44,7 @@ bool	builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		else if (ft_strncmp(hold->lex_struct->item, "unset", 5) == 0)
 			return (unset_builtin(hold, parsed_node), true);
 		else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)
-			return (export_builtin(hold), true);
+			return (export_builtin(hold, parsed_node), true);
 		return (true);
 	}
 	else
