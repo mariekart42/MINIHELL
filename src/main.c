@@ -134,4 +134,16 @@ int main(int32_t argc, char **argv, char **env)
 
 
 //!  PROBLEMOS:
-// ls | ls | wc bonjour  -> prints one ls and the wc bonjour content (multiple pipes) 
+//!			SANTI:
+//				-  echo brrr			-> doesnt prints first character
+//				-  echo "brr"			-> same problem plus prints quotations (more a parser problem)
+//				-  echoHola				-> wrong output
+//				-  pwd -p				-> wrong output
+//				-  pwd --p				-> wrong output
+//				-  echo | echo			-> free stuff error
+//				-  echo hello | rev		-> gets stuck
+
+//!			MY:
+//				-  cat Makefile | cat -e | cat -e		-> gets stuck
+//				-  ls -la | grep "."					-> how to handle grep?
+//				-  cat Makefile | grep src | cat -e		-> same shit

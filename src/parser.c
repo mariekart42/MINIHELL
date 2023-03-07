@@ -93,7 +93,11 @@ int32_t check_infile(t_hold *hold, t_lexing *file_node)
 // not 100% sure about opening macros
 	file_id = open(file_node->item, O_RDONLY);
 	if (file_id < 0)
-		exit_status(hold, "Error!: unable to open infile (in check_infile func)\n", 69);
+	{
+		write(2, RED"minihell: ", 16);
+		ft_putstr_fd(file_node->item, 2);
+		exit_status(hold, ": no such file or directory\n"RESET, 69);
+	}
 	return (file_id);
 }
 

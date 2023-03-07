@@ -51,12 +51,12 @@ void closed_quotes(t_hold *hold)
 void lex_pipe(t_hold *hold, int32_t i)
 {
 	if (i == 0)
-		return (exit_status(hold, "minihell: syntax error near unexpected token '|'\n", 2));
+		return (exit_status(hold, RED"minihell: syntax error near unexpected token '|'\n"RESET, 2));
 	i++;
 	while (hold->line[i] == ' ')
 		i++;
 	if (hold->line[i] == '|')
-		return (exit_status(hold, "minihell: syntax error near unexpected token '|'\n", 2));
+		return (exit_status(hold, RED"minihell: syntax error near unexpected token '|'\n"RESET, 2));
 	add_node_lex(hold, "|");
 }
 
