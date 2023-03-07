@@ -9,7 +9,6 @@ void	delete_var(t_hold **hold, char *var)
 	if (tmp != NULL && (ft_strncmp(tmp->item, var, ft_strlen(var)) == 0))
 	{
 		(*hold)->env_list = tmp->next;
-		free(tmp);
 		return ;
 	}
 	while (tmp != NULL && (ft_strncmp(tmp->item, var, ft_strlen(var)) != 0))
@@ -20,7 +19,6 @@ void	delete_var(t_hold **hold, char *var)
 	if (tmp == NULL)
 		return ;
 	prev->next = tmp->next;
-	free(tmp);
 }
 
 bool	find_var(t_hold *hold, char *var)
@@ -39,7 +37,6 @@ bool	find_var(t_hold *hold, char *var)
 		}
 		tmp = tmp->next;
 	}
-	free(tmp);
 	return (var_exist);
 }
 

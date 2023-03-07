@@ -14,7 +14,6 @@ void	add_to_env(t_hold *hold, char *add, char *structure)
 	while (tmp->next != NULL)
 		tmp = tmp->next;
 	tmp->next = new;
-	free(tmp);
 }
 
 void	update_env(t_hold *hold, char *old, char *new, char *structure)
@@ -42,7 +41,6 @@ void	update_env(t_hold *hold, char *old, char *new, char *structure)
 	}
 	if (!is_oldpwd)
 		add_to_env(hold, old, structure);
-	free(tmp);
 }
 
 void	add_to_var(t_hold *hold, char *add, char *structure)
@@ -60,7 +58,6 @@ void	add_to_var(t_hold *hold, char *add, char *structure)
 	while (tmp->next != NULL)
 		tmp = tmp->next;
 	tmp->next = new;
-	free(tmp);
 }
 
 void	update_var_value(t_hold *hold, char *old, char *new, char *structure)
@@ -86,5 +83,4 @@ void	update_var_value(t_hold *hold, char *old, char *new, char *structure)
 	}
 	if (!is_oldpwd)
 		add_to_var(hold, old, structure);
-	free(tmp);
 }

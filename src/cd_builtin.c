@@ -1,11 +1,10 @@
 #include "minishell.h"
 
-void	update_dir_cont(t_hold *hold, char *old, char *new, t_env_export *tmp)
+void	update_dir_cont(t_hold *hold, char *old, char *new)
 {
 	update_var_value(hold, old, new, "export");
 	update_env(hold, old, new, "env");
 	update_env(hold, old, new, "export");
-	free(tmp);
 	free(old);
 	free(new);
 }
@@ -34,7 +33,7 @@ int	update_dir(t_hold *hold, char **args)
 			tmp->var_value = old;
 		tmp = tmp->next;
 	}
-	update_dir_cont(hold, old, new, tmp);
+	update_dir_cont(hold, old, new);
 	return (0);
 }
 
@@ -53,7 +52,6 @@ void	change_to_home(t_hold *hold)
 			home = tmp->var_value;
 		tmp = tmp->next;
 	}
-	free(tmp);
 	if (home == NULL)
 		is_home = false;
 	if (is_home)
