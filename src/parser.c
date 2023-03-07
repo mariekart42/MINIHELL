@@ -140,6 +140,33 @@ char *get_cmdpath(char *curr_cmd)
 		return (valid_path);
 }
 
+t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst)
+{
+	if (!lst)
+		return (NULL);
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
+}
+
+void add_node_pars(t_hold **hold)
+{
+	t_parsed_chunk *tmp;
+
+	tmp = (t_parsed_chunk *)malloc(sizeof(t_parsed_chunk));
+	// if (!tmp)
+	// 	return (exit_status(hold, "Error! Failed to malloc\n", 69), (t_parsed_chunk*)NULL);
+	tmp->args = NULL;
+	tmp->cmd_path = NULL;
+	tmp->next = NULL;
+	tmp->infile = STDIN_FILENO;
+	tmp->outfile = STDOUT_FILENO;
+	if ((*hold)->parsed_list == NULL)
+		(*hold)->parsed_list = tmp;
+	else
+		(last_node_pars((*hold)->parsed_list))->next = tmp;
+}
+
 void create_parsed_list(t_hold **hold, t_lexing *lex)
 {
 	int32_t pipegroups;

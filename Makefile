@@ -13,18 +13,19 @@ LIB = libft.a
 
 SRC		=	main.c \
 			utils.c \
+			export_struct.c \
 			lexing.c \
 			parser.c \
 			executer.c \
 			syntax_errors.c \
 			delete_later.c \
-			export.c \
 			builtins.c \
 			cd_builtin.c \
 			cd_builtin_cont.c \
 			echo_builtin.c \
 			exit_builtin.c \
-			unset_builtin.c
+			unset_builtin.c \
+			export_builtin.c
 
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRC:.c=.o)
