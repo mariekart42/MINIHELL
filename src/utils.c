@@ -143,6 +143,7 @@ void add_node_pars(t_hold **hold)
 	tmp->args = NULL;
 	tmp->cmd_path = NULL;
 	tmp->next = NULL;
+	tmp->here_doc = false;
 	tmp->infile = STDIN_FILENO;
 	tmp->outfile = STDOUT_FILENO;
 	if ((*hold)->parsed_list == NULL)

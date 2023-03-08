@@ -64,6 +64,7 @@ typedef struct s_parsed_chunk
 {
 	char	**args;
 	char	*cmd_path;
+	bool	here_doc;
 	int32_t	infile;
 	int32_t	outfile;
 	struct s_parsed_chunk	*next;

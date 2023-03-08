@@ -95,6 +95,11 @@ void execute_cmd(t_hold *hold, t_parsed_chunk *parsed_node, char **ori_env)
 	}
 }
 
+void handle_here_doc(t_hold *hold, t_parsed_chunk *pars_node)
+{
+	
+}
+
 void executer(t_hold *hold, char **ori_env)
 {
 	int32_t *pids;
@@ -125,6 +130,10 @@ void executer(t_hold *hold, char **ori_env)
 			{
 				write(2, CYN"BUILTIN\n", 15);
 				builtin(hold, parsed_node);
+			}
+			else if (parsed_node->here_doc == true)
+			{
+				handle_here_doc(hold, parsed_node);
 			}
 			else
 				execute_cmd(hold, parsed_node, ori_env);

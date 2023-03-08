@@ -82,9 +82,9 @@ int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
 int32_t check_infile(t_hold *hold, t_lexing *file_node, int32_t type)
 {
 	int32_t file_id;
-	char	*input_string;
+	// char	*input_string;
 
-	input_string = NULL;
+	// input_string = NULL;
 	if (type == SING_OPEN_REDIR)
 	{
 	// not 100% sure about opening macros
@@ -99,7 +99,7 @@ int32_t check_infile(t_hold *hold, t_lexing *file_node, int32_t type)
 	else
 	{
 		file_id = open(".new", O_WRONLY | O_CREAT, 0777);
-		printf("file_id: %d\n", file_id);
+		// printf("file_id: %d\n", file_id);
 		if (file_id < 0)
 		{
 			write(2, RED"minihell: ", 16);
@@ -108,19 +108,19 @@ int32_t check_infile(t_hold *hold, t_lexing *file_node, int32_t type)
 		}
 		// input_string = get_next_line(0);
 		// input_string = readline(CYN"here_doc> "RESET);
-		while (1)
-		{
-			input_string = readline(CYN"heredoc> "RESET);
-			if (ft_strncmp(input_string, file_node->item, ft_strlen(input_string)) == 0)
-				break;
-			ft_putstr_fd(input_string, file_id);
-			ft_putstr_fd("\n", file_id);
-			free(input_string);
-			// write(1, "> ", 2);
-			// input_string = get_next_line(0);
-		}
-		free(input_string);
-		close(file_id);
+		// while (1)
+		// {
+		// 	input_string = readline(CYN"heredoc> "RESET);
+		// 	if (ft_strncmp(input_string, file_node->item, ft_strlen(input_string)) == 0)
+		// 		break;
+		// 	ft_putstr_fd(input_string, file_id);
+		// 	ft_putstr_fd("\n", file_id);
+		// 	free(input_string);
+		// 	// write(1, "> ", 2);
+		// 	// input_string = get_next_line(0);
+		// }
+		// free(input_string);
+		// close(file_id);
 		// ft_putstr_fd(input_string, file_id);
 		// while (ft_strncmp(file_node->item, input_string, ft_strlen(input_string)))
 	}
@@ -170,21 +170,6 @@ char *get_cmdpath(char *curr_cmd)
 		return (valid_path);
 }
 
-
-// // infile is a tmp created file -> how to delete later?
-// void handle_heredoc(t_parsed_chunk *pars_node)
-// {
-// 	char *delim;
-
-
-// 	// printf("items: %s\n", )
-
-
-// 	// create tmp file where to put in content of these: >
-// 	while (ft_strncmp())	// while input is not the delimiter
-// }
-
-
 void create_parsed_list(t_hold **hold, t_lexing *lex)
 {
 	int32_t pipegroups;
@@ -208,7 +193,7 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 		pipegroups--;
 	}
 	pipegroups = tmp;
-
+print_list((*hold)->lex_struct, "lexd");
 // init list
 	tmp_pars = (*hold)->parsed_list;
 	while (pipegroups > 0)
@@ -223,14 +208,10 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 			else if (tmp_lex->macro == SING_OPEN_REDIR || tmp_lex->macro == DOUBL_OPEN_REDIR)
 			{
 				tmp_pars->infile = check_infile(*hold, tmp_lex->next, tmp_lex->macro);
+				printf("file_id: %d\n", tmp_pars->infile);
+				tmp_pars->here_doc = true;
 				tmp_lex = tmp_lex->next;
 			}
-			// else if (tmp_lex->macro == DOUBL_OPEN_REDIR)	// herdoc function <<
-			// {
-			// 	printf(MAG"DOUBL_CLOSE_REDIR -> add later\n"RESET);
-			// 	// print_parsed_list((*hold)->parsed_list);
-			// 	handle_heredoc(tmp_pars);
-			// }
 			else
 			{
 				if (tmp_arg == NULL)

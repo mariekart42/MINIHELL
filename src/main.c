@@ -101,6 +101,7 @@ print_parsed_list(hold->parsed_list);
 //!  PARSER:
 // - !do env/export shit in parser first
 // - parser keeps all quote symbols -> need later or should get removed/skipped in parser?
+// - cat <<		-> throw syntax error
 
 
 //!  EXECUTER:
