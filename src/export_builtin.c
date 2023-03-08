@@ -20,7 +20,7 @@ void export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	int	j;
 	int	var_class;
 
-	i = 0;
+	i = 1;
 	j = 0;
 	if (parsed_node->args[1] == NULL)
 		print_env_export(hold);
