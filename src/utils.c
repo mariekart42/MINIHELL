@@ -14,6 +14,10 @@ void free_list_pars(t_parsed_chunk* head)
 		tmp = head;
 		head = head->next;
 		free(tmp->cmd_path);
+		if (tmp->access.delim != NULL)
+			free(tmp->access.delim); // new but should work
+		if (tmp->access.is_here_doc == true)
+			unlink("tmp.hd");
 		while (tmp->args[i] != NULL)
 		{
 			free(tmp->args[i]);

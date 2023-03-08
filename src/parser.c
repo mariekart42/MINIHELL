@@ -98,7 +98,7 @@ int32_t check_infile(t_hold *hold, t_lexing *file_node, int32_t type)
 	}
 	else
 	{
-		file_id = open(".new", O_WRONLY | O_CREAT, 0777);
+		file_id = open("tmp.hd", O_WRONLY | O_CREAT, 0777);
 		// printf("file_id: %d\n", file_id);
 		if (file_id < 0)
 		{

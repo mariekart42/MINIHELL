@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
+#include <unistd.h> // unlink
 #include <limits.h>	// for PATH_MAX macro
 #include <sys/stat.h> // for stat function
 #include <signal.h> // function for signal funcs

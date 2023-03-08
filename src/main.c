@@ -2,11 +2,13 @@
 
 void free_content(t_hold **hold)
 {
+
 	free((*hold)->line);
 	free_list_lex((*hold)->lex_struct);
 	free_list_pars((*hold)->parsed_list);
 	(*hold)->lex_struct = NULL;
 	(*hold)->parsed_list = NULL;
+
 
 }
 
@@ -55,6 +57,7 @@ int main(int32_t argc, char **argv, char **env)
 		hold->exit_code = 0;
 		hold->line = readline(BLU"MINIHELL> "RESET);
 		// hold->line = ft_strdup("ls -l");
+		fprintf(stderr, "pp\n");
 		if (!hold->line)
 			break ;
 
@@ -62,20 +65,11 @@ int main(int32_t argc, char **argv, char **env)
 		if (ft_strlen(hold->line) > 0)
 		{
 			add_history(hold->line);
-
 			lexer(hold);
-			// print_list(hold->lex_struct, "lex");
-// write(2, "check\n", 6);
+// print_list(hold->lex_struct, "lex");
 			parser(hold);
-			// print_macro_list(hold->lex_struct);
-			// print_parsed_list(hold->parsed_list);
-// write(2, "check\n", 6);
-// 			// if (hold->exit_code == 0)
-// 			// 	print_macro_list(hold->lex_struct);
 // print_parsed_list(hold->parsed_list);
-// printf("delim: %s\n", hold->parsed_list->access.delim);
-// printf("delim: %s\n", hold->parsed_list->next->access.delim);
-// exit(0);
+
 			executer(hold, env);
 			// builtin(hold, hold->parsed_list); // Add for testing
 			free_content(&hold);
@@ -89,10 +83,7 @@ int main(int32_t argc, char **argv, char **env)
 
 
 //!!!NEXT:
-// - shit should work in a loop
-// - executer: what if there is more then one outfile/infile? -> testing
-// - parser done for now, start executing (redirection, forking)
-// - look again into wait/-pid function
+// - if there is only one pipegroup, builtin should not happen in child
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -105,7 +96,6 @@ int main(int32_t argc, char **argv, char **env)
 //!  LEXER: √
 
 //!  PARSER:
-// - !do env/export shit in parser first
 // - parser keeps all quote symbols -> need later or should get removed/skipped in parser?
 // - cat <<		-> throw syntax error
 
@@ -116,23 +106,12 @@ int main(int32_t argc, char **argv, char **env)
 // - include builtins as soon as they're finished
 
 
-//!  BUILTINS:
-// - later: put builtin stuff into executer (not as bool in main!)
-// - builtins:
-//		- env √
-//		- export -> sorting works, add handling path-updating
-//		- pwd √
-//		- cd -> add handling path-updating
-//		- unset
-//		- echo
-//		- exit
-
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 //!  LATER:
-// - after main loop clear all memory
 // - exit with exit command -> returns 0
 // - signals shit
+
 
 //!  LEAKS:
 // - in parser:
