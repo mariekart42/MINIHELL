@@ -76,8 +76,8 @@ int main(int32_t argc, char **argv, char **env)
 // printf("delim: %s\n", hold->parsed_list->access.delim);
 // printf("delim: %s\n", hold->parsed_list->next->access.delim);
 // exit(0);
-			executer(hold, env);
-			// builtin(hold, hold->parsed_list); // Add for testing
+			// executer(hold, env);
+			builtin(hold, hold->parsed_list); // Add for testing
 			free_content(&hold);
 		}
 	}

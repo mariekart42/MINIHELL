@@ -39,21 +39,28 @@ void export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 			}
 			j++;
 		}
-
+		if (var_class == 0)
+		{
+			add_to_env(hold, parsed_node->args[i],"env");
+			add_to_env(hold, parsed_node->args[i],"export");
+			//sort export
+		}
+		if (var_class == 1)
+		{
+			
+		}
+		// if var_class = 1
+			// ft_strjoin ""
+			// function(parsed_node->args[i]);
 		// if var_class == 2
 			// ft_strjoin remaining args
 			// function(parsed_node->args[i])
 			// return
 
-		// if var_class = 1
-			// ft_strjoin ""
-			// function(parsed_node->args[i]);
-
-		// if var_class = 0
-			//function(parsed_node->args[i]);
 		j = 0;
 		i++;
 	}
 
+	// Check with "string cases"
 	// Modify env and export in both cases
 }
