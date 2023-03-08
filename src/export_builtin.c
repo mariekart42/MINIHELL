@@ -16,9 +16,10 @@ void print_env_export(t_hold *hold)
 
 void export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
-	int	i;
-	int	j;
-	int	var_class;
+	int		i;
+	int		j;
+	int		var_class;
+	char	*tmp_args;
 
 	i = 1;
 	j = 0;
@@ -41,22 +42,24 @@ void export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		}
 		if (var_class == 0)
 		{
-			add_to_env(hold, parsed_node->args[i],"env");
-			add_to_env(hold, parsed_node->args[i],"export");
-			//sort export
+			add_to_env(hold, parsed_node->args[i], "env");
+			add_to_env(hold, parsed_node->args[i], "export");
+			// sort_export_list(hold); // Problem for Future Santiago
 		}
 		if (var_class == 1)
 		{
-			
+			tmp_args = ft_strjoin(parsed_node->args[i], "");
+			add_to_env(hold, tmp_args, "env");
+			add_to_env(hold, tmp_args, "export");
+			// sort_export_list(hold); // Problem for Future Santiago
+			free(tmp_args);
 		}
-		// if var_class = 1
-			// ft_strjoin ""
-			// function(parsed_node->args[i]);
-		// if var_class == 2
-			// ft_strjoin remaining args
-			// function(parsed_node->args[i])
-			// return
-
+		if (var_class == 2)
+		{
+			add_to_env(hold, parsed_node->args[i], "env");
+			add_to_env(hold, parsed_node->args[i], "export");
+			// sort_export_list(hold); // Problem for Future Santiago
+		}
 		j = 0;
 		i++;
 	}
