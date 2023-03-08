@@ -28,7 +28,7 @@ int	ft_atoi_mod(const char *str)
 void	free_all(t_hold *hold)
 {
 	free_content(&hold);
-	free_env_export(hold);
+	// free_env_export(hold);
 	free(hold);
 	// clear_history;
 }
@@ -36,7 +36,7 @@ void	free_all(t_hold *hold)
 void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
 	int32_t	exit_code;
-exit(0);
+
 	if (parsed_node->args[2] != NULL)
 	{
 		exit_status(hold, RED"minishell: exit: too many arguments\n"RESET, 1);
@@ -57,6 +57,6 @@ exit(0);
 	}
 	else
 		hold->exit_code = 0;
-	// free_all(hold);
+	free_all(hold);
 	exit(hold->exit_code % 256);
 }

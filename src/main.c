@@ -72,6 +72,7 @@ int main(int32_t argc, char **argv, char **env)
 // 			// 	print_macro_list(hold->lex_struct);
 
 			executer(hold, env);
+			// builtin(hold, hold->parsed_list); // Add for testing
 			free_content(&hold);
 		}
 	}

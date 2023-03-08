@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+         #
+#    By: stena-he <stena-he@student.42wolfsburg.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/04 00:22:41 by mmensing          #+#    #+#              #
-#    Updated: 2022/06/08 15:36:27 by mmensing         ###   ########.fr        #
+#    Updated: 2023/03/08 17:35:23 by stena-he         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME= libft.a
 
 #define compiler and flags
-CC= gcc 
+CC= cc 
 CFLAGS= -Wall -Wextra -Werror
 HEADER= libft.h
 
