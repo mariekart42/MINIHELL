@@ -65,12 +65,17 @@ int main(int32_t argc, char **argv, char **env)
 
 			lexer(hold);
 			// print_list(hold->lex_struct, "lex");
+// write(2, "check\n", 6);
 			parser(hold);
+			// print_macro_list(hold->lex_struct);
 			// print_parsed_list(hold->parsed_list);
-
+// write(2, "check\n", 6);
 // 			// if (hold->exit_code == 0)
 // 			// 	print_macro_list(hold->lex_struct);
-print_parsed_list(hold->parsed_list);
+// print_parsed_list(hold->parsed_list);
+// printf("delim: %s\n", hold->parsed_list->access.delim);
+// printf("delim: %s\n", hold->parsed_list->next->access.delim);
+// exit(0);
 			executer(hold, env);
 			free_content(&hold);
 		}

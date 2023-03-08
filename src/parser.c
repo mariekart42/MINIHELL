@@ -187,11 +187,13 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 	// printf("amount pipegroups: %d\n", pipegroups);
 
 	// malloc amount of nodes as there are pipegroups:
+				write(2, "pars check\n", 11);
 	while (pipegroups > 0)
 	{
 		add_node_pars(hold);
 		pipegroups--;
 	}
+				write(2, "pars check\n", 11);
 	pipegroups = tmp;
 print_list((*hold)->lex_struct, "lexd");
 // init list
@@ -208,8 +210,12 @@ print_list((*hold)->lex_struct, "lexd");
 			else if (tmp_lex->macro == SING_OPEN_REDIR || tmp_lex->macro == DOUBL_OPEN_REDIR)
 			{
 				tmp_pars->infile = check_infile(*hold, tmp_lex->next, tmp_lex->macro);
-				printf("file_id: %d\n", tmp_pars->infile);
-				tmp_pars->here_doc = true;
+				// printf("file_id: %d\n", tmp_pars->infile);
+				if (tmp_lex->macro == DOUBL_OPEN_REDIR)
+				{
+					tmp_pars->access.is_here_doc = true;
+					tmp_pars->access.delim = ft_strdup(tmp_lex->next->item);
+				}
 				tmp_lex = tmp_lex->next;
 			}
 			else

@@ -69,7 +69,7 @@ void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds
 	}
 	while (tmp != NULL)
 	{
-		if (parsed_list->infile != 0)
+		if (parsed_list->infile != 0)// && parsed_list->access.is_here_doc == false)
 			close(parsed_list->infile);
 		if (parsed_list->outfile != 1)
 			close(parsed_list->outfile);
@@ -85,7 +85,9 @@ void execute_cmd(t_hold *hold, t_parsed_chunk *parsed_node, char **ori_env)
 	// 	builtin(hold, parsed_node);
 	// 	exit(69);
 	// }
-	// else 
+	// else
+	// exit(0);
+	print_parsed_list(parsed_node);
 	if (execve(parsed_node->cmd_path, parsed_node->args, ori_env) == -1)
 	{
 		write(2, RED"minihell: ", 16);
@@ -95,9 +97,45 @@ void execute_cmd(t_hold *hold, t_parsed_chunk *parsed_node, char **ori_env)
 	}
 }
 
-void handle_here_doc(t_hold *hold, t_parsed_chunk *pars_node)
+void handle_here_doc(t_parsed_chunk *pars_node)
 {
-	
+	char *input_string;
+	input_string = NULL;
+	char *tmp1;
+	char *tmp2;
+	tmp1 = NULL;
+	tmp2 = malloc(1);
+	tmp2[0] = '\0';
+
+	if (pars_node->access.delim == NULL)
+		write(2, "problem with delim in handle_here_doc\n", 38);
+printf("infile: %d\n", pars_node->infile);
+	while (1)
+	{
+		input_string = readline(CYN"heredoc> "RESET);
+		if (ft_strncmp(input_string, pars_node->access.delim, ft_strlen(input_string)) == 0)
+		{
+			ft_putstr_fd(tmp2, pars_node->infile);
+			free(tmp2);
+			free(input_string);
+			write(2, "break here :(\n", 14);
+			break;
+		}
+		if (tmp1 == NULL)
+		{
+			tmp1 = ft_strdup(input_string);
+			tmp2 = ft_strjoin(tmp1, "\n");
+			free(tmp1);
+		}
+		else
+		{
+			tmp1 = ft_strjoin(tmp2, input_string);
+			free(tmp2);
+			tmp2 = ft_strjoin(tmp1, "\n");
+			free(tmp1);
+		}
+		free(input_string);
+	}
 }
 
 void executer(t_hold *hold, char **ori_env)
@@ -122,18 +160,29 @@ void executer(t_hold *hold, char **ori_env)
 		pids[i] = fork();
 		if (pids[i] == 0)
 		{
-			redirection(parsed_node, i, pipegroups, pipe_fds);
+			if (parsed_node->access.is_here_doc == true)
+			{
+				handle_here_doc(parsed_node);
+			// redirection(parsed_node, i, pipegroups, pipe_fds);
+			// // exit(0);
+			// 	execute_cmd(hold, parsed_node, ori_env);
 
-			// close filediscriptors (pipes and files)
+			}
+			printf("infile: %d\n", parsed_node->infile);
+			redirection(parsed_node, i, pipegroups, pipe_fds);
+			
 			close_fds(parsed_node, pipegroups, pipe_fds);
+			// close filediscriptors (pipes and files)
+// exit(0);
+	
+			// else if (parsed_node->access.is_here_doc == true)
+			// {
+			// 	handle_here_doc(parsed_node);
+			// }
 			if (builtin_parser(parsed_node->args[0]) == true)
 			{
 				write(2, CYN"BUILTIN\n", 15);
 				builtin(hold, parsed_node);
-			}
-			else if (parsed_node->here_doc == true)
-			{
-				handle_here_doc(hold, parsed_node);
 			}
 			else
 				execute_cmd(hold, parsed_node, ori_env);
