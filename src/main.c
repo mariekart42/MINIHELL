@@ -65,12 +65,17 @@ int main(int32_t argc, char **argv, char **env)
 
 			lexer(hold);
 			// print_list(hold->lex_struct, "lex");
+// write(2, "check\n", 6);
 			parser(hold);
+			// print_macro_list(hold->lex_struct);
 			// print_parsed_list(hold->parsed_list);
-
+// write(2, "check\n", 6);
 // 			// if (hold->exit_code == 0)
 // 			// 	print_macro_list(hold->lex_struct);
-
+// print_parsed_list(hold->parsed_list);
+// printf("delim: %s\n", hold->parsed_list->access.delim);
+// printf("delim: %s\n", hold->parsed_list->next->access.delim);
+// exit(0);
 			executer(hold, env);
 			// builtin(hold, hold->parsed_list); // Add for testing
 			free_content(&hold);
@@ -102,6 +107,7 @@ int main(int32_t argc, char **argv, char **env)
 //!  PARSER:
 // - !do env/export shit in parser first
 // - parser keeps all quote symbols -> need later or should get removed/skipped in parser?
+// - cat <<		-> throw syntax error
 
 
 //!  EXECUTER:
@@ -135,4 +141,18 @@ int main(int32_t argc, char **argv, char **env)
 
 
 //!  PROBLEMOS:
-// ls | ls | wc bonjour  -> prints one ls and the wc bonjour content (multiple pipes) 
+//!			SANTI:
+//				-  echo brrr			-> doesnt prints first character
+//				-  echo "brr"			-> same problem plus prints quotations (more a parser problem)
+//				-  echoHola				-> wrong output
+//				-  pwd -p				-> wrong output
+//				-  pwd --p				-> wrong output
+//				-  echo | echo			-> free stuff error
+//				-  echo hello | rev		-> gets stuck
+//				-  cd src obj			-> should give error, but goes to src
+//				-  cd ~					-> with space between wrong output
+
+//!			MY:
+//				-  cat Makefile | cat -e | cat -e		-> gets stuck
+//				-  ls -la | grep "."					-> parsing problem, reads and interprets quotes as actual characters
+//				-  cat Makefile | grep src | cat -e		-> same shit

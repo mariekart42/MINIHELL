@@ -21,12 +21,17 @@
 # define SING_QUOTE 2
 # define DOUBL_QUOTE 3
 # define PIPE 4
-# define SING_OPEN_REDIR 5
-# define SING_CLOSE_REDIR 6
-# define DOUBL_OPEN_REDIR 7
-# define DOUBL_CLOSE_REDIR 8
+# define SING_OPEN_REDIR 5		// <
+# define SING_CLOSE_REDIR 6		// >
+# define DOUBL_OPEN_REDIR 7		// << heredoc
+# define DOUBL_CLOSE_REDIR 8	// >>
 
 # define MAX_FD 1024
+
+// get_next_line
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 4096
+# endif
 
 //colour shit
 # define RED   "\x1B[31m"
@@ -54,6 +59,12 @@ typedef struct s_env_export
 	struct s_env_export	*next;
 }			t_env_export;
 
+typedef struct s_here_doc
+{
+	char	*delim;
+	bool	is_here_doc;
+}				t_here_doc;
+
 // maybe include variable with macros later here
 typedef struct s_parsed_chunk
 {
@@ -61,6 +72,7 @@ typedef struct s_parsed_chunk
 	char	*cmd_path;
 	int32_t	infile;
 	int32_t	outfile;
+	struct s_here_doc		access;
 	struct s_parsed_chunk	*next;
 }			t_parsed_chunk;
 
@@ -87,6 +99,12 @@ typedef struct s_hold
 void free_content(t_hold **hold);
 int32_t init_structs(t_hold **hold);
 void free_env_export(t_hold *hold);
+
+
+//		get_next_line.c
+void	buff_after_line(char *buff);
+char	*create_last(char *buff, char *line);
+char	*get_next_line(int fd);
 
 
 //		syntax_errors.c
@@ -138,7 +156,7 @@ bool builtin_parser(char *node);
 void recognize_type(t_hold *hold);
 int32_t count_pipegroups(t_lexing *lex);
 int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type);
-int32_t check_infile(t_hold *hold, t_lexing *file_node);
+int32_t check_infile(t_hold *hold, t_lexing *file_node, int32_t type);
 char *get_cmdpath(char *curr_cmd);
 void create_parsed_list(t_hold **hold, t_lexing *lex);
 void			add_node_pars(t_hold **hold);
@@ -151,6 +169,7 @@ void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups, int
 void open_pipefds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
 void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
 void execute_cmd(t_hold *hold, t_parsed_chunk *parsed_node, char **ori_env);
+void handle_here_doc(t_parsed_chunk *pars_node);
 void executer(t_hold *hold, char **ori_env);
 
 
