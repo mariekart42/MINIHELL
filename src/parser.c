@@ -58,10 +58,6 @@ int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
 {
 	int32_t file_id;
 
-	// // get rid of double or single quotes
-	// if (file_node->macro == SING_QUOTE || file_node->macro == DOUBL_QUOTE)
-	// 	file_node->item = ft_substr(file_node->item, 1, ft_strlen(file_node->item)-2);
-
 // not 100% sure about opening macros (in both open calls)
 	if (type == SING_CLOSE_REDIR)
 	{
@@ -83,21 +79,50 @@ int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
 /* function checks and returns infile on success
  * input file must exist and be readable by the user running the command
  * file_node is the current node in parsed_list	*/
-int32_t check_infile(t_hold *hold, t_lexing *file_node)
+int32_t check_infile(t_hold *hold, t_lexing *file_node, int32_t type)
 {
 	int32_t file_id;
+	char	*input_string;
 
-	// // get rid of double or single quotes
-	// if (file_node->macro == SING_QUOTE || file_node->macro == DOUBL_QUOTE)
-	// 	file_node->item = ft_substr(file_node->item, 1, ft_strlen(file_node->item)-2);
-
-// not 100% sure about opening macros
-	file_id = open(file_node->item, O_RDONLY);
-	if (file_id < 0)
+	input_string = NULL;
+	if (type == SING_OPEN_REDIR)
 	{
-		write(2, RED"minihell: ", 16);
-		ft_putstr_fd(file_node->item, 2);
-		exit_status(hold, ": no such file or directory\n"RESET, 69);
+	// not 100% sure about opening macros
+		file_id = open(file_node->item, O_RDONLY);
+		if (file_id < 0)
+		{
+			write(2, RED"minihell: ", 16);
+			ft_putstr_fd(file_node->item, 2);
+			exit_status(hold, ": no such file or directory\n"RESET, 69);
+		}
+	}
+	else
+	{
+		file_id = open(".new", O_WRONLY | O_CREAT, 0777);
+		printf("file_id: %d\n", file_id);
+		if (file_id < 0)
+		{
+			write(2, RED"minihell: ", 16);
+			ft_putstr_fd(file_node->item, 2);
+			exit_status(hold, ": no such file or directory\n"RESET, 69);
+		}
+		// input_string = get_next_line(0);
+		// input_string = readline(CYN"here_doc> "RESET);
+		while (1)
+		{
+			input_string = readline(CYN"heredoc> "RESET);
+			if (ft_strncmp(input_string, file_node->item, ft_strlen(input_string)) == 0)
+				break;
+			ft_putstr_fd(input_string, file_id);
+			ft_putstr_fd("\n", file_id);
+			free(input_string);
+			// write(1, "> ", 2);
+			// input_string = get_next_line(0);
+		}
+		free(input_string);
+		close(file_id);
+		// ft_putstr_fd(input_string, file_id);
+		// while (ft_strncmp(file_node->item, input_string, ft_strlen(input_string)))
 	}
 	return (file_id);
 }
@@ -147,16 +172,19 @@ char *get_cmdpath(char *curr_cmd)
 
 
 // // infile is a tmp created file -> how to delete later?
-// void handle_heredoc()
+// void handle_heredoc(t_parsed_chunk *pars_node)
 // {
 // 	char *delim;
 
-// 	printf("items: %s\n", )
+
+// 	// printf("items: %s\n", )
 
 
 // 	// create tmp file where to put in content of these: >
 // 	while (ft_strncmp())	// while input is not the delimiter
 // }
+
+
 void create_parsed_list(t_hold **hold, t_lexing *lex)
 {
 	int32_t pipegroups;
@@ -192,16 +220,17 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 				tmp_pars->outfile = check_outfile(*hold, tmp_lex->next, tmp_lex->macro);
 				tmp_lex = tmp_lex->next;
 			}
-			else if (tmp_lex->macro == SING_OPEN_REDIR)
+			else if (tmp_lex->macro == SING_OPEN_REDIR || tmp_lex->macro == DOUBL_OPEN_REDIR)
 			{
-				tmp_pars->infile = check_infile(*hold, tmp_lex->next);
+				tmp_pars->infile = check_infile(*hold, tmp_lex->next, tmp_lex->macro);
 				tmp_lex = tmp_lex->next;
 			}
-			else if (tmp_lex->macro == DOUBL_OPEN_REDIR)	// herdoc function <<
-			{
-				printf(MAG"DOUBL_CLOSE_REDIR -> add later\n"RESET);
-				// handle_heredoc();
-			}
+			// else if (tmp_lex->macro == DOUBL_OPEN_REDIR)	// herdoc function <<
+			// {
+			// 	printf(MAG"DOUBL_CLOSE_REDIR -> add later\n"RESET);
+			// 	// print_parsed_list((*hold)->parsed_list);
+			// 	handle_heredoc(tmp_pars);
+			// }
 			else
 			{
 				if (tmp_arg == NULL)

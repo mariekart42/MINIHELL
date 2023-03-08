@@ -24,7 +24,8 @@ SRC		=	main.c \
 			cd_builtin_cont.c \
 			echo_builtin.c \
 			exit_builtin.c \
-			unset_builtin.c
+			unset_builtin.c \
+			get_next_line.c
 
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRC:.c=.o)

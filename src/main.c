@@ -70,7 +70,7 @@ int main(int32_t argc, char **argv, char **env)
 
 // 			// if (hold->exit_code == 0)
 // 			// 	print_macro_list(hold->lex_struct);
-
+print_parsed_list(hold->parsed_list);
 			executer(hold, env);
 			free_content(&hold);
 		}

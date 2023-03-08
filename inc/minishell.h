@@ -28,6 +28,11 @@
 
 # define MAX_FD 1024
 
+// get_next_line
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 4096
+# endif
+
 //colour shit
 # define RED   "\x1B[31m"
 # define GRN   "\x1B[32m"
@@ -89,6 +94,12 @@ int32_t init_structs(t_hold **hold);
 void free_env_export(t_hold *hold);
 
 
+//		get_next_line.c
+void	buff_after_line(char *buff);
+char	*create_last(char *buff, char *line);
+char	*get_next_line(int fd);
+
+
 //		syntax_errors.c
 int32_t check_syntax_errors(t_hold *hold);
 
@@ -131,7 +142,7 @@ bool builtin_parser(char *node);
 void recognize_type(t_hold *hold);
 int32_t count_pipegroups(t_lexing *lex);
 int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type);
-int32_t check_infile(t_hold *hold, t_lexing *file_node);
+int32_t check_infile(t_hold *hold, t_lexing *file_node, int32_t type);
 char *get_cmdpath(char *curr_cmd);
 void create_parsed_list(t_hold **hold, t_lexing *lex);
 void parser(t_hold *hold);
