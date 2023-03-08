@@ -118,6 +118,9 @@ void 			sort_export_list(t_hold *hold);
 //		export_builtin.c
 void 			export_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 
+//		export_builtin_cont.c
+
+
 //		lexing.c
 int32_t	lex_quote(t_hold *hold, int32_t i);
 void	closed_quotes(t_hold *hold);

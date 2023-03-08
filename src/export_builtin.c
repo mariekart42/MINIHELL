@@ -28,11 +28,11 @@ void export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	while (parsed_node->args[i] != NULL)
 	{
 		var_class = 0;
-		while (parsed_node->args[i][j] != NULL)
+		while (parsed_node->args[i][j] != '\0')
 		{
 			if (parsed_node->args[i][j] == '=')
 			{
-				if (parsed_node->args[i][j + 1] == NULL)
+				if (parsed_node->args[i][j + 1] == '\0')
 					var_class = 1;
 				else
 					var_class = 2;
