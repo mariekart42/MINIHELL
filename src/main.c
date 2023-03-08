@@ -135,3 +135,4 @@ int main(int32_t argc, char **argv, char **env)
 //				-  cat Makefile | cat -e | cat -e		-> gets stuck
 //				-  ls -la | grep "."					-> parsing problem, reads and interprets quotes as actual characters
 //				-  cat Makefile | grep src | cat -e		-> same shit
+//				-  cat << hola > bonjourr				-> double free error

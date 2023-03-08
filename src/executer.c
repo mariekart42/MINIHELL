@@ -90,10 +90,11 @@ void execute_cmd(t_hold *hold, t_parsed_chunk *parsed_node, char **ori_env)
 
 void handle_here_doc(t_parsed_chunk *pars_node)
 {
-	char *input_string;
-	input_string = NULL;
+	char	*input_string;
 	char *tmp1;
 	char *tmp2;
+
+	input_string = NULL;
 	tmp1 = NULL;
 	tmp2 = malloc(1);
 	tmp2[0] = '\0';
@@ -103,7 +104,7 @@ void handle_here_doc(t_parsed_chunk *pars_node)
 	while (1)
 	{
 		input_string = readline(CYN"heredoc> "RESET);
-		if (ft_strncmp(input_string, pars_node->access.delim, ft_strlen(pars_node->access.delim)) == 0)
+		if (ft_strncmp(input_string, pars_node->access.delim, ft_strlen(pars_node->access.delim)) == 0 && (ft_strlen(pars_node->access.delim) == ft_strlen(input_string)))
 		{
 			ft_putstr_fd(tmp2, pars_node->infile);
 			free(tmp2);

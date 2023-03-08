@@ -55,7 +55,7 @@ void free_list_env_export(t_env_export* head)
 	{
 		tmp = head;
 		head = head->next;
-		free(tmp->item); // maybe delete
+		// free(tmp->item); // maybe delete
 		free(tmp->var_name);
 		free(tmp->var_value);
 		free(tmp);
