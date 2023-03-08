@@ -57,6 +57,6 @@ void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	}
 	else
 		hold->exit_code = 0;
-	free_all(hold);
+	// free_all(hold);
 	exit(hold->exit_code % 256);
 }
