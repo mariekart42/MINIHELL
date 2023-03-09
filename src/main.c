@@ -62,10 +62,10 @@ int main(int32_t argc, char **argv, char **env)
 		{
 			add_history(hold->line);
 			lexer(hold);
-// print_list(hold->lex_struct, "lex");
+print_list(hold->lex_struct, "lex");
 			parser(hold);
 // print_parsed_list(hold->parsed_list);
-
+// print_macro_list(hold->lex_struct);
 			executer(hold, env);
 			// builtin(hold, hold->parsed_list); // Add for testing
 			free_content(&hold);
@@ -119,18 +119,13 @@ int main(int32_t argc, char **argv, char **env)
 
 //!  PROBLEMOS:
 //!			SANTI:
-//				-  echo brrr			-> doesnt prints first character
-//				-  echo "brr"			-> same problem plus prints quotations (more a parser problem)
 //				-  echoHola				-> wrong output
-//				-  pwd -p				-> wrong output
-//				-  pwd --p				-> wrong output
-//				-  echo | echo			-> free stuff error
-//				-  echo hello | rev		-> gets stuck
-//				-  cd src obj			-> should give error, but goes to src
+//				-  echo-nHola			-> wrong output
+//				-  pwd -p				-> wrong output (not sure if mandatory)
+//				-  pwd --p				-> wrong output (not sure if mandatory)
 //				-  cd ~					-> with space between wrong output
 
 //!			MY:
-//				-  cat Makefile | cat -e | cat -e		-> gets stuck
+//		    !!	-  cat Makefile | cat -e | cat -e		-> gets stuck
 //				-  ls -la | grep "."					-> parsing problem, reads and interprets quotes as actual characters
 //				-  cat Makefile | grep src | cat -e		-> same shit
-//				-  cat << hola > bonjourr				-> double free error

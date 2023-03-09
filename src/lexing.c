@@ -20,6 +20,63 @@ int32_t lex_quote(t_hold *hold, int32_t i)
 	return (end - i);
 }
 
+char *calloc_string(t_hold *hold, int32_t i)
+{
+	int32_t len;
+	char *return_string;
+
+	len = 0;
+	while (hold->line[i] != '\0')
+	{
+		len++;
+		i++;
+	}
+	return_string = (char*)ft_calloc(len + 1, 1);
+	if (!return_string)
+	{
+		exit_status(hold, RED"Error! Failed to malloc for sring in calloc_string()\n"RESET, 69);
+		exit(69);
+	}
+	return (return_string);
+}
+
+int32_t new_lex_quote(t_hold *hold, int32_t i)
+{
+	char first_quote;
+	char *string;
+	int32_t x;
+
+	x = 0;
+	string = calloc_string(hold, i);
+	while (hold->line[i] != '\0')
+	{
+		first_quote = hold->line[i];
+		i++;
+		while (hold->line[i] != first_quote)
+		{
+			if (hold->line[i] == '\0')
+			{
+				exit_status(hold, "minihell: syntax error: quotes are unclosed!\n", 69);
+				return(-1);
+			}
+			string[x] = hold->line[i];
+			x++;
+			i++;
+		}
+		if (hold->line[i + 1] != ' ' || hold->line[i + 1] != '\t')
+		{
+			break;
+		}
+		// i++;
+		while (hold->line[i+1] == ' ' || hold->line[i+1] == '\t')
+			i++;
+		i++;
+	}
+	add_node_lex(hold, string);
+	return (x + 1);
+
+}
+
 /* function checks if amount of quotes is equal -> all quotes are closed
  * THROWS ERROR IF:
  *		- either amount of single or double quotes are not equal	*/
@@ -206,7 +263,7 @@ void lexer(t_hold *hold)
 		}
 		else if (hold->line[i] == 39 || hold->line[i] == 34)	//  ' or "  -> single and double quote
         {
-			i += lex_quote(hold, i);
+			i += new_lex_quote(hold, i);
         }
 		else if (hold->line[i] == '|')
         {

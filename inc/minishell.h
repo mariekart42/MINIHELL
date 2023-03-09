@@ -142,6 +142,8 @@ void 			export_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 
 //		lexing.c
 int32_t	lex_quote(t_hold *hold, int32_t i);
+char *calloc_string(t_hold *hold, int32_t i);
+int32_t new_lex_quote(t_hold *hold, int32_t i);
 void	closed_quotes(t_hold *hold);
 void	lex_pipe(t_hold *hold, int32_t i);
 int32_t	skip_spaces(char *str, int32_t i);

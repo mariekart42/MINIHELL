@@ -132,7 +132,7 @@ void handle_here_doc(t_parsed_chunk *pars_node)
 
 void handle_single_builtin(t_hold *hold)
 {
-	printf("single builtin handeler\n");
+	// printf("single builtin handeler\n");
 	if (hold->parsed_list->here_doc_delim != NULL)
 		handle_here_doc(hold->parsed_list);
 	// redir
@@ -172,7 +172,7 @@ void executer(t_hold *hold, char **ori_env)
 		{
 			if (parsed_node->here_doc_delim != NULL)
 			{
-				printf("%s\n", parsed_node->here_doc_delim);
+				// printf("%s\n", parsed_node->here_doc_delim);
 				handle_here_doc(parsed_node);
 			}
 			redirection(parsed_node, i, pipegroups, pipe_fds);
