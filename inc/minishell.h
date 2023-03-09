@@ -59,11 +59,11 @@ typedef struct s_env_export
 	struct s_env_export	*next;
 }			t_env_export;
 
-typedef struct s_here_doc
-{
-	char	*delim;
-	bool	is_here_doc;
-}				t_here_doc;
+// typedef struct s_here_doc
+// {
+// 	char	*delim;
+// 	bool	is_here_doc;
+// }				t_here_doc;
 
 // maybe include variable with macros later here
 typedef struct s_parsed_chunk
@@ -72,7 +72,8 @@ typedef struct s_parsed_chunk
 	char	*cmd_path;
 	int32_t	infile;
 	int32_t	outfile;
-	struct s_here_doc		access;
+	char *here_doc_delim;
+	// struct s_here_doc		access;
 	struct s_parsed_chunk	*next;
 }			t_parsed_chunk;
 

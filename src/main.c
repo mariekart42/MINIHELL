@@ -3,13 +3,11 @@
 void free_content(t_hold **hold)
 {
 
-	free((*hold)->line);
+	// free((*hold)->line);
 	free_list_lex((*hold)->lex_struct);
 	free_list_pars((*hold)->parsed_list);
 	(*hold)->lex_struct = NULL;
 	(*hold)->parsed_list = NULL;
-
-
 }
 
 int32_t init_structs(t_hold **hold)
@@ -31,7 +29,6 @@ void free_env_export(t_hold *hold)
 	hold->env_list = NULL;
 	hold->export_list = NULL;
 }
-
 
 int main(int32_t argc, char **argv, char **env)
 {
@@ -56,8 +53,7 @@ int main(int32_t argc, char **argv, char **env)
 	{
 		hold->exit_code = 0;
 		hold->line = readline(BLU"MINIHELL> "RESET);
-		// hold->line = ft_strdup("ls -l");
-		fprintf(stderr, "pp\n");
+		// hold->line = ft_strdup("pwd|pwd");
 		if (!hold->line)
 			break ;
 
@@ -73,6 +69,8 @@ int main(int32_t argc, char **argv, char **env)
 			executer(hold, env);
 			// builtin(hold, hold->parsed_list); // Add for testing
 			free_content(&hold);
+			// break;
+			free(hold->line);
 		}
 	}
 	free_env_export(hold);

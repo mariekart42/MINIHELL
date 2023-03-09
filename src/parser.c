@@ -189,6 +189,7 @@ void add_node_pars(t_hold **hold)
 	tmp->args = NULL;
 	tmp->cmd_path = NULL;
 	tmp->next = NULL;
+	tmp->here_doc_delim = NULL;
 	tmp->infile = STDIN_FILENO;
 	tmp->outfile = STDOUT_FILENO;
 	if ((*hold)->parsed_list == NULL)
@@ -214,15 +215,13 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 	// printf("amount pipegroups: %d\n", pipegroups);
 
 	// malloc amount of nodes as there are pipegroups:
-				write(2, "pars check\n", 11);
 	while (pipegroups > 0)
 	{
 		add_node_pars(hold);
 		pipegroups--;
 	}
-				write(2, "pars check\n", 11);
 	pipegroups = tmp;
-print_list((*hold)->lex_struct, "lexd");
+// print_list((*hold)->lex_struct, "lexd");
 // init list
 	tmp_pars = (*hold)->parsed_list;
 	while (pipegroups > 0)
@@ -240,8 +239,12 @@ print_list((*hold)->lex_struct, "lexd");
 				// printf("file_id: %d\n", tmp_pars->infile);
 				if (tmp_lex->macro == DOUBL_OPEN_REDIR)
 				{
-					tmp_pars->access.is_here_doc = true;
-					tmp_pars->access.delim = ft_strdup(tmp_lex->next->item);
+					// tmp_pars->access.is_here_doc = true;
+					tmp_pars->here_doc_delim = ft_strdup(tmp_lex->next->item);
+				}
+				else{
+					// tmp_pars->access.is_here_doc = false;
+					tmp_pars->here_doc_delim = NULL;
 				}
 				tmp_lex = tmp_lex->next;
 			}

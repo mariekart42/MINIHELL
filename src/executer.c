@@ -99,12 +99,12 @@ void handle_here_doc(t_parsed_chunk *pars_node)
 	tmp2 = malloc(1);
 	tmp2[0] = '\0';
 
-	if (pars_node->access.delim == NULL)
+	if (pars_node->here_doc_delim == NULL)
 		write(2, "problem with delim in handle_here_doc\n", 38);
 	while (1)
 	{
 		input_string = readline(CYN"heredoc> "RESET);
-		if (ft_strncmp(input_string, pars_node->access.delim, ft_strlen(pars_node->access.delim)) == 0 && (ft_strlen(pars_node->access.delim) == ft_strlen(input_string)))
+		if (ft_strncmp(input_string, pars_node->here_doc_delim, ft_strlen(pars_node->here_doc_delim)) == 0 && (ft_strlen(pars_node->here_doc_delim) == ft_strlen(input_string)))
 		{
 			ft_putstr_fd(tmp2, pars_node->infile);
 			free(tmp2);
@@ -133,7 +133,7 @@ void handle_here_doc(t_parsed_chunk *pars_node)
 void handle_single_builtin(t_hold *hold)
 {
 	printf("single builtin handeler\n");
-	if (hold->parsed_list->access.is_here_doc == true)
+	if (hold->parsed_list->here_doc_delim != NULL)
 		handle_here_doc(hold->parsed_list);
 	// redir
 
@@ -170,8 +170,11 @@ void executer(t_hold *hold, char **ori_env)
 		pids[i] = fork();
 		if (pids[i] == 0)
 		{
-			if (parsed_node->access.is_here_doc == true)
+			if (parsed_node->here_doc_delim != NULL)
+			{
+				printf("%s\n", parsed_node->here_doc_delim);
 				handle_here_doc(parsed_node);
+			}
 			redirection(parsed_node, i, pipegroups, pipe_fds);
 			close_fds(parsed_node, pipegroups, pipe_fds);
 			if (builtin_parser(parsed_node->args[0]) == true)
