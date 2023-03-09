@@ -20,11 +20,13 @@ void	add_to_env(t_hold *hold, char *add, char *structure)
 void	update_env(t_hold *hold, char *old, char *new, char *structure)
 {
 	t_env_export	*tmp;
+	char			*tmp2;
+	char			*tmp3;
 	bool			is_oldpwd;
 
 	is_oldpwd = false;
-	old = ft_strjoin("OLDPWD=", old);
-	new = ft_strjoin("PWD=", new);
+	tmp2 = ft_strjoin("OLDPWD=", old);
+	tmp3 = ft_strjoin("PWD=", new);
 	if (ft_strncmp(structure, "env", 3) == 0)
 		tmp = hold->env_list;
 	if (ft_strncmp(structure, "export", 6) == 0)
@@ -32,16 +34,18 @@ void	update_env(t_hold *hold, char *old, char *new, char *structure)
 	while (tmp != NULL)
 	{
 		if (ft_strncmp(tmp->item, "PWD", 3) == 0)
-			tmp->item = new;
+			tmp->item = tmp3;
 		if (ft_strncmp(tmp->item, "OLDPWD", 6) == 0)
 		{
-			tmp->item = old;
+			tmp->item = tmp2;
 			is_oldpwd = true;
 		}
 		tmp = tmp->next;
 	}
 	if (!is_oldpwd)
 		add_to_env(hold, old, structure);
+	free(tmp2);
+	free(tmp3);
 }
 
 void	add_to_var(t_hold *hold, char *add, char *structure)
