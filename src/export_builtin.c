@@ -14,12 +14,53 @@ void print_env_export(t_hold *hold)
 	}
 }
 
+// Handle case 3
+void	add_to_env_mod(t_hold *hold, char *add, int var_class)
+{
+	t_env_export	*new;
+	t_env_export	*tmp;
+
+	var_class = 0; //Update to handle == 3 later
+	new = malloc(sizeof(t_env_export));
+	new->item = ft_strdup(add);
+	new->next = NULL;
+	tmp = hold->env_list;
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	tmp->next = new;
+}
+
+// Handle case 3
+void	add_to_export_mod(t_hold *hold, char *add, int var_class)
+{
+	t_env_export	*new;
+	t_env_export	*tmp;
+	char			*tmp_add;
+	char			*tmp_add2;
+
+	if (var_class == 1)
+		tmp_add = ft_strjoin(add, """");
+	if (var_class == 2)
+	{
+		tmp_add2 = ft_strjoin("\"", add);
+		free(tmp_add2);
+		tmp_add = ft_strjoin(tmp_add2, "\"");
+	}
+	new = malloc(sizeof(t_env_export));
+	new->item = ft_strdup(tmp_add);
+	free(tmp_add);
+	new->next = NULL;
+	tmp = hold->env_list;
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	tmp->next = new;
+}
+
 void export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
 	int		i;
 	int		j;
 	int		var_class;
-	char	*tmp_args;
 
 	i = 1;
 	j = 0;
@@ -35,6 +76,8 @@ void export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 			{
 				if (parsed_node->args[i][j + 1] == '\0')
 					var_class = 1;
+				else if (parsed_node->args[i][j + 1] == '"') //Ask Marie
+					var_class = 3;
 				else
 					var_class = 2;
 			}
@@ -46,24 +89,19 @@ void export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 			add_to_env(hold, parsed_node->args[i], "export");
 			// sort_export_list(hold); // Problem for Future Santiago
 		}
-		if (var_class == 1)
+		else
 		{
-			tmp_args = ft_strjoin(parsed_node->args[i], "");
-			add_to_env(hold, tmp_args, "env");
-			add_to_env(hold, tmp_args, "export");
-			// sort_export_list(hold); // Problem for Future Santiago
-			free(tmp_args);
-		}
-		if (var_class == 2)
-		{
-			add_to_env(hold, parsed_node->args[i], "env");
-			add_to_env(hold, parsed_node->args[i], "export");
+			add_to_env_mod(hold, parsed_node->args[i], var_class);
+			add_to_export_mod(hold, parsed_node->args[i], var_class);
 			// sort_export_list(hold); // Problem for Future Santiago
 		}
 		j = 0;
 		i++;
 	}
 
-	// Check with "string cases"
-	// Modify env and export in both cases
 }
+	// Check with "string cases"
+	// export - var var="" var="abc" var="abc def"
+	// env - var var= var=abc abc
+	// cmd - [x]0 [x]1 [x]2 []3
+	// Ask Marie about case 3
