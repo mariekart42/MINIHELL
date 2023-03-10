@@ -14,13 +14,12 @@ void print_env_export(t_hold *hold)
 	}
 }
 
-// Handle case 3
 void	add_to_env_mod(t_hold *hold, char *add, int var_class)
 {
 	t_env_export	*new;
 	t_env_export	*tmp;
 
-	var_class = 0; //Update to handle == 3 later
+	var_class = 0;
 	new = malloc(sizeof(t_env_export));
 	new->item = ft_strdup(add);
 	new->next = NULL;
@@ -30,7 +29,6 @@ void	add_to_env_mod(t_hold *hold, char *add, int var_class)
 	tmp->next = new;
 }
 
-// Handle case 3
 void	add_to_export_mod(t_hold *hold, char *add, int var_class)
 {
 	t_env_export	*new;
@@ -65,8 +63,10 @@ void export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	i = 1;
 	j = 0;
 	if (parsed_node->args[1] == NULL)
+	{
 		print_env_export(hold);
-
+		return ;
+	}
 	while (parsed_node->args[i] != NULL)
 	{
 		var_class = 0;
@@ -76,8 +76,6 @@ void export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 			{
 				if (parsed_node->args[i][j + 1] == '\0')
 					var_class = 1;
-				else if (parsed_node->args[i][j + 1] == '"') //Ask Marie
-					var_class = 3;
 				else
 					var_class = 2;
 			}
@@ -87,21 +85,24 @@ void export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		{
 			add_to_env(hold, parsed_node->args[i], "env");
 			add_to_env(hold, parsed_node->args[i], "export");
-			// sort_export_list(hold); // Problem for Future Santiago
 		}
 		else
 		{
 			add_to_env_mod(hold, parsed_node->args[i], var_class);
 			add_to_export_mod(hold, parsed_node->args[i], var_class);
-			// sort_export_list(hold); // Problem for Future Santiago
 		}
+		// sort_export_list(hold); // Problem for Future Santiago
 		j = 0;
 		i++;
 	}
 
+	//To do
+	//[ ]Remove node if var alredy exists and replace 
 }
 	// Check with "string cases"
-	// export - var var="" var="abc" var="abc def"
-	// env - var var= var=abc abc
-	// cmd - [x]0 [x]1 [x]2 []3
-	// Ask Marie about case 3
+	// export - var var="" var="abc def"
+	// env - var var= var=abc def
+	// cmd - [x]0 [x]1 [x]2
+
+	// Ask Marie about case 3:
+	// 3 is a full arg by itself arg[i] == "abc def"
