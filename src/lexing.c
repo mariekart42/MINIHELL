@@ -242,21 +242,21 @@ int32_t lex_word(t_hold *hold, int32_t i)
 	return (end - i - 1);
 }
 
-char *quote_chunk(char *line, int32_t i, int32_t len)
+char *quote_chunk(t_hold *hold, int32_t i, int32_t len)
 {
 	char open_quote;
 	// int32_t other_quote;
 	int32_t x;
 	char *quote_chunk_;
 
-	open_quote = line[i];
+	open_quote = hold->line[i];
 	// other_quote = 0;
 	x = 0;
 	quote_chunk_ = (char*)ft_calloc(len, 1);
 	i++;
-	while (line[i] != '\0')
+	while (hold->line[i] != '\0')
 	{
-		if (line[i] == open_quote)
+		if (hold->line[i] == open_quote)
 		{
 			// if ((other_quote % 2) != 0)
 			// 	break ;
@@ -266,11 +266,11 @@ char *quote_chunk(char *line, int32_t i, int32_t len)
 		// {
 		// 	other_quote++;
 		// }
-		quote_chunk_[x] = line[i];
+		quote_chunk_[x] = hold->line[i];
 		i++;
 		x++;
 	}
-	ft_putstr_fd(RED"minihell: syntax error: quotes are unclosed!\n"RESET, 69);
+	exit_status(hold, RED"minihell: syntax error: quotes are unclosed!\n"RESET, 69);
 	return (NULL);
 }
 
@@ -297,59 +297,102 @@ char *add_letter(char *pointer, char letter)
 // deal with quotes
 void prep_line(t_hold *hold)
 {
-	char *pointer;
-	char *tmp;
-	char *check_tmp;
+	// char *pointer;
+	// char *tmp;
+	// char *check_tmp;
 	int32_t i =0;
-
+char quote;
 	while (hold->line[i] == ' ' || hold->line[i] == '\t')
 		i++;
-	pointer = (char *)malloc(1);
-	pointer[0] = '\0';
+	// pointer = (char *)malloc(1);
+	// pointer[0] = '\0';
 	while (hold->line[i] != '\0')
 	{
 		if (hold->line[i] == ' ' || hold->line[i] == '\t')
 		{
 			while (hold->line[i] == ' ' || hold->line[i] == '\t')
 				i++;
-			pointer = add_letter(pointer, ' ');
+			// pointer = add_letter(pointer, ' ');
 		}
 		if (hold->line[i] == 39 || hold->line[i] == 34)
 		{
-			check_tmp = quote_chunk(hold->line, i, ft_strlen(hold->line) - i + 1);
-			if (!check_tmp)
-				return (exit_status(hold, RED"minihell: syntax error: quotes are unclosed!\n"RESET, 69));
-			if (ft_strlen(check_tmp) == 0)
-				i+=1;
-			else
+			quote = hold->line[i];
+			i++;
+			while (hold->line[i] != quote)
 			{
-				tmp = ft_strjoin(pointer, check_tmp);
-				free(pointer);
-				i += ft_strlen(check_tmp) + 1;
-				char check;
-				check = hold->line[i];
-				char check2;
-				check2 = hold->line[i+1];
-
-				free(check_tmp);
-				check_tmp = NULL;
-				pointer = ft_strdup(tmp);
-				free(tmp);
-				tmp = NULL;
+				if (hold->line[i] == '\0')
+					return (exit_status(hold, RED"minihell: syntax error: quotes are unclosed!\n"RESET, 69));
+				i++;
 			}
 		}
-		else
-			pointer = add_letter(pointer, hold->line[i]);
 		i++;
 	}
-	free(hold->line);
-	hold->line = ft_strdup(pointer);
-	free(pointer);
+	// free(hold->line);
+	// hold->line = ft_strdup(pointer);
+	// free(pointer);
 }
 
-int32_t QUOTES(char *line)
+char *cut_string(char *line, int32_t start, int32_t end)
 {
-	
+	char *pointer;
+	int32_t i;
+
+	pointer = (char *)malloc((end - start) + 1); // not sure if right size
+	i = 0;
+	while (start < end) // maybe <=
+	{
+		pointer[i] = line[start];
+		start++;
+		i++;
+	}
+	pointer[i] = '\0';
+	return (pointer);
+}
+
+int32_t lex_WORD(t_hold *hold, char *line, int32_t i)
+{
+	char quote;
+	char *quote_chunk;
+	int32_t x;
+	int32_t zero_quote_check;
+
+	quote_chunk = (char *)ft_calloc(ft_strlen(line) + 1, 1);
+	x = 0;
+	zero_quote_check = 0;
+	while (line[i] != '\0')
+	{
+		if (line[i] == ' ')
+		{
+			break ;
+		}
+		if (line[i] == 34 || line[i] == 39)
+		{
+			quote = line[i];
+			i++;
+			while (line[i] != quote)
+			{
+				if (line[i] == '\0')
+					return (exit_status(hold, RED"minihell: syntax error: quotes are unclosed!\n"RESET, 69), -1);
+				quote_chunk[x] = line[i];
+				i++;		
+				x++;
+				zero_quote_check++;	
+			}
+			if (zero_quote_check == 0)
+				i+=1;
+		}
+		else
+			quote_chunk[x] = line[i];
+		i++;
+		x++;
+		zero_quote_check = 0;
+	}
+	if (x > 0)
+	{
+		add_node_lex(hold, quote_chunk);
+		free(quote_chunk);
+	}
+	return (i); 
 }
 
 // devide chunks of commands etc in single linked list
@@ -359,7 +402,7 @@ void lexer(t_hold *hold)
 	i = 0;
 	// check_spaces(hold);
 	// closed_quotes(hold);
-	prep_line(hold);
+	// prep_line(hold);
 	// return;
 	while (hold->line[i] != '\0' && hold->line[i] != '\n')
 	{
@@ -370,10 +413,6 @@ void lexer(t_hold *hold)
 			add_node_lex(hold, "$?");
 			i++;
 		}
-		else if (hold->line[i] == 39 || hold->line[i] == 34)	//  ' or "  -> single and double quote
-        {
-			i += QUOTES(hold, i);
-        }
 		else if (hold->line[i] == '|')
         {
 			lex_pipe(hold, i);
@@ -384,8 +423,12 @@ void lexer(t_hold *hold)
         }
 		else if (hold->line[i] != ' ')
         {
-			i += lex_word(hold, i);
-        }
+			i = lex_WORD(hold, hold->line, i);
+        }			
 		i++;
 	}
 }
+		// else if (hold->line[i] == 39 || hold->line[i] == 34)	//  ' or "  -> single and double quote
+        // {
+		// 	i += QUOTES(hold, i);
+        // }

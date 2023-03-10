@@ -57,7 +57,7 @@ int main(int32_t argc, char **argv, char **env)
 		{
 			add_history(hold->line);
 			lexer(hold);
-// print_list(hold->lex_struct, "lex");
+print_list(hold->lex_struct, "lex");
 // exit(0);
 			parser(hold);
 // print_parsed_list(hold->parsed_list);

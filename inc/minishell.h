@@ -151,10 +151,14 @@ int32_t	skip_spaces(char *str, int32_t i);
 int32_t check_beginning_redir(t_hold *hold);
 int32_t	lex_redir(t_hold *hold, int32_t i);
 int32_t	lex_word(t_hold *hold, int32_t i);
-char *quote_chunk(char *line, int32_t i, int32_t len);
+char *quote_chunk(t_hold *hold, int32_t i, int32_t len);
 char *add_letter(char *pointer, char letter);
 void prep_line(t_hold *hold);
 void lexer(t_hold *hold);
+
+char *cut_string(char *line, int32_t start, int32_t end);
+int32_t lex_WORD(t_hold *hold, char *line, int32_t i);
+
 
 
 //		parser.c
