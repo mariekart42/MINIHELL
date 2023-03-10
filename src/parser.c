@@ -255,7 +255,7 @@ void create_parsed_list(t_hold **hold, t_lexing *lex)
 				else
 				{
 					tmp_arg = ft_strjoin(tmp_arg, " ");
-					tmp_arg = ft_strjoin(tmp_arg, tmp_lex->item); 
+					tmp_arg = ft_strjoin(tmp_arg, tmp_lex->item);
 				}				
 			}
 			if (tmp_lex->next == NULL)

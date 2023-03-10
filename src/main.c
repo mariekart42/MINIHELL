@@ -44,10 +44,6 @@ int main(int32_t argc, char **argv, char **env)
 	// Take a look here on how to create export
 	// Found in utils.c
 	create_env_export_list(hold, env);
-			// // important later
-			// char *test;
-			// test = getenv("PATH");
-			// printf("getenv: %s\n", test);
 			
 	while (1)
 	{
@@ -57,12 +53,12 @@ int main(int32_t argc, char **argv, char **env)
 		if (!hold->line)
 			break ;
 
-// 		// if line is empty, bash returns 0 and does nothing
 		if (ft_strlen(hold->line) > 0)
 		{
 			add_history(hold->line);
 			lexer(hold);
-print_list(hold->lex_struct, "lex");
+// print_list(hold->lex_struct, "lex");
+// exit(0);
 			parser(hold);
 // print_parsed_list(hold->parsed_list);
 // print_macro_list(hold->lex_struct);

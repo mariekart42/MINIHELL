@@ -141,16 +141,19 @@ void 			export_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 
 
 //		lexing.c
-int32_t	lex_quote(t_hold *hold, int32_t i);
-char *calloc_string(t_hold *hold, int32_t i);
-int32_t new_lex_quote(t_hold *hold, int32_t i);
-void	closed_quotes(t_hold *hold);
+// int32_t	lex_quote(t_hold *hold, int32_t i);
+// char *calloc_string(t_hold *hold, int32_t i);
+// int32_t new_lex_quote(t_hold *hold, int32_t i);
+// void	closed_quotes(t_hold *hold);
 void	lex_pipe(t_hold *hold, int32_t i);
 int32_t	skip_spaces(char *str, int32_t i);
-void	check_spaces(t_hold *hold);
+// void	check_spaces(t_hold *hold);
 int32_t check_beginning_redir(t_hold *hold);
 int32_t	lex_redir(t_hold *hold, int32_t i);
 int32_t	lex_word(t_hold *hold, int32_t i);
+char *quote_chunk(char *line, int32_t i, int32_t len);
+char *add_letter(char *pointer, char letter);
+void prep_line(t_hold *hold);
 void lexer(t_hold *hold);
 
 
