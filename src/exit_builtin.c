@@ -37,7 +37,7 @@ void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
 	int32_t	exit_code;
 
-	if (parsed_node->args[2] != NULL)
+	if (parsed_node->args[1] && parsed_node->args[2])
 	{
 		exit_status(hold, RED"minishell: exit: too many arguments\n"RESET, 1);
 		return ;
