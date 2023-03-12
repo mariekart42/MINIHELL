@@ -49,15 +49,18 @@ int main(int32_t argc, char **argv, char **env)
 			// char *test;
 			// test = getenv("PATH");
 			// printf("getenv: %s\n", test);
-			
+	signals(); // Signals are applied before the main loop
 	while (1)
 	{
 		hold->exit_code = 0;
 		hold->line = readline(BLU"MINIHELL> "RESET);
 		// hold->line = ft_strdup("ls -l");
 		if (!hold->line)
-			break ;
-
+		{
+			// Signal for Ctrl+D
+			ft_putstr_fd("\b\bexit\n", 1);
+			exit(1);
+		}
 // 		// if line is empty, bash returns 0 and does nothing
 		if (ft_strlen(hold->line) > 0)
 		{

@@ -138,6 +138,15 @@ void 			export_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 
 //		export_builtin_cont.c
 
+//		signals.c
+void			signals(void);
+void			child_sig(void);
+void			heredoc_sig(void);
+
+//		signal_handlers.c
+void			sig_handle(int sig);
+void			sig_handle_child(int sig);
+void			heredoc_sig_handle(int sig);
 
 //		lexing.c
 int32_t	lex_quote(t_hold *hold, int32_t i);

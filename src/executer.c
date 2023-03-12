@@ -110,6 +110,7 @@ void handle_here_doc(t_parsed_chunk *pars_node)
 	if (pars_node->access.delim == NULL)
 		write(2, "problem with delim in handle_here_doc\n", 38);
 printf("infile: %d\n", pars_node->infile);
+	heredoc_sig(); // Signal goes before input of hierdoc
 	while (1)
 	{
 		input_string = readline(CYN"heredoc> "RESET);
@@ -160,6 +161,7 @@ void executer(t_hold *hold, char **ori_env)
 		pids[i] = fork();
 		if (pids[i] == 0)
 		{
+			child_sig();
 			if (parsed_node->access.is_here_doc == true)
 			{
 				handle_here_doc(parsed_node);
