@@ -37,7 +37,7 @@ void	add_to_export_mod(t_hold *hold, char *add, int var_class)
 	char			*tmp_add2;
 
 	if (var_class == 1)
-		tmp_add = ft_strjoin(add, """");
+		tmp_add = ft_strjoin(add, "\"\"");
 	if (var_class == 2)
 	{
 		tmp_add2 = ft_strjoin("\"", add);
@@ -48,13 +48,13 @@ void	add_to_export_mod(t_hold *hold, char *add, int var_class)
 	new->item = ft_strdup(tmp_add);
 	free(tmp_add);
 	new->next = NULL;
-	tmp = hold->env_list;
+	tmp = hold->export_list;
 	while (tmp->next != NULL)
 		tmp = tmp->next;
 	tmp->next = new;
 }
 
-void export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
+void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
 	int		i;
 	int		j;
@@ -82,10 +82,7 @@ void export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 			j++;
 		}
 		if (var_class == 0)
-		{
-			add_to_env(hold, parsed_node->args[i], "env");
 			add_to_env(hold, parsed_node->args[i], "export");
-		}
 		else
 		{
 			add_to_env_mod(hold, parsed_node->args[i], var_class);
@@ -95,14 +92,18 @@ void export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		j = 0;
 		i++;
 	}
+}
 
 	//To do
-	//[ ]Remove node if var alredy exists and replace 
-}
+
+	// Sort with bubble sort
+	// [ ] Remove node if var alredy exists and replace 
+	// open_quotes.c from Fedia for case 2
+
 	// Check with "string cases"
 	// export - var var="" var="abc def"
 	// env - var var= var=abc def
 	// cmd - [x]0 [x]1 [x]2
 
-	// Ask Marie about case 3:
-	// 3 is a full arg by itself arg[i] == "abc def"
+	// [x] Ask Marie about case 3:
+	// [x] 3 is a full arg by itself arg[i] == "abc def"
