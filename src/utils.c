@@ -14,19 +14,23 @@ void free_list_pars(t_parsed_chunk* head)
 		tmp = head;
 		head = head->next;
 		free(tmp->cmd_path);
+		tmp->cmd_path = NULL;
 		if (tmp->here_doc_delim != NULL)
 		{
 			unlink("tmp.hd");
 			free(tmp->here_doc_delim); // new but should work
+			tmp->here_doc_delim = NULL;
 		}
 		// if (tmp->access.is_here_doc == true)
 		while (tmp->args[i] != NULL)
 		{
 			free(tmp->args[i]);
+			tmp->args[i]= NULL;
 			i++;
 		}
 		i = 0;
 		free(tmp);
+		tmp = NULL;
 	}
 }
 
@@ -42,7 +46,9 @@ void free_list_lex(t_lexing* head)
 		tmp = head;
 		head = head->next;
 		free(tmp->item);
+		tmp->item = NULL;
 		free(tmp);
+		tmp = NULL;
     }
 }
 
@@ -59,8 +65,11 @@ void free_list_env_export(t_env_export* head)
 		head = head->next;
 		// free(tmp->item); // maybe delete
 		free(tmp->var_name);
+		tmp->var_name = NULL;
 		free(tmp->var_value);
+		tmp->var_value = NULL;
 		free(tmp);
+		tmp = NULL;
 	}
 }
 

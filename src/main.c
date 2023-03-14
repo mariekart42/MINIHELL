@@ -38,6 +38,7 @@ int main(int32_t argc, char **argv, char **env)
 
 	if (init_structs(&hold))
 		return (69);
+	hold->line = NULL;
 
 	// using signal function here to catch signal if eg ctr-c is used
 	
@@ -45,11 +46,14 @@ int main(int32_t argc, char **argv, char **env)
 	// Found in utils.c
 	create_env_export_list(hold, env);
 			
+	// int i = 1;
+	// while(i)
 	while (1)
 	{
 		hold->exit_code = 0;
 		hold->line = readline(BLU"MINIHELL> "RESET);
-		// hold->line = ft_strdup("pwd|pwd");
+		// hold->line = ft_strdup("ls");
+			// printf("line: %s\n", hold->line);
 		if (!hold->line)
 			break ;
 
@@ -57,16 +61,19 @@ int main(int32_t argc, char **argv, char **env)
 		{
 			add_history(hold->line);
 			lexer(hold);
-print_list(hold->lex_struct, "lex");
-// exit(0);
+// print_list(hold->lex_struct, "lex");
 			parser(hold);
 // print_parsed_list(hold->parsed_list);
 // print_macro_list(hold->lex_struct);
 			executer(hold, env);
+// exit(0);
 			// builtin(hold, hold->parsed_list); // Add for testing
+			// printf("beore free contene'n")
 			free_content(&hold);
 			// break;
 			free(hold->line);
+			hold->line = NULL;
+			// i--;
 		}
 	}
 	free_env_export(hold);
@@ -74,6 +81,8 @@ print_list(hold->lex_struct, "lex");
 	clear_history();
 }
 
+
+// only problems if i have 3 pipes AHHHHHHHH
 
 
 //!!!NEXT:

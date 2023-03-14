@@ -86,6 +86,7 @@ void execute_cmd(t_hold *hold, t_parsed_chunk *parsed_node, char **ori_env)
 		exit_status(hold, RED": command not found!\n"RESET, 69);
 		exit(127);
 	}
+	// exit(1);
 }
 
 void handle_here_doc(t_parsed_chunk *pars_node)
@@ -132,7 +133,7 @@ void handle_here_doc(t_parsed_chunk *pars_node)
 
 void handle_single_builtin(t_hold *hold)
 {
-	// printf("single builtin handeler\n");
+	printf("single builtin handeler\n");
 	if (hold->parsed_list->here_doc_delim != NULL)
 		handle_here_doc(hold->parsed_list);
 	// redir
@@ -178,13 +179,17 @@ void executer(t_hold *hold, char **ori_env)
 			redirection(parsed_node, i, pipegroups, pipe_fds);
 			close_fds(parsed_node, pipegroups, pipe_fds);
 			if (builtin_parser(parsed_node->args[0]) == true)
+			{
+				// write(2, "builtin, child\n", 15);
 				builtin(hold, parsed_node);
+			}
 			else
 				execute_cmd(hold, parsed_node, ori_env);
 			exit(1);
 		}
 		else
 		{
+			// waitpid(pids[i], NULL, 0);
 			close(pipe_fds[i][1]);
 			if (i != 0)
 				close(pipe_fds[i-1][0]);
@@ -196,14 +201,19 @@ void executer(t_hold *hold, char **ori_env)
 		i++;
 		parsed_node = parsed_node->next;
 	}
-	close(pipe_fds[i-1][0]); // not sure which 
-	close(pipe_fds[i][0]); // one of these two
+	close(pipe_fds[i-1][0]);
+
+		// close(pipe_fds[i][0]); // not sure which 
+	// close(pipe_fds[i][0]); // one of these two
 
 	i = 0;
-	while ((i < pipegroups) && (pids[i]))
+	// while ((i < pipegroups) && (pids[i]))
+	while (pids[i])
 	{
 		waitpid(pids[i], NULL, 0);
+		// write(2, GRN"child done\n"RESET, 16);
 		i++;
 	}
 	free(pids);
+	pids = NULL;
 }

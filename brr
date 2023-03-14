@@ -1,0 +1,10 @@
+total 176
+-rw-r--r--   1 mariemensing  staff    997 13 Mär 12:47 Makefile
+-rw-r--r--   1 mariemensing  staff     23 13 Mär 12:47 bonjourr
+-rw-r--r--   1 mariemensing  staff      0 14 Mär 15:53 brr
+drwxr-xr-x   3 mariemensing  staff     96 13 Mär 12:47 inc
+drwxr-xr-x  89 mariemensing  staff   2848 14 Mär 15:19 libft
+-rwxr-xr-x   1 mariemensing  staff  78688 14 Mär 15:52 minishell
+drwxr-xr-x  17 mariemensing  staff    544 14 Mär 15:52 obj
+drwxr-xr-x  12 mariemensing  staff    384  2 Mär 23:56 previous
+drwxr-xr-x  19 mariemensing  staff    608 13 Mär 12:47 src

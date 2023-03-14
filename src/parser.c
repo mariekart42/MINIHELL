@@ -4,7 +4,7 @@ bool builtin_parser(char *node)
 {
 	if (ft_strncmp(node, "echo\0", 5) == 0)
 		return (true);
-	else if (ft_strncmp(node, "pwd\0", 3) == 0)
+	else if (ft_strncmp(node, "pwd\0", 4) == 0)
 		return (true);
 	else if (ft_strncmp(node, "unset", 5) == 0)
 		return (true);
@@ -59,7 +59,7 @@ int32_t init_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
 	int32_t file_id;
 
 	file_id = 1;
-	if (type != SING_CLOSE_REDIR || type != DOUBL_CLOSE_REDIR)
+	if (type != SING_CLOSE_REDIR && type != DOUBL_CLOSE_REDIR)
 		return (1);
 // not 100% sure about opening macros (in both open calls)
 	if (type == SING_CLOSE_REDIR)
@@ -130,18 +130,34 @@ char *get_cmdpath(char *curr_cmd)
 {
 	char **env_path;
 	char *valid_path;
+	char *tmp;
 	int32_t i = 0;
 
+	tmp = NULL;
 	env_path = ft_split(getenv("PATH"), ':');
 	while (env_path[i] != NULL)
 	{
-		env_path[i] = ft_strjoin(env_path[i], "/");
-		valid_path = ft_strjoin(env_path[i], curr_cmd);
+		tmp = ft_strjoin(env_path[i], "/");
+		// env_path[i] = ft_strjoin(env_path[i], "/");
+		// valid_path = ft_strjoin(env_path[i], curr_cmd);
+		valid_path = ft_strjoin(tmp, curr_cmd);
+		free(tmp);
+		tmp = NULL;
 		if (access(valid_path, F_OK | X_OK) == 0)
 			break ;
 		free(valid_path);
+		valid_path = NULL;
 		i++;
 	}
+	i=0;
+	while(env_path[i] != NULL)
+	{
+		free(env_path[i]);
+		env_path[i] = NULL;
+		i++;
+	}
+	free(env_path);
+	env_path = NULL;
 	if (access(valid_path, F_OK | X_OK) != 0)
 		return (NULL);
 	else
@@ -241,7 +257,7 @@ void create_parsed_list(t_hold **hold, t_lexing *lex, int32_t pipegroups)
 	tmp_pars = (*hold)->parsed_list;
 	while (pipegroups > 0)
 	{
-		tmp_pars->args = malloc(sizeof(char *) * arg_amount(tmp_lex));
+		tmp_pars->args = malloc(sizeof(char *) * arg_amount(tmp_lex) + 1);
 		i = 0;
 		while (tmp_lex->macro != PIPE)
 		{
@@ -293,8 +309,8 @@ void parser(t_hold *hold)
 {
 	int32_t pipegroups;
 
-	pipegroups = count_pipegroups(hold->lex_struct);
 	recognize_type(hold);
+	pipegroups = count_pipegroups(hold->lex_struct);
     if (hold->exit_code != 0 || check_syntax_errors(hold))
         return ;
 

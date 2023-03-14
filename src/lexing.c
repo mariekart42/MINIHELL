@@ -471,7 +471,7 @@ void check_closed_quotes(t_hold *hold)
 void lexer(t_hold *hold)
 {
 	int32_t	i;
-	
+
 	i = 0;
 	check_closed_quotes(hold);
 	while (hold->line[i] != '\0' && hold->line[i] != '\n')
@@ -497,4 +497,6 @@ void lexer(t_hold *hold)
         }			
 		i++;
 	}
+	if (hold->lex_struct == NULL)
+		exit_status(hold, RED"minihell: : command not found!\n"RESET, 69);
 }
