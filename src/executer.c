@@ -159,6 +159,7 @@ void executer(t_hold *hold, char **ori_env)
 	if (hold->exit_code != 0)
 		return ;
 	pipegroups = count_pipegroups(hold->lex_struct);
+	printf("pipegroups: %d\n", pipegroups);
 	if (pipegroups == 1 && hold->lex_struct->macro == BUILTIN)
 		return (handle_single_builtin(hold));
 	pids = malloc(sizeof(int32_t) * pipegroups);
