@@ -182,11 +182,13 @@ void parser(t_hold *hold);
 //		executer.c
 void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
 void open_pipefds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
-void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+// void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
 void execute_cmd(t_hold *hold, t_parsed_chunk *parsed_node, char **ori_env);
 void handle_here_doc(t_parsed_chunk *pars_node);
 void executer(t_hold *hold, char **ori_env);
 
+void close_fds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+void close_all_fds(t_parsed_chunk *parsed_node, int32_t pipe_fds[MAX_FD][2], int32_t i, int32_t pipegroups);
 
 //		utils.c
 void free_list_pars(t_parsed_chunk* head);

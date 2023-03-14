@@ -44,6 +44,7 @@ void open_pipefds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 	i = 0;
 	while (i + 1 < pipegroups)
 	{
+		write(2, "opend pipe\n", 11);
 		if (pipe(pipe_fds[i]) < 0)
 		{
 			exit_status(hold, "Error! Failed to open pipe!\n", 69);
@@ -53,13 +54,13 @@ void open_pipefds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 	}
 }
 
-void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
+void close_fds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
 	int32_t i;
 	t_parsed_chunk *tmp;
 
 	i = 0;
-	tmp = parsed_list;
+	tmp = hold->parsed_list;
 	while ((i+1) < pipegroups)
 	{
 		close(pipe_fds[i][0]);
@@ -68,10 +69,10 @@ void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds
 	}
 	while (tmp != NULL)
 	{
-		if (parsed_list->infile != 0)
-			close(parsed_list->infile);
-		if (parsed_list->outfile != 1)
-			close(parsed_list->outfile);
+		if (tmp->infile != 0)
+			close(tmp->infile);
+		if (tmp->outfile != 1)
+			close(tmp->outfile);
 		tmp = tmp->next;
 	}
 }
@@ -147,6 +148,26 @@ void handle_single_builtin(t_hold *hold)
 	builtin(hold, hold->parsed_list);
 }
 
+// void close_all_fds(t_parsed_chunk *parsed_node, int32_t pipe_fds[MAX_FD][2], int32_t i)
+// {
+// 	int32_t x = 0;
+
+// 	while (x <= i)
+// 	{
+// 		if (x != 0)
+// 		{
+// 			close(pipe_fds[x-1][0]);
+// 		}
+// 		close(pipe_fds[x][1]);
+// 		x++;
+// 	}
+// 	if (parsed_node->infile != 0)
+// 		close(parsed_node->infile);
+// 	if (parsed_node->outfile != 1)
+// 		close(parsed_node->outfile);
+
+// }
+
 void executer(t_hold *hold, char **ori_env)
 {
 	int32_t *pids;
@@ -159,10 +180,9 @@ void executer(t_hold *hold, char **ori_env)
 	if (hold->exit_code != 0)
 		return ;
 	pipegroups = count_pipegroups(hold->lex_struct);
-	printf("pipegroups: %d\n", pipegroups);
 	if (pipegroups == 1 && hold->lex_struct->macro == BUILTIN)
 		return (handle_single_builtin(hold));
-	pids = malloc(sizeof(int32_t) * pipegroups);
+	pids = malloc(sizeof(int32_t) * (pipegroups));
 	if (!pids)
 		return (exit_status(hold, MAG"Error! Failed to malloc for pids (in executer())\n"RESET, 69));
 	open_pipefds(hold, pipegroups, pipe_fds);
@@ -170,26 +190,36 @@ void executer(t_hold *hold, char **ori_env)
 	while (i < pipegroups)
 	{
 		pids[i] = fork();
+		// if (i == 2 &&pids[i]!=0)
+		// {
+		// 	redirection(parsed_node, i, pipegroups, pipe_fds);
+		// 	close_fds(parsed_node, pipegroups, pipe_fds);
+
+		// 		execute_cmd(hold, parsed_node, ori_env);
+		// 	exit(1);
+		// }
 		if (pids[i] == 0)
 		{
-			if (parsed_node->here_doc_delim != NULL)
-			{
-				// printf("%s\n", parsed_node->here_doc_delim);
-				handle_here_doc(parsed_node);
-			}
+			// if (parsed_node->here_doc_delim != NULL)
+			// {
+			// 	// printf("%s\n", parsed_node->here_doc_delim);
+			// 	handle_here_doc(parsed_node);
+			// }
 			redirection(parsed_node, i, pipegroups, pipe_fds);
-			close_fds(parsed_node, pipegroups, pipe_fds);
-			if (builtin_parser(parsed_node->args[0]) == true)
-			{
-				// write(2, "builtin, child\n", 15);
-				builtin(hold, parsed_node);
-			}
-			else
+
+			close_fds(hold, pipegroups, pipe_fds);
+			// if (builtin_parser(parsed_node->args[0]) == true)
+			// {
+			// 	// write(2, "builtin, child\n", 15);
+			// 	builtin(hold, parsed_node);
+			// }
+			// else
 				execute_cmd(hold, parsed_node, ori_env);
 			exit(1);
 		}
 		else
 		{
+			// close_all_fds(parsed_node, pipe_fds, i, pipegroups);
 			// waitpid(pids[i], NULL, 0);
 			close(pipe_fds[i][1]);
 			if (i != 0)
