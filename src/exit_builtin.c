@@ -33,13 +33,13 @@ void	free_all(t_hold *hold)
 	// clear_history;
 }
 
-void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
+void	exit_builtin(t_parsed_chunk *parsed_node)
 {
 	int32_t	exit_code;
 
 	if (parsed_node->args[2] != NULL)
 	{
-		exit_status(hold, RED"minishell: exit: too many arguments\n"RESET, 1);
+		exit_status(RED"minishell: exit: too many arguments\n"RESET, 1);
 		return ;
 	}
 	if (parsed_node->args[1] != NULL)
@@ -47,16 +47,16 @@ void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		exit_code = ft_atoi_mod(parsed_node->args[1]);
 		if (exit_code == -1)
 		{
-			ft_putstr_fd("minishell: exit: ", 2);
+			ft_putstr_fd(RED"minishell: exit: ", 2);
 			ft_putstr_fd(parsed_node->args[1], 2);
-			ft_putstr_fd(": numeric argument required\n", 2);
-			hold->exit_code = 255;
+			ft_putstr_fd(": numeric argument required\n"RESET, 2);
+			error_code = 255;
 		}
 		else
-			hold->exit_code = exit_code;
+			error_code = exit_code;
 	}
 	else
-		hold->exit_code = 0;
+		error_code = 0;
 	// free_all(hold);
-	exit(hold->exit_code % 256);
+	exit(error_code % 256);
 }

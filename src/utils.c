@@ -82,7 +82,7 @@ void add_node_lex(t_hold *hold, char *content)
 
 	ptr = (t_lexing *)malloc(sizeof(t_lexing));
 	if (!ptr)
-		return (exit_status(hold, "Error! Failed to malloc\n", 69));
+		return (exit_status(RED"Error! Failed to malloc\n"RESET, 69));
 	ptr->item = ft_strdup(content);
 	ptr->next = NULL;
 
@@ -102,9 +102,10 @@ t_lexing	*last_node_lex(t_lexing *lst)
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-void exit_status(t_hold *hold, char *message, int8_t exit_code_)
+void exit_status(char *message, int8_t exit_code_)
 {
 	// printf(RED"calling exit_status: %d\n"RESET, exit_code_);
 	write(2, message, ft_strlen(message));
-	hold->exit_code = exit_code_;
+	error_code = exit_code_%256;
+	// printf("something: %s\n", hold->line);
 }

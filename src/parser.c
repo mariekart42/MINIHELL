@@ -54,7 +54,7 @@ void recognize_type(t_hold *hold)
 /* function checks and returns outfile on success
  * opens/creates file if it not exists
  * check later for permission issues if the file already exists(how lol?) */
-int32_t init_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
+int32_t init_outfile(t_lexing *file_node, int32_t type)
 {
 	int32_t file_id;
 
@@ -67,14 +67,14 @@ int32_t init_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
 	else if (type == DOUBL_CLOSE_REDIR)
 		file_id = open(file_node->item, O_CREAT | O_WRONLY | O_APPEND); // check if its right
 	if (file_id < 0)
-		exit_status(hold, "Error!: unable to open outfile (in check_outfile func)\n", 69);
+		exit_status("Error!: unable to open outfile (in check_outfile func)\n", 69);
 	return (file_id);
 }
 
 /* function checks and returns infile on success
  * input file must exist and be readable by the user running the command
  * file_node is the current node in parsed_list	*/
-int32_t init_infile(t_hold *hold, t_parsed_chunk *file_node_pars, t_lexing *file_node_lex, int32_t type)
+int32_t init_infile(t_parsed_chunk *file_node_pars, t_lexing *file_node_lex, int32_t type)
 {
 	int32_t file_id;
 
@@ -87,7 +87,7 @@ int32_t init_infile(t_hold *hold, t_parsed_chunk *file_node_pars, t_lexing *file
 		{
 			write(2, RED"minihell: ", 16);
 			ft_putstr_fd(file_node_lex->item, 2);
-			exit_status(hold, ": no such file or directory\n"RESET, 69);
+			exit_status(": no such file or directory\n"RESET, 69);
 		}
 		file_node_pars->here_doc_delim = NULL;
 	}
@@ -98,7 +98,7 @@ int32_t init_infile(t_hold *hold, t_parsed_chunk *file_node_pars, t_lexing *file
 		{
 			write(2, RED"minihell: ", 16);
 			ft_putstr_fd(file_node_lex->item, 2);
-			exit_status(hold, ": no such file or directory\n"RESET, 69);
+			exit_status(": no such file or directory\n"RESET, 69);
 		}
 		file_node_pars->here_doc_delim = ft_strdup(file_node_lex->next->item);
 	}
@@ -235,25 +235,16 @@ void create_parsed_list(t_hold **hold, t_lexing *lex, int32_t pipegroups)
 	int32_t i;
 	t_lexing *tmp_lex;
 	t_parsed_chunk *tmp_pars;
-	// char *tmp_arg;
 
-	// tmp_arg = malloc(sizeof(char));
-	// tmp_arg = "\0";
 	tmp_pars = NULL;
-	// tmp_arg = NULL;
 	tmp_lex = lex;
-	// pipegroups = count_pipegroups(lex);
 	i = pipegroups;
-	// printf("amount pipegroups: %d\n", pipegroups);
-
 	while (pipegroups > 0)
 	{
 		add_node_pars(hold);
 		pipegroups--;
 	}
 	pipegroups = i;
-// print_list((*hold)->lex_struct, "lexd");
-// init list
 	tmp_pars = (*hold)->parsed_list;
 	while (pipegroups > 0)
 	{
@@ -261,44 +252,22 @@ void create_parsed_list(t_hold **hold, t_lexing *lex, int32_t pipegroups)
 		i = 0;
 		while (tmp_lex->macro != PIPE)
 		{
-			tmp_pars->outfile = init_outfile(*hold, tmp_lex->next, tmp_lex->macro);
-			tmp_pars->infile = init_infile(*hold, tmp_pars, tmp_lex->next, tmp_lex->macro);
+			tmp_pars->outfile = init_outfile(tmp_lex->next, tmp_lex->macro);
+			tmp_pars->infile = init_infile(tmp_pars, tmp_lex->next, tmp_lex->macro);
 			if (tmp_lex->macro == SING_CLOSE_REDIR || tmp_lex->macro == DOUBL_CLOSE_REDIR || tmp_lex->macro == SING_OPEN_REDIR || tmp_lex->macro == DOUBL_OPEN_REDIR)
 				tmp_lex = tmp_lex->next;
 			else
 			{
-
-				// MALLOC HERE DOUBLE ARRAY FOR ALL ARGUMENTS (REALLOCATION SHIT)
 				tmp_pars->args[i] = ft_strdup(tmp_lex->item);
 				i++;
 			}
-			//
-			// else
-			// {
-			// 	// add_arg(tmp_pars);
-			// 	if (tmp_arg == NULL)
-			// 		tmp_arg = ft_strdup(tmp_lex->item);
-			// 	else
-			// 	{
-			// 		tmp_arg = ft_strjoin(tmp_arg, "\b");
-			// 		tmp_arg = ft_strjoin(tmp_arg, tmp_lex->item);
-			// 	}				
-			// }
+
 			if (tmp_lex->next == NULL)
 				break ;
 			tmp_lex = tmp_lex->next;
 		}
-		// tmp_pars->args = init_arguments()
-		// if (ft_strlen(tmp_arg) == 0)
-		// {
-		// 	printf(RED"pipegroup doesnt conatin any commands: %s -> dunno what to do | EXIT\n"RESET, tmp_lex->item);
-		// 	exit(0);
-		// }
-		// tmp_pars->args = ft_split(tmp_arg, '\b');
 		tmp_pars->args[i] = NULL;
 		tmp_pars->cmd_path = get_cmdpath(tmp_pars->args[0]);
-		// free(tmp_arg);
-		// tmp_arg = "\0";
 		tmp_lex = tmp_lex->next;
 		tmp_pars = tmp_pars->next;
 		pipegroups--;
@@ -311,9 +280,7 @@ void parser(t_hold *hold)
 
 	recognize_type(hold);
 	pipegroups = count_pipegroups(hold->lex_struct);
-    if (hold->exit_code != 0 || check_syntax_errors(hold))
+    if (error_code != 0 || check_syntax_errors(hold))
         return ;
-
 	create_parsed_list(&hold, hold->lex_struct, pipegroups);
-	
 }

@@ -45,12 +45,10 @@ int main(int32_t argc, char **argv, char **env)
 	// Take a look here on how to create export
 	// Found in utils.c
 	create_env_export_list(hold, env);
-			
-	// int i = 1;
-	// while(i)
+
 	while (1)
 	{
-		hold->exit_code = 0;
+		error_code = 0;
 		hold->line = readline(BLU"MINIHELL> "RESET);
 		// hold->line = ft_strdup("ls");
 			// printf("line: %s\n", hold->line);
@@ -66,14 +64,11 @@ int main(int32_t argc, char **argv, char **env)
 // print_parsed_list(hold->parsed_list);
 // print_macro_list(hold->lex_struct);
 			executer(hold, env);
-// exit(0);
-			// builtin(hold, hold->parsed_list); // Add for testing
-			// printf("beore free contene'n")
+
+			printf(MAG"error code: %d\n"RESET, error_code);
 			free_content(&hold);
-			// break;
 			free(hold->line);
 			hold->line = NULL;
-			// i--;
 		}
 	}
 	free_env_export(hold);
@@ -82,32 +77,23 @@ int main(int32_t argc, char **argv, char **env)
 }
 
 
-// only problems if i have 3 pipes AHHHHHHHH
-
-
 //!!!NEXT:
-// - if there is only one pipegroup, builtin should not happen in child
-
+// - change permissions for open in and outfile
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 //!  GENERAL:
 // - move cursor bums
-// - how to store prev return value for '$?' ?
 // - handle also relativ paths
 
 
 //!  LEXER: √
 
-//!  PARSER:
-// - parser keeps all quote symbols -> need later or should get removed/skipped in parser?
-// - cat <<		-> throw syntax error
+//!  PARSER:√
 
 
 //!  EXECUTER:
 //	- douple redir not working yet(prolly wrong opening rights)
 // - change 'ori_env' to **char of own env list
-// - include builtins as soon as they're finished
-
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -131,6 +117,6 @@ int main(int32_t argc, char **argv, char **env)
 //				-  cd ~					-> with space between wrong output
 
 //!			MY:
-//		    !!	-  cat Makefile | cat -e | cat -e		-> gets stuck
-//				-  ls -la | grep "."					-> parsing problem, reads and interprets quotes as actual characters
+//		    !!	-  cat Makefile | cat | cat				-> gets stuck
 //				-  cat Makefile | grep src | cat -e		-> same shit
+//				-  echo hola | cat -e | cat -e | cat -e -> gets stuck
