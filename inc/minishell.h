@@ -126,6 +126,10 @@ void	update_env(t_hold *hold, char *old, char *new, char *structure);
 void	add_to_var(t_hold *hold, char *add, char *structure);
 void	update_var_value(t_hold *hold, char *old, char *new, char *structure);
 
+//		unset.c
+bool	find_var(t_hold *hold, char *var, char *structure);
+void	delete_var(t_hold **hold, char *var, char *structure);
+
 //		export_struct.c
 void			create_env_export_list(t_hold *hold, char **ori_env);
 t_env_export	*new_node_env(void);
