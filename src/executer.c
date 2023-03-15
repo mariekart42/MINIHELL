@@ -180,7 +180,7 @@ void executer(t_hold *hold, char **ori_env)
 		if (pids[i] == 0)
 		{
 			child_sig();
-			if (parsed_node->access.is_here_doc == true)
+			if (parsed_node->here_doc_delim != NULL)
 			{
 				// printf("%s\n", parsed_node->here_doc_delim);
 				handle_here_doc(parsed_node);
