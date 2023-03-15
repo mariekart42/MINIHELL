@@ -44,7 +44,7 @@ void open_pipefds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 	i = 0;
 	while (i + 1 < pipegroups)
 	{
-		write(2, "opend pipe\n", 11);
+		// write(2, "opend pipe\n", 11);
 		if (pipe(pipe_fds[i]) < 0)
 		{
 			exit_status(hold, "Error! Failed to open pipe!\n", 69);
@@ -134,7 +134,7 @@ void handle_here_doc(t_parsed_chunk *pars_node)
 
 void handle_single_builtin(t_hold *hold)
 {
-	printf("single builtin handeler\n");
+	// printf("single builtin handeler\n");
 	if (hold->parsed_list->here_doc_delim != NULL)
 		handle_here_doc(hold->parsed_list);
 	// redir
