@@ -1,5 +1,9 @@
 #include "minishell.h"
 
+// void	sort_export_list(t_hold *hold, char *var) 
+// {
+// }
+
 void print_env_export(t_hold *hold)
 {
 	t_env_export *tmp;
@@ -82,28 +86,48 @@ void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 			j++;
 		}
 		if (var_class == 0)
+		{
+			find_var(hold, parsed_node->args[i], "export");
 			add_to_env(hold, parsed_node->args[i], "export");
+		}
 		else
 		{
+			find_var(hold, parsed_node->args[i], "env");
+			find_var(hold, parsed_node->args[i], "export");
 			add_to_env_mod(hold, parsed_node->args[i], var_class);
 			add_to_export_mod(hold, parsed_node->args[i], var_class);
 		}
-		// sort_export_list(hold); // Problem for Future Santiago
+		// sort_export_list(hold, parsed_node->args[i]); // Problem for Future Santiago
 		j = 0;
 		i++;
 	}
 }
 
-	//To do
+//To do
 
-	// Sort with bubble sort
-	// [ ] Remove node if var alredy exists and replace 
-	// open_quotes.c from Fedia for case 2
+// Sort with bubble sort
+// [ ] Remove node if var alredy exists and replace 
+// open_quotes.c from Fedia for case 2
 
-	// Check with "string cases"
-	// export - var var="" var="abc def"
-	// env - var var= var=abc def
-	// cmd - [x]0 [x]1 [x]2
+// Check with "string cases"
+// export - var var="" var="abc def"
+// env - var var= var=abc def
+// cmd - [x]0 [x]1 [x]2
 
-	// [x] Ask Marie about case 3:
-	// [x] 3 is a full arg by itself arg[i] == "abc def"
+// [x] Ask Marie about case 3:
+// [x] 3 is a full arg by itself arg[i] == "abc def"
+
+////////////////
+// char	*ft_strndup(const char *s1, size_t n)
+// {
+// 	char	*cpy;
+
+// 	if (ft_strlen((char *)s1) < n)
+// 		cpy = ft_strnew(ft_strlen((char *)s1));
+// 	else
+// 		cpy = ft_strnew(n);
+// 	if (cpy == NULL)
+// 		return (NULL);
+// 	return (ft_strncpy(cpy, (char *)s1, n));
+// }
+/////////
