@@ -141,6 +141,8 @@ void 			sort_export_list(t_hold *hold);
 void 			export_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 
 //		export_builtin_cont.c
+char			*ft_strndup(const char *s1, size_t n);
+char			*ft_strncpy(char *dest, const char *src, size_t len);
 
 //		signals.c
 void			signals(void);
