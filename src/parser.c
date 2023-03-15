@@ -2,9 +2,9 @@
 
 bool builtin_parser(char *node)
 {
-	if (ft_strncmp(node, "echo", 4) == 0)
+	if (ft_strncmp(node, "echo\0", 5) == 0)
 		return (true);
-	else if (ft_strncmp(node, "pwd", 3) == 0)
+	else if (ft_strncmp(node, "pwd\0", 4) == 0)
 		return (true);
 	else if (ft_strncmp(node, "unset", 5) == 0)
 		return (true);
@@ -54,75 +54,53 @@ void recognize_type(t_hold *hold)
 /* function checks and returns outfile on success
  * opens/creates file if it not exists
  * check later for permission issues if the file already exists(how lol?) */
-int32_t check_outfile(t_hold *hold, t_lexing *file_node, int32_t type)
+int32_t init_outfile(t_lexing *file_node, int32_t type)
 {
 	int32_t file_id;
 
+	file_id = 1;
+	if (type != SING_CLOSE_REDIR && type != DOUBL_CLOSE_REDIR)
+		return (1);
 // not 100% sure about opening macros (in both open calls)
 	if (type == SING_CLOSE_REDIR)
-	{
-		// printf("single redir\n");
 		file_id = open(file_node->item, O_CREAT | O_WRONLY | O_TRUNC , 0644);
-	}
-	else
-	{
-		// printf("double redir\n");
-		// file_id = open(file_node->item, O_CREAT, 0644); // used this before
+	else if (type == DOUBL_CLOSE_REDIR)
 		file_id = open(file_node->item, O_CREAT | O_WRONLY | O_APPEND); // check if its right
-	}
-
 	if (file_id < 0)
-		exit_status(hold, "Error!: unable to open outfile (in check_outfile func)\n", 69);
+		exit_status("Error!: unable to open outfile (in check_outfile func)\n", 69);
 	return (file_id);
 }
 
 /* function checks and returns infile on success
  * input file must exist and be readable by the user running the command
  * file_node is the current node in parsed_list	*/
-int32_t check_infile(t_hold *hold, t_lexing *file_node, int32_t type)
+int32_t init_infile(t_parsed_chunk *file_node_pars, t_lexing *file_node_lex, int32_t type)
 {
 	int32_t file_id;
-	// char	*input_string;
 
-	// input_string = NULL;
+	file_id = 0;
 	if (type == SING_OPEN_REDIR)
 	{
 	// not 100% sure about opening macros
-		file_id = open(file_node->item, O_RDONLY);
+		file_id = open(file_node_lex->item, O_RDONLY);
 		if (file_id < 0)
 		{
 			write(2, RED"minihell: ", 16);
-			ft_putstr_fd(file_node->item, 2);
-			exit_status(hold, ": no such file or directory\n"RESET, 69);
+			ft_putstr_fd(file_node_lex->item, 2);
+			exit_status(": no such file or directory\n"RESET, 69);
 		}
+		file_node_pars->here_doc_delim = NULL;
 	}
-	else
+	else if (type == DOUBL_OPEN_REDIR)
 	{
-		file_id = open(".new", O_WRONLY | O_CREAT, 0777);
-		// printf("file_id: %d\n", file_id);
+		file_id = open("tmp.hd", O_WRONLY | O_CREAT, 0777);
 		if (file_id < 0)
 		{
 			write(2, RED"minihell: ", 16);
-			ft_putstr_fd(file_node->item, 2);
-			exit_status(hold, ": no such file or directory\n"RESET, 69);
+			ft_putstr_fd(file_node_lex->item, 2);
+			exit_status(": no such file or directory\n"RESET, 69);
 		}
-		// input_string = get_next_line(0);
-		// input_string = readline(CYN"here_doc> "RESET);
-		// while (1)
-		// {
-		// 	input_string = readline(CYN"heredoc> "RESET);
-		// 	if (ft_strncmp(input_string, file_node->item, ft_strlen(input_string)) == 0)
-		// 		break;
-		// 	ft_putstr_fd(input_string, file_id);
-		// 	ft_putstr_fd("\n", file_id);
-		// 	free(input_string);
-		// 	// write(1, "> ", 2);
-		// 	// input_string = get_next_line(0);
-		// }
-		// free(input_string);
-		// close(file_id);
-		// ft_putstr_fd(input_string, file_id);
-		// while (ft_strncmp(file_node->item, input_string, ft_strlen(input_string)))
+		file_node_pars->here_doc_delim = ft_strdup(file_node_lex->next->item);
 	}
 	return (file_id);
 }
@@ -152,18 +130,34 @@ char *get_cmdpath(char *curr_cmd)
 {
 	char **env_path;
 	char *valid_path;
+	char *tmp;
 	int32_t i = 0;
 
+	tmp = NULL;
 	env_path = ft_split(getenv("PATH"), ':');
 	while (env_path[i] != NULL)
 	{
-		env_path[i] = ft_strjoin(env_path[i], "/");
-		valid_path = ft_strjoin(env_path[i], curr_cmd);
+		tmp = ft_strjoin(env_path[i], "/");
+		// env_path[i] = ft_strjoin(env_path[i], "/");
+		// valid_path = ft_strjoin(env_path[i], curr_cmd);
+		valid_path = ft_strjoin(tmp, curr_cmd);
+		free(tmp);
+		tmp = NULL;
 		if (access(valid_path, F_OK | X_OK) == 0)
 			break ;
 		free(valid_path);
+		valid_path = NULL;
 		i++;
 	}
+	i=0;
+	while(env_path[i] != NULL)
+	{
+		free(env_path[i]);
+		env_path[i] = NULL;
+		i++;
+	}
+	free(env_path);
+	env_path = NULL;
 	if (access(valid_path, F_OK | X_OK) != 0)
 		return (NULL);
 	else
@@ -189,6 +183,7 @@ void add_node_pars(t_hold **hold)
 	tmp->args = NULL;
 	tmp->cmd_path = NULL;
 	tmp->next = NULL;
+	tmp->here_doc_delim = NULL;
 	tmp->infile = STDIN_FILENO;
 	tmp->outfile = STDOUT_FILENO;
 	if ((*hold)->parsed_list == NULL)
@@ -197,77 +192,82 @@ void add_node_pars(t_hold **hold)
 		(last_node_pars((*hold)->parsed_list))->next = tmp;
 }
 
-void create_parsed_list(t_hold **hold, t_lexing *lex)
+void add_arg(t_parsed_chunk *pars_node)
 {
-	int32_t pipegroups;
-	int32_t tmp;
+	int32_t i;
+	int32_t x;
+	char **new_args;
+	t_parsed_chunk *tmp;
+
+	i = 0;
+	x = 0;
+	tmp = pars_node;
+	while (tmp->args[i] != NULL)
+	{
+		tmp = tmp->next;
+		i++;
+	}
+	new_args = malloc(sizeof(char *) * i + 1);
+	tmp = pars_node;
+	while (tmp->args[x] != NULL)
+	{
+		new_args[x] = ft_strdup(tmp->args[x]);
+		x++;
+	}
+}
+
+int32_t arg_amount(t_lexing *lex_node)
+{
+	int32_t arg_amount;
+
+	arg_amount = 0;
+	while (lex_node && lex_node->macro != PIPE)
+	{
+		if (lex_node->macro != SING_CLOSE_REDIR && lex_node->macro != SING_OPEN_REDIR && lex_node->macro != DOUBL_CLOSE_REDIR && lex_node->macro != DOUBL_OPEN_REDIR)
+			arg_amount++;
+		lex_node = lex_node->next;
+	}
+	return (arg_amount);
+}
+
+void create_parsed_list(t_hold **hold, t_lexing *lex, int32_t pipegroups)
+{
+	int32_t i;
 	t_lexing *tmp_lex;
 	t_parsed_chunk *tmp_pars;
-	char *tmp_arg;
 
-	tmp_arg = malloc(sizeof(char));
-	tmp_arg = "\0";
 	tmp_pars = NULL;
 	tmp_lex = lex;
-	pipegroups = count_pipegroups(lex);
-	tmp = pipegroups;
-	// printf("amount pipegroups: %d\n", pipegroups);
-
-	// malloc amount of nodes as there are pipegroups:
-				write(2, "pars check\n", 11);
+	i = pipegroups;
 	while (pipegroups > 0)
 	{
 		add_node_pars(hold);
 		pipegroups--;
 	}
-				write(2, "pars check\n", 11);
-	pipegroups = tmp;
-print_list((*hold)->lex_struct, "lexd");
-// init list
+	pipegroups = i;
 	tmp_pars = (*hold)->parsed_list;
 	while (pipegroups > 0)
 	{
+		tmp_pars->args = malloc(sizeof(char *) * arg_amount(tmp_lex) + 1);
+		i = 0;
 		while (tmp_lex->macro != PIPE)
 		{
-			if (tmp_lex->macro == SING_CLOSE_REDIR || tmp_lex->macro == DOUBL_CLOSE_REDIR)
-			{
-				tmp_pars->outfile = check_outfile(*hold, tmp_lex->next, tmp_lex->macro);
+			tmp_pars->outfile = init_outfile(tmp_lex->next, tmp_lex->macro);
+			tmp_pars->infile = init_infile(tmp_pars, tmp_lex->next, tmp_lex->macro);
+			if (tmp_lex->macro == SING_CLOSE_REDIR || tmp_lex->macro == DOUBL_CLOSE_REDIR || tmp_lex->macro == SING_OPEN_REDIR || tmp_lex->macro == DOUBL_OPEN_REDIR)
 				tmp_lex = tmp_lex->next;
-			}
-			else if (tmp_lex->macro == SING_OPEN_REDIR || tmp_lex->macro == DOUBL_OPEN_REDIR)
-			{
-				tmp_pars->infile = check_infile(*hold, tmp_lex->next, tmp_lex->macro);
-				// printf("file_id: %d\n", tmp_pars->infile);
-				if (tmp_lex->macro == DOUBL_OPEN_REDIR)
-				{
-					tmp_pars->access.is_here_doc = true;
-					tmp_pars->access.delim = ft_strdup(tmp_lex->next->item);
-				}
-				tmp_lex = tmp_lex->next;
-			}
 			else
 			{
-				if (tmp_arg == NULL)
-					tmp_arg = ft_strdup(tmp_lex->item);
-				else
-				{
-					tmp_arg = ft_strjoin(tmp_arg, " ");
-					tmp_arg = ft_strjoin(tmp_arg, tmp_lex->item); 
-				}				
+				tmp_pars->args[i] = ft_strdup(tmp_lex->item);
+				i++;
 			}
+
 			if (tmp_lex->next == NULL)
 				break ;
 			tmp_lex = tmp_lex->next;
 		}
-		if (ft_strlen(tmp_arg) == 0)
-		{
-			printf(RED"pipegroup doesnt conatin any commands: %s -> dunno what to do | EXIT\n"RESET, tmp_lex->item);
-			exit(0);
-		}
-		tmp_pars->args = ft_split(tmp_arg, ' ');
+		tmp_pars->args[i] = NULL;
 		tmp_pars->cmd_path = get_cmdpath(tmp_pars->args[0]);
-		free(tmp_arg);
-		tmp_arg = "\0";
 		tmp_lex = tmp_lex->next;
 		tmp_pars = tmp_pars->next;
 		pipegroups--;
@@ -276,11 +276,11 @@ print_list((*hold)->lex_struct, "lexd");
 
 void parser(t_hold *hold)
 {
+	int32_t pipegroups;
+
 	recognize_type(hold);
-
-    if (hold->exit_code != 0 || check_syntax_errors(hold))
+	pipegroups = count_pipegroups(hold->lex_struct);
+    if (error_code != 0 || check_syntax_errors(hold))
         return ;
-
-	create_parsed_list(&hold, hold->lex_struct);
-	
+	create_parsed_list(&hold, hold->lex_struct, pipegroups);
 }

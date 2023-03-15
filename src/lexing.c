@@ -1,49 +1,5 @@
 #include "minishell.h"
 
-// throw error if the amount of quotes is unequal (no interpreting of unclosed quotes)
-// returns the i that gives the position after the closing quote
-int32_t lex_quote(t_hold *hold, int32_t i)
-{
-	int32_t	end;
-	char	quote;
-	char	*tmp;
-
-	end = i + 1;
-	// either single or double quote
-	quote = hold->line[i];
-	while (hold->line[end] != quote)
-		end++;
-
-	// put token into linked list
-	tmp = ft_substr(hold->line, i, end - i + 1);
-	add_node_lex(hold, tmp);
-	return (end - i);
-}
-
-/* function checks if amount of quotes is equal -> all quotes are closed
- * THROWS ERROR IF:
- *		- either amount of single or double quotes are not equal	*/
-void closed_quotes(t_hold *hold)
-{
-	int32_t	i;
-	int32_t	single_quotes;
-	int32_t	double_quotes;
-
-	i = 0;
-	single_quotes = 0;
-	double_quotes = 0;
-	while (hold->line[i] != '\0')
-	{
-		if (hold->line[i] == 39)
-			single_quotes++;
-		else if (hold->line[i] == 34)
-			double_quotes++;
-		i++;
-	}
-	if (single_quotes % 2 != 0 || double_quotes % 2 != 0)
-		exit_status(hold, RED"minihell: syntax error: quotes are unclosed!\n"RESET, 69);
-}
-
 /* function adds pipe symbol as a new node to the 'lex_struct'
  * THROWS ERROR IF:
  *		- pipe at the very beginning of the line
@@ -51,12 +7,12 @@ void closed_quotes(t_hold *hold)
 void lex_pipe(t_hold *hold, int32_t i)
 {
 	if (i == 0)
-		return (exit_status(hold, RED"minihell: syntax error near unexpected token '|'\n"RESET, 2));
+		return (exit_status(RED"minihell: syntax error near unexpected token '|'\n"RESET, 2));
 	i++;
 	while (hold->line[i] == ' ')
 		i++;
 	if (hold->line[i] == '|')
-		return (exit_status(hold, RED"minihell: syntax error near unexpected token '|'\n"RESET, 2));
+		return (exit_status(RED"minihell: syntax error near unexpected token '|'\n"RESET, 2));
 	add_node_lex(hold, "|");
 }
 
@@ -66,24 +22,6 @@ int32_t skip_spaces(char *str, int32_t i)
 	while (str[i] == 32)
 		i++;
 	return (i);
-}
-
-/* function skips all spaces in the very beginning of 'line'
- * like this its easier to throw errors in eg. the pipe function 
- *	-> no pipe at the very beginning possible
- * If there are spaces, line gets cutted till there are no more spaces in the beginning
- * 	eg.		before: '   santi isn't real'
- * 			after:	'santi isn't real'								*/
-void check_spaces(t_hold *hold)
-{
-	int32_t	i;
-	char *tmp;
-
-	i = skip_spaces(hold->line, 0);
-	if (i == 0)
-		return ;
-	tmp = ft_substr(hold->line, i, ft_strlen(hold->line) - i);
-	ft_memmove(hold->line, tmp, ft_strlen(hold->line) - i + 1);
 }
 
 /* function checks if there are no more signs beside space and redirection sign	
@@ -101,7 +39,7 @@ int32_t check_beginning_redir(t_hold *hold)
 			return (0);
 		i++;		
 	}
-	exit_status(hold, RED"minihell: syntax error near unexpected token 'newline'\n"RESET, 2);
+	exit_status(RED"minihell: syntax error near unexpected token 'newline'\n"RESET, 2);
     return (-1);
 }
 
@@ -128,7 +66,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 			i = skip_spaces(hold->line, i);
 			if (hold->line[i] == '<')
             {
-				exit_status(hold, RED"minihell: syntax error near unexpected token '<'\n"RESET, 69);
+				exit_status(RED"minihell: syntax error near unexpected token '<'\n"RESET, 69);
                 return (-1);
             }
 			return (i-1);
@@ -142,7 +80,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 		i = skip_spaces(hold->line, i);
 		if (hold->line[i] == '<')
         {
-			exit_status(hold, RED"minihell: syntax error near unexpected token '<'\n"RESET, 69);
+			exit_status(RED"minihell: syntax error near unexpected token '<'\n"RESET, 69);
             return (-1);
         }
 		if (hold->line[i] == '>')
@@ -152,7 +90,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 			i = skip_spaces(hold->line, i);
 			if (hold->line[i] == '>' || hold->line[i] == '<')
             {
-				exit_status(hold, RED"minihell: syntax error near unexpected token '>'\n"RESET, 69);
+				exit_status(RED"minihell: syntax error near unexpected token '>'\n"RESET, 69);
                 return (-1);
             }
 			return (i-1);
@@ -163,51 +101,159 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 	return (69);
 }
 
-/* function adds words as a new node to 'lex_struct' 
- * 	as long as there are no:
- *		- special characters (quotes, pipe, redirection signs, $?)
- *		- spaces
- *		- newline character or null-terminator		*/
-int32_t lex_word(t_hold *hold, int32_t i)
+char *add_letter(char *pointer, char letter)
 {
-	int32_t	end;
-	char	*tmp;
+	int32_t i;
+	char *return_pointer;
 
-	end = i;
-	while (hold->line[end] != 32 && hold->line[end] != '\0' && hold->line[end] != '\n' && hold->line[end] != 34 && hold->line[end] != 39 && hold->line[end] != '>' && hold->line[end] != '<' && hold->line[end] != '|')
+	i = 0;
+	return_pointer = (char *)malloc(ft_strlen(pointer) + 2);
+	while (pointer[i] != '\0')
 	{
-		if (hold->line[end] == '$' && hold->line[end + 1] == '?')
-			break ;
-		end++;
+		return_pointer[i] = pointer[i];
+		i++;
 	}
+	return_pointer[i] = letter;
+	i++;
+	return_pointer[i] = '\0';
+	free(pointer);
+	return (return_pointer);
+}
 
-	// put token into linked list
-	tmp = ft_substr(hold->line, i, end - i);
-	add_node_lex(hold, tmp);
-	free(tmp);
-	return (end - i - 1);
+int32_t quote_len(char *line, int32_t i, char quote)
+{
+	int32_t len;
+
+	len = 0;
+	while (line[i] != '\0')
+	{
+		if (line[i] == quote)
+			return (len);
+		len++;
+		i++;
+	}
+	return (-1);
+}
+
+char *quote_chunk2(char *line, int32_t i)
+{
+	char quote;
+	char *string;
+	int32_t quote_len_;
+	int32_t x;
+
+	quote = line[i];
+	quote_len_ = quote_len(line, i+1, quote);
+	if (line[i + 1] == quote || quote_len_ == -1)
+		return (NULL);
+	string = (char *)malloc(quote_len_ + 1);
+	x = 0;
+	i++;
+	while (line[i] != '\0')
+	{
+		if (line[i] == quote)
+			break ;
+		string[x] = line[i];
+		x++;
+		i++;
+	}
+	if (x > 0)
+	{
+		string[x] = '\0';
+		return (string);
+	}
+	return (NULL);
+}
+
+int32_t lex_word(t_hold *hold, char *line, int32_t i)
+{
+	char *quote_chunk_;
+	char *string;
+	char *tmp;
+	int32_t x;
+
+	quote_chunk_ = NULL;
+	string = ft_calloc(ft_strlen(line) + 1, 1);
+	tmp = NULL;
+	x = 0;
+	while (1)
+	{
+		if (line[i] == '\0' || line[i] == ' ' || line[i] == '|' || line[i] == '>' || line[i] == '<' || (line[i] == '$' && line[i+1] == '?'))
+			break ;
+		else if (line[i] == 34 || line[i] == 39)
+		{
+			quote_chunk_ = quote_chunk2(line, i);
+			if (quote_chunk_ == NULL)
+				i++;
+			else
+			{
+				i += ft_strlen(quote_chunk_) + 1;
+				tmp = ft_strjoin(string, quote_chunk_);
+				free(string);
+				string = ft_strdup(tmp);
+				free(tmp);
+				free(quote_chunk_);
+				tmp = NULL;
+				quote_chunk_ = NULL;
+			}
+			x = ft_strlen(string) - 1;
+		}
+		else
+			string[x] = line[i];
+		i++;
+		x++;
+	}
+	if (x > 0)
+	{
+		string[x] = '\0';
+		add_node_lex(hold, string);
+		free(string);
+	}
+	return (i-1);
+}
+
+void check_closed_quotes(t_hold *hold)
+{
+	char quote;
+	int32_t i;
+
+	i = 0;
+	while (hold->line[i] != '\0')
+	{
+		if (hold->line[i] == 34 || hold->line[i] == 39)
+		{
+			quote = hold->line[i];
+			i++;
+			while (hold->line[i] != quote)
+			{
+				if (hold->line[i] == '\0')
+				{
+					exit_status(RED"minihell: syntax error: quotes are unclosed!\n"RESET, 69);
+					return;
+				}
+				i++;
+			}
+		}
+		i++;
+	}
 }
 
 // devide chunks of commands etc in single linked list
 void lexer(t_hold *hold)
 {
 	int32_t	i;
+
 	i = 0;
-	check_spaces(hold);
-	closed_quotes(hold);
+	check_closed_quotes(hold);
 	while (hold->line[i] != '\0' && hold->line[i] != '\n')
 	{
-        if (hold->exit_code != 0)
+        if (error_code != 0)
             return ;
 		if (hold->line[i] == '$' && hold->line[i + 1] == '?')
 		{
 			add_node_lex(hold, "$?");
 			i++;
 		}
-		else if (hold->line[i] == 39 || hold->line[i] == 34)	//  ' or "  -> single and double quote
-        {
-			i += lex_quote(hold, i);
-        }
 		else if (hold->line[i] == '|')
         {
 			lex_pipe(hold, i);
@@ -216,10 +262,12 @@ void lexer(t_hold *hold)
         {
 			i = lex_redir(hold, i);
         }
-		else if (hold->line[i] != ' ')
+		else if (hold->line[i] != ' ' && hold->line[i] != '\t')
         {
-			i += lex_word(hold, i);
-        }
+			i = lex_word(hold, hold->line, i);
+        }			
 		i++;
 	}
+	if (hold->lex_struct == NULL)
+		exit_status(RED"minihell: : command not found!\n"RESET, 69);
 }

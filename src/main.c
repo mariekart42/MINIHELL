@@ -2,12 +2,12 @@
 
 void free_content(t_hold **hold)
 {
-	free((*hold)->line);
+
+	// free((*hold)->line);
 	free_list_lex((*hold)->lex_struct);
 	free_list_pars((*hold)->parsed_list);
 	(*hold)->lex_struct = NULL;
 	(*hold)->parsed_list = NULL;
-
 }
 
 int32_t init_structs(t_hold **hold)
@@ -30,7 +30,6 @@ void free_env_export(t_hold *hold)
 	hold->export_list = NULL;
 }
 
-
 int main(int32_t argc, char **argv, char **env)
 {
 	t_hold	*hold = NULL;
@@ -39,6 +38,7 @@ int main(int32_t argc, char **argv, char **env)
 
 	if (init_structs(&hold))
 		return (69);
+	hold->line = NULL;
 
 	// using signal function here to catch signal if eg ctr-c is used
 	
@@ -52,7 +52,7 @@ int main(int32_t argc, char **argv, char **env)
 	signals(); // Signals are applied before the main loop
 	while (1)
 	{
-		hold->exit_code = 0;
+		error_code = 0;
 		hold->line = readline(BLU"MINIHELL> "RESET);
 		// hold->line = ft_strdup("ls -l");
 		if (!hold->line)
@@ -65,23 +65,17 @@ int main(int32_t argc, char **argv, char **env)
 		if (ft_strlen(hold->line) > 0)
 		{
 			add_history(hold->line);
-
 			lexer(hold);
-			// print_list(hold->lex_struct, "lex");
-// write(2, "check\n", 6);
+// print_list(hold->lex_struct, "lex");
 			parser(hold);
-			// print_macro_list(hold->lex_struct);
-			// print_parsed_list(hold->parsed_list);
-// write(2, "check\n", 6);
-// 			// if (hold->exit_code == 0)
-// 			// 	print_macro_list(hold->lex_struct);
 // print_parsed_list(hold->parsed_list);
-// printf("delim: %s\n", hold->parsed_list->access.delim);
-// printf("delim: %s\n", hold->parsed_list->next->access.delim);
-// exit(0);
-			// executer(hold, env);
-			builtin(hold, hold->parsed_list); // Add for testing
+// print_macro_list(hold->lex_struct);
+			executer(hold, env);
+
+			printf(MAG"error code: %d\n"RESET, error_code);
 			free_content(&hold);
+			free(hold->line);
+			hold->line = NULL;
 		}
 	}
 	free_env_export(hold);
@@ -90,52 +84,30 @@ int main(int32_t argc, char **argv, char **env)
 }
 
 
-
 //!!!NEXT:
-// - shit should work in a loop
-// - executer: what if there is more then one outfile/infile? -> testing
-// - parser done for now, start executing (redirection, forking)
-// - look again into wait/-pid function
-
+// - change permissions for open in and outfile
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 //!  GENERAL:
 // - move cursor bums
-// - how to store prev return value for '$?' ?
 // - handle also relativ paths
 
 
 //!  LEXER: √
 
-//!  PARSER:
-// - !do env/export shit in parser first
-// - parser keeps all quote symbols -> need later or should get removed/skipped in parser?
-// - cat <<		-> throw syntax error
+//!  PARSER:√
 
 
 //!  EXECUTER:
 //	- douple redir not working yet(prolly wrong opening rights)
 // - change 'ori_env' to **char of own env list
-// - include builtins as soon as they're finished
-
-
-//!  BUILTINS:
-// - later: put builtin stuff into executer (not as bool in main!)
-// - builtins:
-//		- env √
-//		- export -> sorting works, add handling path-updating
-//		- pwd √
-//		- cd -> add handling path-updating
-//		- unset
-//		- echo
-//		- exit
 
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 //!  LATER:
-// - after main loop clear all memory
 // - exit with exit command -> returns 0
 // - signals shit
+
 
 //!  LEAKS:
 // - in parser:
@@ -145,17 +117,13 @@ int main(int32_t argc, char **argv, char **env)
 
 //!  PROBLEMOS:
 //!			SANTI:
-//				-  echo brrr			-> doesnt prints first character
-//				-  echo "brr"			-> same problem plus prints quotations (more a parser problem)
 //				-  echoHola				-> wrong output
-//				-  pwd -p				-> wrong output
-//				-  pwd --p				-> wrong output
-//				-  echo | echo			-> free stuff error
-//				-  echo hello | rev		-> gets stuck
-//				-  cd src obj			-> should give error, but goes to src
+//				-  echo-nHola			-> wrong output
+//				-  pwd -p				-> wrong output (not sure if mandatory)
+//				-  pwd --p				-> wrong output (not sure if mandatory)
 //				-  cd ~					-> with space between wrong output
 
 //!			MY:
-//				-  cat Makefile | cat -e | cat -e		-> gets stuck
-//				-  ls -la | grep "."					-> parsing problem, reads and interprets quotes as actual characters
+//		    !!	-  cat Makefile | cat | cat				-> gets stuck
 //				-  cat Makefile | grep src | cat -e		-> same shit
+//				-  echo hola | cat -e | cat -e | cat -e -> gets stuck
