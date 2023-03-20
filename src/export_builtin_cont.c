@@ -1,3 +1,5 @@
+#include "minishell.h"
+
 char	*ft_strncpy(char *dest, const char *src, size_t len)
 {
 	size_t		index;
@@ -14,6 +16,25 @@ char	*ft_strncpy(char *dest, const char *src, size_t len)
 		index++;
 	}
 	return (dest);
+}
+
+char	*ft_strnew(const int size)
+{
+	int		i;
+	char	*new_string;
+
+	if (size < 0)
+	{
+		return (0);
+	}
+	i = 0;
+	new_string = (char *)malloc(sizeof(char) * (size + 1));
+	while (i <= size)
+	{
+		new_string[i] = '\0';
+		i++;
+	}
+	return (new_string);
 }
 
 char	*ft_strndup(const char *s1, size_t n)
