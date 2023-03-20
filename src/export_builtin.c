@@ -4,7 +4,7 @@
 // {
 // }
 
-void	add_to_export_mod(t_hold *hold, char *add, int var_class)
+void	add_to_export_mod(t_hold *hold, char *var_name, int var_class)
 {
 	t_env_export	*new;
 	t_env_export	*tmp;
@@ -12,10 +12,10 @@ void	add_to_export_mod(t_hold *hold, char *add, int var_class)
 	char			*tmp_add2;
 
 	if (var_class == 1)
-		tmp_add = ft_strjoin(add, "\"\"");
+		tmp_add = ft_strjoin(var_name, "=\"\"");
 	if (var_class == 2)
 	{
-		tmp_add2 = ft_strjoin("\"", add);
+		tmp_add2 = ft_strjoin("\"", var_name);
 		free(tmp_add2);
 		tmp_add = ft_strjoin(tmp_add2, "\"");
 	}
@@ -83,7 +83,7 @@ void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 			find_var(hold, var_name, "env");
 			find_var(hold, var_name, "export");
 			add_to_env(hold, parsed_node->args[i], "env");
-			add_to_export_mod(hold, parsed_node->args[i], var_class);
+			add_to_export_mod(hold, var_name, var_class);
 		}
 		// sort_export_list(hold, parsed_node->args[i]); // Problem for Future Santiago
 		j = 0;
