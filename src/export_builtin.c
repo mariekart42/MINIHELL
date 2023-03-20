@@ -1,8 +1,30 @@
 #include "minishell.h"
 
-// void	sort_export_list(t_hold *hold, char *var) 
-// {
-// }
+void	swap_export(t_env_export *export_list)
+{
+	char	*tmp;
+
+	tmp = export_list->item;
+	export_list->item = export_list->next->item;
+	export_list->next->item = tmp;
+}
+
+
+void	sort_export_end(t_env_export *export_list) 
+{
+	t_env_export *tmp;
+
+	tmp = export_list;
+	while (export_list->next != NULL)
+	{
+		if (ft_strcmp(export_list->item, export_list->next->item) > 0)
+		{
+			swap_export(export_list);
+			export_list = tmp;
+		}
+		export_list = export_list->next;
+	}
+}
 
 void	add_to_export_mod(t_hold *hold, char *var_name, char *var_value, int var_class)
 {
@@ -92,7 +114,7 @@ void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 			add_to_env(hold, parsed_node->args[i], "env");
 			add_to_export_mod(hold, var_name, var_value, var_class);
 		}
-		// sort_export_list(hold, parsed_node->args[i]); // Problem for Future Santiago
+		sort_export_end(hold->export_list); // Problem for Future Santiago
 		j = 0;
 		i++;
 	}

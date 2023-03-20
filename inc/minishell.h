@@ -147,6 +147,7 @@ void 			export_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 //		export_builtin_cont.c
 char			*ft_strndup(const char *s1, size_t n);
 char			*ft_strncpy(char *dest, const char *src, size_t len);
+int				ft_strcmp(char *s1, char *s2);
 
 //		signals.c
 void			signals(void);
