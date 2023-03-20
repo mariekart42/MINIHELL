@@ -4,8 +4,6 @@
 // {
 // }
 
-
-
 void	add_to_env_mod(t_hold *hold, char *add, int var_class)
 {
 	t_env_export	*new;
@@ -65,6 +63,7 @@ void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	int		i;
 	int		j;
 	int		var_class;
+	char	*var_name;
 
 	i = 1;
 	j = 0;
@@ -73,9 +72,9 @@ void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		print_env_export(hold);
 		return ;
 	}
+	var_class = 0;
 	while (parsed_node->args[i] != NULL)
 	{
-		var_class = 0;
 		while (parsed_node->args[i][j] != '\0')
 		{
 			if (parsed_node->args[i][j] == '=')
@@ -84,19 +83,21 @@ void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 					var_class = 1;
 				else
 					var_class = 2;
+				var_name = ft_strndup(parsed_node->args[i], j);
+				break ;
 			}
 			j++;
 		}
 		if (var_class == 0)
 		{
-			// find_var(hold, parsed_node->args[i], "export");
+			find_var(hold, parsed_node->args[i], "export");
 			add_to_env(hold, parsed_node->args[i], "export");
 		}
 		else
 		{
-			// find_var(hold, parsed_node->args[i], "env");
-			// find_var(hold, parsed_node->args[i], "export");
-			add_to_env_mod(hold, parsed_node->args[i], var_class);
+			find_var(hold, var_name, "env");
+			find_var(hold, var_name, "export");
+			add_to_env(hold, parsed_node->args[i], "env");
 			add_to_export_mod(hold, parsed_node->args[i], var_class);
 		}
 		// sort_export_list(hold, parsed_node->args[i]); // Problem for Future Santiago
