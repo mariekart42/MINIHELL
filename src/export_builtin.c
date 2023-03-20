@@ -4,21 +4,6 @@
 // {
 // }
 
-void	add_to_env_mod(t_hold *hold, char *add, int var_class)
-{
-	t_env_export	*new;
-	t_env_export	*tmp;
-
-	var_class = 0;
-	new = malloc(sizeof(t_env_export));
-	new->item = ft_strdup(add);
-	new->next = NULL;
-	tmp = hold->env_list;
-	while (tmp->next != NULL)
-		tmp = tmp->next;
-	tmp->next = new;
-}
-
 void	add_to_export_mod(t_hold *hold, char *add, int var_class)
 {
 	t_env_export	*new;
