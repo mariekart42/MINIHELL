@@ -10,14 +10,17 @@ void	add_to_export_mod(t_hold *hold, char *var_name, int var_class)
 	t_env_export	*tmp;
 	char			*tmp_add;
 	char			*tmp_add2;
+	char			*tmp_add3;
 
 	if (var_class == 1)
 		tmp_add = ft_strjoin(var_name, "=\"\"");
 	if (var_class == 2)
 	{
-		tmp_add2 = ft_strjoin("\"", var_name);
-		free(tmp_add2);
+		tmp_add3 = ft_strjoin(var_name, "=\"");
+		tmp_add2 = ft_strjoin(tmp_add3, var_name); // replace for var_value
 		tmp_add = ft_strjoin(tmp_add2, "\"");
+		free(tmp_add2);
+		free(tmp_add3);
 	}
 	new = malloc(sizeof(t_env_export));
 	new->item = ft_strdup(tmp_add);
