@@ -9,6 +9,7 @@
 #include <signal.h> // function for signal funcs
 # include <stdbool.h>	// bool
 #include <fcntl.h> // open function
+#include <sys/wait.h> // waitpid
 
 #include "../libft/libft.h"
 
@@ -62,11 +63,9 @@ typedef struct s_env_export
 	struct s_env_export	*next;
 }			t_env_export;
 
-// typedef struct s_here_doc
-// {
-// 	char	*delim;
-// 	bool	is_here_doc;
-// }				t_here_doc;
+
+
+
 
 // maybe include variable with macros later here
 typedef struct s_parsed_chunk
@@ -99,6 +98,11 @@ typedef struct s_hold
 
 }				t_hold;
 
+//		new_exec
+void executer(t_hold *hold);
+
+
+
 //		main.c
 void free_content(t_hold **hold);
 int32_t init_structs(t_hold **hold);
@@ -122,7 +126,7 @@ void	pwd_builtin(t_hold *hold);
 void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 void	exit_builtin(t_parsed_chunk *parsed_node);
 void 	unset_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
-bool 	builtin(t_hold *hold, t_parsed_chunk *parsed_node);
+void 	builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 
 //		cd_builtin_cont.c
 void	add_to_env(t_hold *hold, char *add, char *structure);
@@ -137,35 +141,25 @@ void			add_node_env(t_hold *hold, char *content, char *type);
 void 			swap_data(t_env_export *export_list);
 void 			sort_export_list(t_hold *hold);
 
+
+
 //		export_builtin.c
 void 			export_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 
-//		export_builtin_cont.c
 
 
 //		lexing.c
-// int32_t	lex_quote(t_hold *hold, int32_t i);
-// char *calloc_string(t_hold *hold, int32_t i);
-// int32_t new_lex_quote(t_hold *hold, int32_t i);
-// void	closed_quotes(t_hold *hold);
 void	lex_pipe(t_hold *hold, int32_t i);
 int32_t	skip_spaces(char *str, int32_t i);
-// void	check_spaces(t_hold *hold);
 int32_t check_beginning_redir(t_hold *hold);
 int32_t	lex_redir(t_hold *hold, int32_t i);
-// int32_t	lex_word(t_hold *hold, int32_t i);
 char *quote_chunk(t_hold *hold, int32_t i, int32_t len);
 char *add_letter(char *pointer, char letter);
-// void prep_line(t_hold *hold);
 void lexer(t_hold *hold);
-
-// char *cut_string(char *line, int32_t start, int32_t end);
-// int32_t lex_WORD(t_hold *hold, char *line, int32_t i);
-
-// new lex
 char *quote_chunk2(char *line, int32_t i);
 int32_t lex_word(t_hold *hold, char *line, int32_t i);
 void check_closed_quotes(t_hold *hold);
+
 
 
 //		parser.c
@@ -182,16 +176,18 @@ int32_t arg_amount(t_lexing *lex_node);
 void parser(t_hold *hold);
 
 
-//		executer.c
-void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
-void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
-// void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
-void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env);
-void handle_here_doc(t_parsed_chunk *pars_node);
-void executer(t_hold *hold, char **ori_env);
 
-void close_fds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
-void close_all_fds(t_parsed_chunk *parsed_node, int32_t pipe_fds[MAX_FD][2], int32_t i, int32_t pipegroups);
+//		old_executer.c
+// void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+// void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+// // void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+// void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env);
+// void handle_here_doc(t_parsed_chunk *pars_node);
+// void executer(t_hold *hold, char **ori_env);
+// void close_fds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+// void close_all_fds(t_parsed_chunk *parsed_node, int32_t pipe_fds[MAX_FD][2], int32_t i, int32_t pipegroups);
+
+
 
 //		utils.c
 void free_list_pars(t_parsed_chunk* head);

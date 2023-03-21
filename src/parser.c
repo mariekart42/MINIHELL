@@ -6,15 +6,15 @@ bool builtin_parser(char *node)
 		return (true);
 	else if (ft_strncmp(node, "pwd\0", 4) == 0)
 		return (true);
-	else if (ft_strncmp(node, "unset", 5) == 0)
+	else if (ft_strncmp(node, "unset\0", 6) == 0)
 		return (true);
-	else if (ft_strncmp(node, "env", 3) == 0)
+	else if (ft_strncmp(node, "env\0", 4) == 0)
 		return (true);
-	else if (ft_strncmp(node, "export", 6) == 0)
+	else if (ft_strncmp(node, "export\0", 7) == 0)
 		return (true);
-	else if (ft_strncmp(node, "cd", 2) == 0)
+	else if (ft_strncmp(node, "cd\0", 3) == 0)
 		return (true);
-	else if (ft_strncmp(node, "exit", 4) == 0)
+	else if (ft_strncmp(node, "exit\0", 5) == 0)
 		return (true);
 	else
 		return (false);

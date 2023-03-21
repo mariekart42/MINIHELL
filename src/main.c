@@ -61,11 +61,14 @@ int main(int32_t argc, char **argv, char **env)
 			lexer(hold);
 // print_list(hold->lex_struct, "lex");
 			parser(hold);
-// print_parsed_list(hold->parsed_list);
+print_parsed_list(hold->parsed_list);
 // print_macro_list(hold->lex_struct);
-			executer(hold, env);
-
-			printf(MAG"error code: %d\n"RESET, error_code);
+			executer(hold);
+if(error_code>255)
+	fprintf(stderr, MAG"error code: %d\n"RESET, error_code/255);
+else
+	fprintf(stderr, MAG"error code: %d\n"RESET, error_code);
+	// exit(0);
 			free_content(&hold);
 			free(hold->line);
 			hold->line = NULL;
