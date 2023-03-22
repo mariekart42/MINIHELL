@@ -25,7 +25,7 @@ int	update_dir(t_hold *hold, char **args)
 	new = NULL;
 	new = getcwd(new, 0);
 	tmp = hold->export_list;
-	while (tmp != NULL)
+	while (tmp != NULL && tmp->var_name)
 	{
 		if (ft_strncmp(tmp->var_name, "PWD", 3) == 0)
 			tmp->var_value = new;
@@ -61,7 +61,7 @@ void	change_to_home(t_hold *hold)
 		update_dir(hold, args);
 	}
 	else
-		exit_status(RED"minishell: cd: HOME not set\n"RESET, 69);
+		exit_status(RED"minishell: cd: HOME not set\n"RESET, 1);
 }
 
 void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
@@ -75,7 +75,7 @@ void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	{
 		ft_putstr_fd(RED"minshell: cd: ", 2);
 		ft_putstr_fd(parsed_node->args[1], 2);
-		exit_status(": No such file or directory\n"RESET, 69);
+		exit_status(": No such file or directory\n"RESET, 1);
 	}
 	return ;
 }

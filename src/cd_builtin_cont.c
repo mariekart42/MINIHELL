@@ -8,11 +8,12 @@ void	add_to_env(t_hold *hold, char *add, char *structure)
 	new = malloc(sizeof(t_env_export));
 	new->item = ft_strdup(add);
 	new->next = NULL;
+	tmp = NULL;
 	if (ft_strncmp(structure, "env", 3) == 0)
 		tmp = hold->env_list;
 	if (ft_strncmp(structure, "export", 6) == 0)
 		tmp = hold->export_list;
-	while (tmp->next != NULL) // Error
+	while (tmp && tmp->next != NULL)
 		tmp = tmp->next;
 	tmp->next = new;
 }
@@ -31,7 +32,7 @@ void	update_env(t_hold *hold, char *old, char *new, char *structure)
 		tmp = hold->env_list;
 	if (ft_strncmp(structure, "export", 6) == 0)
 		tmp = hold->export_list;
-	while (tmp != NULL && tmp->item)
+	while (tmp != NULL && tmp->item) //Protect ft_strncmp //
 	{
 		if (ft_strncmp(tmp->item, "PWD", 3) == 0)
 			tmp->item = tmp3;
@@ -75,7 +76,7 @@ void	update_var_value(t_hold *hold, char *old, char *new, char *structure)
 		tmp = hold->env_list;
 	if (ft_strncmp(structure, "export", 6) == 0)
 		tmp = hold->export_list;
-	while (tmp != NULL)
+	while (tmp != NULL && tmp->item)
 	{
 		if (ft_strncmp(tmp->item, "PWD", 3) == 0)
 			tmp->var_value = new;
