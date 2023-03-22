@@ -126,9 +126,9 @@ bool 	builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 
 //		cd_builtin_cont.c
 void	add_to_env(t_hold *hold, char *add, char *structure);
-void	update_env(t_hold *hold, char *old, char *new, char *structure);
-void	add_to_var(t_hold *hold, char *add, char *structure);
-void	update_var_value(t_hold *hold, char *old, char *new, char *structure);
+// void	update_env(t_hold *hold, char *old, char *new, char *structure);
+// void	add_to_var(t_hold *hold, char *add, char *structure);
+// void	update_var_value(t_hold *hold, char *old, char *new, char *structure);
 
 //		unset.c
 bool	find_var(t_hold *hold, char *var, char *structure);
@@ -143,6 +143,9 @@ void 			sort_export_list(t_hold *hold);
 
 //		export_builtin.c
 void 			export_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
+void			add_to_export_mod(t_hold *hold, char *var_name, char *var_value, int var_class);
+void			sort_export_end(t_env_export *export_list);
+void			swap_export(t_env_export *export_list);
 
 //		export_builtin_cont.c
 char			*ft_strndup(const char *s1, size_t n);

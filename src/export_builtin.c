@@ -114,37 +114,8 @@ void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 			add_to_env(hold, parsed_node->args[i], "env");
 			add_to_export_mod(hold, var_name, var_value, var_class);
 		}
-		sort_export_end(hold->export_list); // Problem for Future Santiago
+		sort_export_end(hold->export_list);
 		j = 0;
 		i++;
 	}
 }
-
-//To do
-
-// Sort with bubble sort
-// [ ] Remove node if var alredy exists and replace 
-// open_quotes.c from Fedia for case 2
-
-// Check with "string cases"
-// export - var var="" var="abc def"
-// env - var var= var=abc def
-// cmd - [x]0 [x]1 [x]2
-
-// [x] Ask Marie about case 3:
-// [x] 3 is a full arg by itself arg[i] == "abc def"
-
-////////////////
-// char	*ft_strndup(const char *s1, size_t n)
-// {
-// 	char	*cpy;
-
-// 	if (ft_strlen((char *)s1) < n)
-// 		cpy = ft_strnew(ft_strlen((char *)s1));
-// 	else
-// 		cpy = ft_strnew(n);
-// 	if (cpy == NULL)
-// 		return (NULL);
-// 	return (ft_strncpy(cpy, (char *)s1, n));
-// }
-/////////
