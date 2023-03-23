@@ -269,5 +269,5 @@ void lexer(t_hold *hold)
 		i++;
 	}
 	if (hold->lex_struct == NULL)
-		exit_status(RED"minihell: : command not found!\n"RESET, 69);
+		exit_status(RED"minihell: : command not found!\n"RESET, 127);
 }

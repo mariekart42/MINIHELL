@@ -87,7 +87,7 @@ void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env)
 	{
 		write(2, RED"minihell: ", 16);
 		write(2, parsed_node->args[0], ft_strlen(parsed_node->args[0]));
-		exit_status(RED": command not found!\n"RESET, 69);
+		exit_status(RED": command not found!\n"RESET, 127);
 		// exit(127);
 	}
 	// printf("lskjdfh: %s\n",hold->valid_path);
