@@ -1,9 +1,24 @@
 #include "minishell.h"
 
-void	env_builtin(t_hold *hold)
+void	env_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
 	t_env_export	*tmp;
+	char			**args;
+	int				i;
 
+	args = parsed_node->args;
+	i = 1;
+	while (args[i] != NULL)
+	{
+		if (ft_strncmp(args[i], "env", 3) != 0)
+		{
+			ft_putstr_fd(RED"minshell: env: ", 2);
+			ft_putstr_fd(args[i], 2);
+			exit_status(": No such file or directory\n"RESET, 127);
+			return ;
+		}
+		i++;
+	}
 	tmp = hold->env_list;
 	while (tmp != NULL)
 	{
@@ -33,7 +48,7 @@ bool	builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		if (ft_strncmp(hold->lex_struct->item, "echo", 4) == 0)
 			return (echo_builtin(parsed_node), true);
 		else if (ft_strncmp(hold->lex_struct->item, "env", 3) == 0)
-			return (env_builtin(hold), true);
+			return (env_builtin(hold, parsed_node), true);
 		else if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
 			return (pwd_builtin(hold), true);
 		else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
