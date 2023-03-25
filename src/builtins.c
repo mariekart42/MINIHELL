@@ -46,7 +46,7 @@ bool	builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	if (hold->lex_struct->macro == BUILTIN)
 	{
 		if (ft_strncmp(hold->lex_struct->item, "echo", 4) == 0)
-			return (echo_builtin(parsed_node), true);
+			return (echo_builtin(hold, parsed_node), true);
 		else if (ft_strncmp(hold->lex_struct->item, "env", 3) == 0)
 			return (env_builtin(hold, parsed_node), true);
 		else if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
