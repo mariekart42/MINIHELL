@@ -28,7 +28,7 @@ void	env_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	}
 }
 
-void	pwd_builtin(t_hold *hold)
+void	pwd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
 	char	path[PATH_MAX];
 
@@ -37,8 +37,19 @@ void	pwd_builtin(t_hold *hold)
 		exit_status(RED"minishell: pwd: No such file or directory\n"RESET, 69);
 		return ;
 	}
-	write(hold->parsed_list->outfile, path, ft_strlen(path));
-	write(hold->parsed_list->outfile, "\n", 1);
+	if (parsed_node->args[1] == NULL)
+	{
+		write(hold->parsed_list->outfile, path, ft_strlen(path));
+		write(hold->parsed_list->outfile, "\n", 1);
+		return ;
+	}
+	if (ft_strncmp(&parsed_node->args[1][0], "-", 1) == 0)
+	{
+		ft_putstr_fd(RED"minshell: pwd: ", 2);
+		ft_putstr_fd(parsed_node->args[1], 2);
+		exit_status(": invalid option\n"RESET, 2);
+		return ;
+	}
 }
 
 bool	builtin(t_hold *hold, t_parsed_chunk *parsed_node)
@@ -50,7 +61,7 @@ bool	builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		else if (ft_strncmp(hold->lex_struct->item, "env", 3) == 0)
 			return (env_builtin(hold, parsed_node), true);
 		else if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
-			return (pwd_builtin(hold), true);
+			return (pwd_builtin(hold, parsed_node), true);
 		else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
 			return (cd_builtin(hold, parsed_node), true);
 		else if (ft_strncmp(hold->lex_struct->item, "exit", 4) == 0)
