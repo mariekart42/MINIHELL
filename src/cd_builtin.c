@@ -89,6 +89,13 @@ void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		change_to_home(hold);
 		return ;
 	}
+	if (parsed_node->args[2])
+	{
+		ft_putstr_fd(RED"minshell: cd: ", 2);
+		ft_putstr_fd(parsed_node->args[1], 2);
+		exit_status(": too many arguments\n"RESET, 1);
+		return ;
+	}
 	if (update_dir(hold, parsed_node->args) == -1)
 	{
 		ft_putstr_fd(RED"minshell: cd: ", 2);
