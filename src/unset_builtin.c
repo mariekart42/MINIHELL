@@ -57,9 +57,7 @@ void	unset_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	{
 		find_var(hold, args[i], "export");
 		if (find_var(hold, args[i], "env") == false)
-		{
 			return ;
-		}
 		i++;
 	}
 }
