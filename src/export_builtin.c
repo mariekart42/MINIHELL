@@ -68,6 +68,14 @@ void print_env_export(t_hold *hold)
 	}
 }
 
+int	ft_isalpha_mod(int val)
+{
+	if ((val >= 65 && val <= 90) || (val >= 97 && val <= 122) 
+		|| (val == 95) || (val == 61))
+		return (1);
+	return (0);
+}
+
 void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
 	int		i;
@@ -83,18 +91,18 @@ void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		print_env_export(hold);
 		return ;
 	}
-	if (ft_isalpha(parsed_node->args[1][0]) == 0)
-	{
-		ft_putstr_fd(RED"minshell: export: ", 2);
-		ft_putstr_fd(parsed_node->args[i], 2);
-		exit_status(": not a valid identifier\n"RESET, 1);
-		return ;
-	}
-	var_class = 0;
 	while (parsed_node->args[i] != NULL)
 	{
+		var_class = 0;
 		while (parsed_node->args[i][j] != '\0')
 		{
+			if (ft_isalpha_mod(parsed_node->args[i][j]) == 0)
+			{
+				ft_putstr_fd(RED"minshell: export: ", 2);
+				ft_putstr_fd(parsed_node->args[i], 2);
+				exit_status(": not a valid identifier\n"RESET, 1);
+				return ;
+			}
 			if (parsed_node->args[i][j] == '=')
 			{
 				if (parsed_node->args[i][j + 1] == '\0')
