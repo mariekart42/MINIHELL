@@ -68,10 +68,10 @@ void print_env_export(t_hold *hold)
 	}
 }
 
-int	ft_isalpha_mod(int val)
+int		ft_isalnum_mod(int val)
 {
-	if ((val >= 65 && val <= 90) || (val >= 97 && val <= 122) 
-		|| (val == 95) || (val == 61))
+	if ((val >= 48 && val <= 57) || (val >= 65 && val <= 90) || \
+		(val >= 97 && val <= 122) || val == 61 || val == 95)
 		return (1);
 	return (0);
 }
@@ -96,7 +96,7 @@ void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		var_class = 0;
 		while (parsed_node->args[i][j] != '\0')
 		{
-			if (ft_isalpha_mod(parsed_node->args[i][j]) == 0)
+			if (ft_isalnum_mod(parsed_node->args[i][j]) == 0)
 			{
 				ft_putstr_fd(RED"minshell: export: ", 2);
 				ft_putstr_fd(parsed_node->args[i], 2);

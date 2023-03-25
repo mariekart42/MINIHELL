@@ -146,6 +146,7 @@ void 			export_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 void			add_to_export_mod(t_hold *hold, char *var_name, char *var_value, int var_class);
 void			sort_export_end(t_env_export *export_list);
 void			swap_export(t_env_export *export_list);
+int				ft_isalnum_mod(int val);
 
 //		export_builtin_cont.c
 char			*ft_strndup(const char *s1, size_t n);
