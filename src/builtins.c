@@ -12,7 +12,7 @@ void	env_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	{
 		if (ft_strncmp(args[i], "env", 3) != 0)
 		{
-			ft_putstr_fd(RED"minshell: env: ", 2);
+			ft_putstr_fd(RED"minishell: env: ", 2);
 			ft_putstr_fd(args[i], 2);
 			exit_status(": No such file or directory\n"RESET, 127);
 			return ;
@@ -46,7 +46,7 @@ void	pwd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	}
 	if (ft_strncmp(&parsed_node->args[1][0], "-", 1) == 0)
 	{
-		ft_putstr_fd(RED"minshell: pwd: ", 2);
+		ft_putstr_fd(RED"minishell: pwd: ", 2);
 		ft_putstr_fd(parsed_node->args[1], 2);
 		exit_status(": invalid option\n"RESET, 2);
 		return ;
