@@ -57,11 +57,18 @@ void	unset_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	j = 0;
 	while (args[i] != NULL)
 	{
+		if (ft_isdigit(parsed_node->args[i][0]) != 0)
+		{
+			ft_putstr_fd(RED"minishell: export: ", 2);
+			ft_putstr_fd(parsed_node->args[i], 2);
+			exit_status(": not a valid identifier\n"RESET, 1);
+			return ;
+		}
 		while (args[i][j] != '\0')
 		{
 			if (ft_isalnum_mod(parsed_node->args[i][j]) == 0)
 			{
-				ft_putstr_fd(RED"minshell: unset: ", 2);
+				ft_putstr_fd(RED"minishell: unset: ", 2);
 				ft_putstr_fd(parsed_node->args[i], 2);
 				exit_status(": not a valid identifier\n"RESET, 1);
 				return ;
