@@ -37,8 +37,8 @@ void	pwd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		exit_status(RED"minishell: pwd: No such file or directory\n"RESET, 127);
 		return ;
 	}
-	if (parsed_node->args[1] == NULL || 
-		ft_strncmp(&parsed_node->args[1][0], "-", 1) != 0)
+	if (parsed_node->args[1] == NULL
+		|| ft_strncmp(&parsed_node->args[1][0], "-", 1) != 0)
 	{
 		write(hold->parsed_list->outfile, path, ft_strlen(path));
 		write(hold->parsed_list->outfile, "\n", 1);

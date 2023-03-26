@@ -1,18 +1,8 @@
 #include "minishell.h"
 
-void	swap_export(t_env_export *export_list)
+void	sort_export_end(t_env_export *export_list)
 {
-	char	*tmp;
-
-	tmp = export_list->item;
-	export_list->item = export_list->next->item;
-	export_list->next->item = tmp;
-}
-
-
-void	sort_export_end(t_env_export *export_list) 
-{
-	t_env_export *tmp;
+	t_env_export	*tmp;
 
 	tmp = export_list;
 	while (export_list->next != NULL)
@@ -26,7 +16,8 @@ void	sort_export_end(t_env_export *export_list)
 	}
 }
 
-void	add_to_export_mod(t_hold *hold, char *var_name, char *var_value, int var_class)
+void	add_to_export_mod(t_hold *hold, char *var_name, char *var_value,
+							int var_class)
 {
 	t_env_export	*new;
 	t_env_export	*tmp;
@@ -54,10 +45,10 @@ void	add_to_export_mod(t_hold *hold, char *var_name, char *var_value, int var_cl
 	tmp->next = new;
 }
 
-void print_env_export(t_hold *hold)
+void	print_env_export(t_hold *hold)
 {
-	t_env_export *tmp;
-	
+	t_env_export	*tmp;
+
 	tmp = hold->export_list;
 	while (tmp != NULL)
 	{
@@ -66,14 +57,6 @@ void print_env_export(t_hold *hold)
 		write(hold->parsed_list->outfile, "\n", 1);
 		tmp = tmp->next;
 	}
-}
-
-int		ft_isalnum_mod(int val)
-{
-	if ((val >= 48 && val <= 57) || (val >= 65 && val <= 90) || \
-		(val >= 97 && val <= 122) || val == 61 || val == 95)
-		return (1);
-	return (0);
 }
 
 void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
@@ -117,7 +100,8 @@ void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 				else
 				{
 					var_class = 2;
-					var_value = ft_strndup(&parsed_node->args[i][j + 1], ft_strlen(parsed_node->args[i]) + 1);
+					var_value = ft_strndup(&parsed_node->args[i][j + 1],
+							ft_strlen(parsed_node->args[i]) + 1);
 				}
 				var_name = ft_strndup(parsed_node->args[i], j);
 				break ;

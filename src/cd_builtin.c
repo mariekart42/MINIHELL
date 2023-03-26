@@ -8,7 +8,7 @@ char	*create_path_var(char *var_name, char *var_value)
 	tmp_add2 = ft_strjoin(var_name, "=");
 	tmp_add = ft_strjoin(tmp_add2, var_value);
 	free(tmp_add2);
-	return(tmp_add);
+	return (tmp_add);
 }
 
 void	update_dir_cont(t_hold *hold, char *new, char *old)
@@ -18,19 +18,15 @@ void	update_dir_cont(t_hold *hold, char *new, char *old)
 
 	pwd = create_path_var("PWD", new);
 	oldpwd = create_path_var("OLDPWD", old);
-
 	find_var(hold, "PWD", "env");
 	find_var(hold, "OLDPWD", "env");
 	add_to_env(hold, pwd, "env");
 	add_to_env(hold, oldpwd, "env");
-
 	find_var(hold, "PWD", "export");
 	find_var(hold, "OLDPWD", "export");
 	add_to_export_mod(hold, "PWD", new, 2);
 	add_to_export_mod(hold, "OLDPWD", old, 2);
-
 	sort_export_end(hold->export_list);
-
 	free(pwd);
 	free(oldpwd);
 }
@@ -88,8 +84,8 @@ void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	char	**args;
 
 	args = parsed_node->args;
-	if (args[1] == NULL || ft_strncmp(args[0], "cd~", 3) == 0 ||
-		args[1][0] == '~')
+	if (args[1] == NULL || ft_strncmp(args[0], "cd~", 3) == 0
+		|| args[1][0] == '~')
 	{
 		change_to_home(hold);
 		return ;

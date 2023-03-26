@@ -47,8 +47,6 @@ void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	}
 	else
 		error_code = 0;
-	// free_env_export(hold);
-	// free(hold);
-	// clear_history();
+	free(hold);
 	exit(error_code % 256);
 }

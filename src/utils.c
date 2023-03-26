@@ -109,3 +109,22 @@ void exit_status(char *message, int8_t exit_code_)
 	error_code = exit_code_%256;
 	// printf("something: %s\n", hold->line);
 }
+
+void	print_error_code(void)
+{
+	char	*error;
+
+	error = ft_itoa(error_code);
+	ft_putstr_fd(error, 1);
+	ft_putstr_fd("\n", 1);
+	free(error);
+	return ;
+}
+
+int	ft_isalnum_mod(int val)
+{
+	if ((val >= 48 && val <= 57) || (val >= 65 && val <= 90) || \
+		(val >= 97 && val <= 122) || val == 61 || val == 95)
+		return (1);
+	return (0);
+}

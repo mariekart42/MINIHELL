@@ -118,7 +118,7 @@ int32_t check_syntax_errors(t_hold *hold);
 //		builtins
 void	echo_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 void	env_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
-void	pwd_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
+void	pwd_builtin(t_hold *hold);
 void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 void 	unset_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
@@ -152,6 +152,7 @@ int				ft_isalnum_mod(int val);
 char			*ft_strndup(const char *s1, size_t n);
 char			*ft_strncpy(char *dest, const char *src, size_t len);
 int				ft_strcmp(char *s1, char *s2);
+void			swap_export(t_env_export *export_list);
 
 //		signals.c
 void			signals(void);
@@ -220,6 +221,8 @@ void free_list_env_export(t_env_export* head);
 void			add_node_lex(t_hold *hold, char *content);
 t_lexing		*last_node_lex(t_lexing *lst);
 void exit_status(char *message, int8_t exit_code_);
+void	print_error_code(void);
+int	ft_isalnum_mod(int val);
 
 
 // -----------------------------------------
