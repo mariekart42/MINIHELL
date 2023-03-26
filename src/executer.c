@@ -179,7 +179,7 @@ void executer(t_hold *hold, char **ori_env)
 
 		if (pids[i] == 0)
 		{
-			child_sig();
+			child_sig(); //Placed at start of child
 			if (parsed_node->here_doc_delim != NULL)
 			{
 				// printf("%s\n", parsed_node->here_doc_delim);
