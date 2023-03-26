@@ -63,6 +63,7 @@ void	change_to_home(t_hold *hold)
 	char			*args[2];
 
 	is_home = true;
+	home = NULL;
 	tmp = hold->export_list;
 	while (tmp != NULL && tmp->item)
 	{
@@ -84,22 +85,25 @@ void	change_to_home(t_hold *hold)
 
 void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
-	if (parsed_node->args[1] == NULL)
+	char	**args;
+
+	args = parsed_node->args;
+	if (args[1] == NULL || args[1][0] == '~')
 	{
 		change_to_home(hold);
 		return ;
 	}
-	if (parsed_node->args[2])
+	if (args[2])
 	{
 		ft_putstr_fd(RED"minshell: cd: ", 2);
-		ft_putstr_fd(parsed_node->args[1], 2);
+		ft_putstr_fd(args[1], 2);
 		exit_status(": too many arguments\n"RESET, 1);
 		return ;
 	}
-	if (update_dir(hold, parsed_node->args) == -1)
+	if (update_dir(hold, args) == -1)
 	{
 		ft_putstr_fd(RED"minshell: cd: ", 2);
-		ft_putstr_fd(parsed_node->args[1], 2);
+		ft_putstr_fd(args[1], 2);
 		exit_status(": No such file or directory\n"RESET, 1);
 	}
 	return ;
