@@ -23,26 +23,11 @@ int	ft_atoi_mod(const char *str)
 	return (sign * output);
 }
 
-// Add clear_history when ready
-// Use all appropiate freeing when ready
-void	free_all(t_hold *hold)
-{
-	free_content(&hold);
-	// free_env_export(hold);
-	free(hold);
-	// clear_history;
-}
-
 void	exit_builtin(t_parsed_chunk *parsed_node)
 {
 	int32_t	exit_code;
 
-	if (parsed_node->args[1] && parsed_node->args[2])
-	{
-		exit_status(RED"minishell: exit: too many arguments\n"RESET, 1);
-		return ;
-	}
-	if (parsed_node->args[1] != NULL)
+	if (parsed_node->args[1])
 	{
 		exit_code = ft_atoi_mod(parsed_node->args[1]);
 		if (exit_code == -1)
@@ -50,13 +35,17 @@ void	exit_builtin(t_parsed_chunk *parsed_node)
 			ft_putstr_fd(RED"minishell: exit: ", 2);
 			ft_putstr_fd(parsed_node->args[1], 2);
 			ft_putstr_fd(": numeric argument required\n"RESET, 2);
-			error_code = 255;
+			exit(255);
 		}
 		else
 			error_code = exit_code;
+		if (parsed_node->args[1] && parsed_node->args[2])
+		{
+			exit_status(RED"minishell: exit: too many arguments\n"RESET, 1);
+			return ;
+		}
 	}
 	else
 		error_code = 0;
-	// free_all(hold);
 	exit(error_code % 256);
 }
