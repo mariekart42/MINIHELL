@@ -88,7 +88,7 @@ void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	char	**args;
 
 	args = parsed_node->args;
-	if (args[1] == NULL || args[1][0] == '~')
+	if (args[1] == NULL || args[0][2] == '~')
 	{
 		change_to_home(hold);
 		return ;
