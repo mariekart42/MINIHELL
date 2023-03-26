@@ -34,7 +34,7 @@ void	pwd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 
 	if (!getcwd(path, PATH_MAX))
 	{
-		exit_status(RED"minishell: pwd: No such file or directory\n"RESET, 69);
+		exit_status(RED"minishell: pwd: No such file or directory\n"RESET, 127);
 		return ;
 	}
 	if (parsed_node->args[1] == NULL || 
