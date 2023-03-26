@@ -9,7 +9,6 @@ bool	echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag)
 	args = parsed_node->args;
 	outfile = parsed_node->outfile;
 	j = 1;
-	is_nflag = false;
 	if (ft_strncmp(args[i], "-n", 2) == 0)
 	{
 		while (args[i][j] != '\0')
@@ -61,6 +60,7 @@ bool	is_nflag_func(char **args, t_parsed_chunk *parsed_node, int *i)
 	bool	temp_flag;
 	bool	is_nflag;
 
+	is_nflag = false;
 	while (args[*i] != NULL)
 	{
 		temp_flag = echo_builtin_helper(parsed_node, *i, is_nflag);
