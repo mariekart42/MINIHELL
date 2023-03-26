@@ -66,7 +66,7 @@ bool	builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
 			return (cd_builtin(hold, parsed_node), true);
 		else if (ft_strncmp(hold->lex_struct->item, "exit", 4) == 0)
-			return (exit_builtin(parsed_node), true);
+			return (exit_builtin(hold, parsed_node), true);
 		else if (ft_strncmp(hold->lex_struct->item, "unset", 5) == 0)
 			return (unset_builtin(hold, parsed_node), true);
 		else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)

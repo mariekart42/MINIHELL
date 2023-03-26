@@ -120,7 +120,7 @@ void	echo_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 void	env_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 void	pwd_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
-void	exit_builtin(t_parsed_chunk *parsed_node);
+void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 void 	unset_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 bool 	builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 

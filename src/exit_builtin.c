@@ -23,7 +23,7 @@ int	ft_atoi_mod(const char *str)
 	return (sign * output);
 }
 
-void	exit_builtin(t_parsed_chunk *parsed_node)
+void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
 	int32_t	exit_code;
 
@@ -47,5 +47,8 @@ void	exit_builtin(t_parsed_chunk *parsed_node)
 	}
 	else
 		error_code = 0;
+	// free_env_export(hold);
+	// free(hold);
+	// clear_history();
 	exit(error_code % 256);
 }
