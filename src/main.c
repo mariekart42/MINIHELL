@@ -72,7 +72,7 @@ int main(int32_t argc, char **argv, char **env)
 // print_macro_list(hold->lex_struct);
 			executer(hold, env);
 
-			printf(MAG"error code: %d\n"RESET, error_code);
+			// printf(MAG"error code: %d\n"RESET, error_code);
 			free_content(&hold);
 			free(hold->line);
 			hold->line = NULL;

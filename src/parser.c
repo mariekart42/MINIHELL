@@ -248,7 +248,7 @@ void create_parsed_list(t_hold **hold, t_lexing *lex, int32_t pipegroups)
 	tmp_pars = (*hold)->parsed_list;
 	while (pipegroups > 0)
 	{
-		tmp_pars->args = malloc(sizeof(char *) * arg_amount(tmp_lex) + 1);
+		tmp_pars->args = malloc(sizeof(char *) * (arg_amount(tmp_lex) + 1));
 		i = 0;
 		while (tmp_lex->macro != PIPE)
 		{
