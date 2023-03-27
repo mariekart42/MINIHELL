@@ -32,16 +32,17 @@ void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		exit_code = ft_atoi_mod(parsed_node->args[1]);
 		if (exit_code == -1)
 		{
-			ft_putstr_fd(RED"minishell: exit: ", 2);
-			ft_putstr_fd(parsed_node->args[1], 2);
-			ft_putstr_fd(": numeric argument required\n"RESET, 2);
+			// ft_putstr_fd(RED"minishell: exit: ", 2);
+			// ft_putstr_fd(parsed_node->args[1], 2);
+			// ft_putstr_fd(": numeric argument required\n"RESET, 2);
+			exit_status("exit:", parsed_node->args[1], ": numeric argument required", 255);
 			exit(255);
 		}
 		else
 			error_code = exit_code;
 		if (parsed_node->args[1] && parsed_node->args[2])
 		{
-			exit_status(RED"minishell: exit: too many arguments\n"RESET, 1);
+			exit_status("exit: too many arguments", "", "", 1);
 			return ;
 		}
 	}

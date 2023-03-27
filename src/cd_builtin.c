@@ -76,7 +76,7 @@ void	change_to_home(t_hold *hold)
 		update_dir(hold, args);
 	}
 	else
-		exit_status(RED"minishell: cd: HOME not set\n"RESET, 1);
+		exit_status("cd: HOME not set", "", "", 1);
 }
 
 void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
@@ -92,16 +92,16 @@ void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	}
 	if (args[2])
 	{
-		ft_putstr_fd(RED"minshell: cd: ", 2);
-		ft_putstr_fd(args[1], 2);
-		exit_status(": too many arguments\n"RESET, 1);
+		// ft_putstr_fd(RED"minshell: cd: ", 2);
+		// ft_putstr_fd(args[1], 2);
+		exit_status("cd:", args[1], ": too many arguments", 1);
 		return ;
 	}
 	if (update_dir(hold, args) == -1)
 	{
-		ft_putstr_fd(RED"minshell: cd: ", 2);
-		ft_putstr_fd(args[1], 2);
-		exit_status(": No such file or directory\n"RESET, 1);
+		// ft_putstr_fd(RED"minshell: cd: ", 2);
+		// ft_putstr_fd(args[1], 2);
+		exit_status("cd:", args[1], ": No such file or directory", 1);
 	}
 	return ;
 }

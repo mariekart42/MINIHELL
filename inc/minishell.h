@@ -222,7 +222,7 @@ void free_list_lex(t_lexing* head);
 void free_list_env_export(t_env_export* head);
 void			add_node_lex(t_hold *hold, char *content);
 t_lexing		*last_node_lex(t_lexing *lst);
-void exit_status(char *message, int8_t exit_code_);
+void exit_status(char *msg1, char *msg2, char *msg3, int32_t exit_code_);
 void	print_error_code(void);
 int	ft_isalnum_mod(int val);
 

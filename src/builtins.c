@@ -12,9 +12,9 @@ void	env_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	{
 		if (ft_strncmp(args[i], "env", 3) != 0)
 		{
-			ft_putstr_fd(RED"minishell: env: ", 2);
-			ft_putstr_fd(args[i], 2);
-			exit_status(": No such file or directory\n"RESET, 127);
+			// ft_putstr_fd(RED"minishell: env: ", 2);
+			// ft_putstr_fd(args[i], 2);
+			exit_status("env:", args[i], ": No such file or directory", 127);
 			return ;
 		}
 		i++;
@@ -34,7 +34,7 @@ void	pwd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 
 	if (!getcwd(path, PATH_MAX))
 	{
-		exit_status(RED"minishell: pwd: No such file or directory\n"RESET, 127);
+		exit_status("pwd: No such file or directory", "", "", 127);
 		return ;
 	}
 	if (parsed_node->args[1] == NULL
@@ -46,9 +46,9 @@ void	pwd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	}
 	if (ft_strncmp(&parsed_node->args[1][0], "-", 1) == 0)
 	{
-		ft_putstr_fd(RED"minishell: pwd: ", 2);
-		ft_putstr_fd(parsed_node->args[1], 2);
-		exit_status(": invalid option\n"RESET, 2);
+		// ft_putstr_fd(RED"minishell: pwd: ", 2);
+		// ft_putstr_fd(parsed_node->args[1], 2);
+		exit_status("pwd:", parsed_node->args[1], ": invalid option", 2);
 		return ;
 	}
 }

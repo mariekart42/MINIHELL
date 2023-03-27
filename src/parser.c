@@ -67,7 +67,7 @@ int32_t init_outfile(t_lexing *file_node, int32_t type)
 	else if (type == DOUBL_CLOSE_REDIR)
 		file_id = open(file_node->item, O_CREAT | O_WRONLY | O_APPEND); // check if its right
 	if (file_id < 0)
-		exit_status("Error!: unable to open outfile (in check_outfile func)\n", 69);
+		exit_status("Error!: unable to open outfile (in check_outfile func)", "", "", 69);
 	return (file_id);
 }
 
@@ -85,9 +85,9 @@ int32_t init_infile(t_parsed_chunk *file_node_pars, t_lexing *file_node_lex, int
 		file_id = open(file_node_lex->item, O_RDONLY);
 		if (file_id < 0)
 		{
-			write(2, RED"minihell: ", 16);
-			ft_putstr_fd(file_node_lex->item, 2);
-			exit_status(": no such file or directory\n"RESET, 69);
+			// write(2, RED"minihell: ", 16);
+			// ft_putstr_fd(file_node_lex->item, 2);
+			exit_status(file_node_lex->item, ": no such file or directory", "", 69);
 		}
 		file_node_pars->here_doc_delim = NULL;
 	}
@@ -96,9 +96,9 @@ int32_t init_infile(t_parsed_chunk *file_node_pars, t_lexing *file_node_lex, int
 		file_id = open("tmp.hd", O_WRONLY | O_CREAT, 0777);
 		if (file_id < 0)
 		{
-			write(2, RED"minihell: ", 16);
-			ft_putstr_fd(file_node_lex->item, 2);
-			exit_status(": no such file or directory\n"RESET, 69);
+			// write(2, RED"minihell: ", 16);
+			// ft_putstr_fd(file_node_lex->item, 2);
+			exit_status(file_node_lex->item, ": no such file or directory", "", 69);
 		}
 		file_node_pars->here_doc_delim = ft_strdup(file_node_lex->next->item);
 	}

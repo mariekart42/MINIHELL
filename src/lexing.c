@@ -7,12 +7,12 @@
 void lex_pipe(t_hold *hold, int32_t i)
 {
 	if (i == 0)
-		return (exit_status(RED"minihell: syntax error near unexpected token '|'\n"RESET, 2));
+		return (exit_status("syntax error near unexpected token '|'", "", "", 2));
 	i++;
 	while (hold->line[i] == ' ')
 		i++;
 	if (hold->line[i] == '|')
-		return (exit_status(RED"minihell: syntax error near unexpected token '|'\n"RESET, 2));
+		return (exit_status("syntax error near unexpected token '|'", "", "", 2));
 	add_node_lex(hold, "|");
 }
 
@@ -39,7 +39,7 @@ int32_t check_beginning_redir(t_hold *hold)
 			return (0);
 		i++;		
 	}
-	exit_status(RED"minihell: syntax error near unexpected token 'newline'\n"RESET, 2);
+	exit_status("syntax error near unexpected token 'newline'", "", "", 2);
     return (-1);
 }
 
@@ -66,7 +66,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 			i = skip_spaces(hold->line, i);
 			if (hold->line[i] == '<')
             {
-				exit_status(RED"minihell: syntax error near unexpected token '<'\n"RESET, 69);
+				exit_status("syntax error near unexpected token '<'", "", "", 69);
                 return (-1);
             }
 			return (i-1);
@@ -80,7 +80,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 		i = skip_spaces(hold->line, i);
 		if (hold->line[i] == '<')
         {
-			exit_status(RED"minihell: syntax error near unexpected token '<'\n"RESET, 69);
+			exit_status("syntax error near unexpected token '<'", "", "", 69);
             return (-1);
         }
 		if (hold->line[i] == '>')
@@ -90,7 +90,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 			i = skip_spaces(hold->line, i);
 			if (hold->line[i] == '>' || hold->line[i] == '<')
             {
-				exit_status(RED"minihell: syntax error near unexpected token '>'\n"RESET, 69);
+				exit_status("syntax error near unexpected token '>'", "", "", 69);
                 return (-1);
             }
 			return (i-1);
@@ -228,7 +228,7 @@ void check_closed_quotes(t_hold *hold)
 			{
 				if (hold->line[i] == '\0')
 				{
-					exit_status(RED"minihell: syntax error: quotes are unclosed!\n"RESET, 69);
+					exit_status("syntax error: quotes are unclosed!", "", "", 69);
 					return;
 				}
 				i++;
@@ -269,5 +269,5 @@ void lexer(t_hold *hold)
 		i++;
 	}
 	if (hold->lex_struct == NULL)
-		exit_status(RED"minihell: : command not found!\n"RESET, 127);
+		exit_status(": :command not found!", "", "", 127);
 }

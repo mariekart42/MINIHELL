@@ -78,9 +78,9 @@ void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	{
 		if (ft_isdigit(parsed_node->args[i][0]) != 0)
 		{
-			ft_putstr_fd(RED"minishell: export: ", 2);
-			ft_putstr_fd(parsed_node->args[i], 2);
-			exit_status(": not a valid identifier\n"RESET, 1);
+			// ft_putstr_fd(RED"minishell: export: ", 2);
+			// ft_putstr_fd(parsed_node->args[i], 2);
+			exit_status("export:", parsed_node->args[i], ": not a valid identifier", 1);
 			return ;
 		}
 		var_class = 0;
@@ -88,9 +88,9 @@ void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		{
 			if (ft_isalnum_mod(parsed_node->args[i][j]) == 0)
 			{
-				ft_putstr_fd(RED"minishell: export: ", 2);
-				ft_putstr_fd(parsed_node->args[i], 2);
-				exit_status(": not a valid identifier\n"RESET, 1);
+				// ft_putstr_fd(RED"minishell: export: ", 2);
+				// ft_putstr_fd(parsed_node->args[i], 2);
+				exit_status("export:", parsed_node->args[i], ": not a valid identifier", 1);
 				return ;
 			}
 			if (parsed_node->args[i][j] == '=')

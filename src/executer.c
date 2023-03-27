@@ -51,8 +51,8 @@ void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 		// write(2, "opend pipe\n", 11);
 		if (pipe(pipe_fds[i]) < 0)
 		{
-			exit_status("Error! Failed to open pipe!\n", 69);
-			exit(0);
+			exit_status("Error! Failed to open pipe!", "", "", 69);
+			exit(1);
 		}
 		i++;
 	}
@@ -86,9 +86,9 @@ void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env)
 		// fprintf(stderr, "error bef exec: %d\n", error_code);
 	if (execve(parsed_node->cmd_path, parsed_node->args, ori_env) == -1)
 	{
-		write(2, RED"minihell: ", 16);
-		write(2, parsed_node->args[0], ft_strlen(parsed_node->args[0]));
-		exit_status(RED": command not found!\n"RESET, 127);
+		// write(2, RED"minihell: ", 16);
+		// write(2, parsed_node->args[0], ft_strlen(parsed_node->args[0]));
+		exit_status(parsed_node->args[0], ":command not found!", "", 127);
 	}
 }
 
