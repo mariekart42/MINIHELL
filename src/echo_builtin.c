@@ -33,9 +33,9 @@ void	echo_builtin_cont(t_parsed_chunk *parsed_node, int *i, bool is_nflag)
 	args = parsed_node->args;
 	while (args[*i] != NULL)
 	{
-		ft_putstr_fd(args[*i], parsed_node->outfile);
+		ft_putstr_fd(args[*i], 1);
 		if (args[*i + 1] != NULL)
-			ft_putstr_fd(" ", parsed_node->outfile);
+			ft_putstr_fd(" ", 1);
 		(*i)++;
 	}
 	if (!is_nflag)
@@ -59,28 +59,9 @@ bool	is_nflag_func(char **args, t_parsed_chunk *parsed_node, int *i)
 	return (is_nflag);
 }
 
-void	expand_var(t_hold *hold, t_parsed_chunk *parsed_node, int i)
-{
-	char			*var_name;
-	char			**args;
-	t_env_export	*tmp;
-
-	args = parsed_node->args;
-	var_name = ft_strndup(&args[i][1], ft_strlen(args[i]) - 1);
-	tmp = hold->env_list;
-	while (tmp != NULL)
-	{
-		if (ft_strncmp(var_name, tmp->item, ft_strlen(var_name)) == 0)
-		{
-			ft_putstr_fd(tmp->item, hold->parsed_list->outfile);
-			write(2, "\n", 1);
-		}
-		tmp = tmp->next;
-	}
-}
-
 void	echo_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
+	(void)hold;
 	char			**args;
 	int				i;
 	bool			is_nflag;
@@ -91,16 +72,6 @@ void	echo_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	if (args[1] == NULL)
 	{
 		ft_putstr_fd("\n", 1);
-		return ;
-	}
-	if (ft_strncmp(args[i], "$?", 2) == 0)
-	{
-		print_error_code();
-		return ;
-	}
-	if (ft_strncmp(&args[i][0], "$", 1) == 0)
-	{
-		expand_var(hold, parsed_node, i);
 		return ;
 	}
 	is_nflag = is_nflag_func(args, parsed_node, &i);

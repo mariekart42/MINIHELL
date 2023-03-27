@@ -152,7 +152,7 @@ void executer(t_hold *hold, char **ori_env)
 	t_parsed_chunk *parsed_node;
 	int32_t pipe_fds[MAX_FD][2];
 
-	int32_t pid[100];
+	// int32_t pid[100];
 
 	parsed_node = hold->parsed_list;
 	if (error_code != 0)
@@ -164,8 +164,7 @@ void executer(t_hold *hold, char **ori_env)
 	i = 0;
 	while (i < pipegroups)
 	{
-		pid[i] = fork();
-		if (pid[i] == 0)
+		if (fork() == 0)
 		{
 			error_code = 0;
 			child_sig(); //Placed at start of child
@@ -200,7 +199,7 @@ void executer(t_hold *hold, char **ori_env)
 	i = 0;
 	while (i < pipegroups)
 	{
-		waitpid(pid[i], &error_code, WUNTRACED);
+		waitpid(-1, &error_code, WUNTRACED);
 		i++;
 	}
 }
