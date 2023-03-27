@@ -127,3 +127,4 @@ int main(int32_t argc, char **argv, char **env)
 //		    !!	-  cat Makefile | cat | cat				-> gets stuck
 //				-  cat Makefile | grep src | cat -e		-> same shit
 //				-  echo hola | cat -e | cat -e | cat -e -> gets stuck
+//				-  echo|ls|pwd

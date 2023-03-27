@@ -9,6 +9,8 @@
 #include <signal.h> // function for signal funcs
 # include <stdbool.h>	// bool
 #include <fcntl.h> // open function
+#include <sys/types.h>
+
 
 #include "../libft/libft.h"
 
@@ -118,7 +120,7 @@ int32_t check_syntax_errors(t_hold *hold);
 //		builtins
 void	echo_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 void	env_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
-void	pwd_builtin(t_hold *hold);
+void	pwd_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 void 	unset_builtin(t_hold *hold, t_parsed_chunk *parsed_node);

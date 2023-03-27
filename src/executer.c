@@ -36,8 +36,8 @@ void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups, int
 	}
 	else // in the middle of pipegroups
 	{
-		dup2(pipe_fds[i][0], parsed_node->infile);
-		dup2(pipe_fds[i][1], parsed_node->outfile);
+		dup2(pipe_fds[i-1][0], STDIN_FILENO);
+		dup2(pipe_fds[i][1], STDOUT_FILENO);
 	}
 }
 
@@ -83,6 +83,7 @@ void close_fds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 
 void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env)
 {
+		fprintf(stderr, "error bef exec: %d\n", error_code);
 	if (execve(parsed_node->cmd_path, parsed_node->args, ori_env) == -1)
 	{
 		write(2, RED"minihell: ", 16);
@@ -152,15 +153,18 @@ void handle_single_builtin(t_hold *hold)
 		close(hold->parsed_list->outfile);
 
 	builtin(hold, hold->parsed_list);
+	// printf(MAG"built error code: %d\n"RESET, error_code);
 }
 
 void executer(t_hold *hold, char **ori_env)
 {
-	int32_t *pids;
 	int32_t pipegroups;
 	int32_t	i;
 	t_parsed_chunk *parsed_node;
 	int32_t pipe_fds[MAX_FD][2];
+
+	int32_t pid[100];
+
 
 	parsed_node = hold->parsed_list;
 	if (error_code != 0)
@@ -168,17 +172,14 @@ void executer(t_hold *hold, char **ori_env)
 	pipegroups = count_pipegroups(hold->lex_struct);
 	if (pipegroups == 1 && hold->lex_struct->macro == BUILTIN)
 		return (handle_single_builtin(hold));
-	pids = malloc(sizeof(int32_t) * (pipegroups));
-	if (!pids)
-		return (exit_status(MAG"Error! Failed to malloc for pids (in executer())\n"RESET, 69));
 	open_pipefds(pipegroups, pipe_fds);
 	i = 0;
 	while (i < pipegroups)
 	{
-		pids[i] = fork();
-
-		if (pids[i] == 0)
+		pid[i] = fork();
+		if (pid[i] == 0)
 		{
+			error_code = 0;
 			child_sig(); //Placed at start of child
 			if (parsed_node->here_doc_delim != NULL)
 			{
@@ -191,8 +192,11 @@ void executer(t_hold *hold, char **ori_env)
 			if (builtin_parser(parsed_node->args[0]) == true)
 				builtin(hold, parsed_node);
 			else
+			{
 				execute_cmd(parsed_node, ori_env);
-			exit(69);
+				exit(122);
+			}
+			exit(error_code);
 		}
 		else
 		{
@@ -211,18 +215,12 @@ void executer(t_hold *hold, char **ori_env)
 	}
 	close(pipe_fds[i-1][0]);
 
-		// close(pipe_fds[i][0]); // not sure which 
-	// close(pipe_fds[i][0]); // one of these two
-
 	i = 0;
-	// while (pids[i])
-	while ((i < pipegroups) && (pids[i]))
+	while (i < pipegroups)
 	{
-		waitpid(pids[i], &error_code, WUNTRACED);
-		if (error_code != 0)
-			exit_status("", 69);
+		waitpid(pid[i], &error_code, 0);
+		if (error_code == 13)
+			error_code = 0;
 		i++;
 	}
-	free(pids);
-	pids = NULL;
 }

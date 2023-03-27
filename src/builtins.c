@@ -55,24 +55,20 @@ void	pwd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 
 bool	builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 {
-	if (hold->lex_struct->macro == BUILTIN)
-	{
-		if (ft_strncmp(hold->lex_struct->item, "echo", 4) == 0)
-			return (echo_builtin(hold, parsed_node), true);
-		else if (ft_strncmp(hold->lex_struct->item, "env", 3) == 0)
-			return (env_builtin(hold, parsed_node), true);
-		else if (ft_strncmp(hold->lex_struct->item, "pwd", 3) == 0)
-			return (pwd_builtin(hold, parsed_node), true);
-		else if (ft_strncmp(hold->lex_struct->item, "cd", 2) == 0)
-			return (cd_builtin(hold, parsed_node), true);
-		else if (ft_strncmp(hold->lex_struct->item, "exit", 4) == 0)
-			return (exit_builtin(hold, parsed_node), true);
-		else if (ft_strncmp(hold->lex_struct->item, "unset", 5) == 0)
-			return (unset_builtin(hold, parsed_node), true);
-		else if (ft_strncmp(hold->lex_struct->item, "export", 6) == 0)
-			return (export_builtin(hold, parsed_node), true);
-		return (true);
-	}
-	else
-		return (false);
+	// error_code = 0;
+	if (ft_strncmp(parsed_node->args[0], "echo", 4) == 0)
+		return (echo_builtin(hold, parsed_node), true);
+	else if (ft_strncmp(parsed_node->args[0], "env", 3) == 0)
+		return (env_builtin(hold, parsed_node), true);
+	else if (ft_strncmp(parsed_node->args[0], "pwd", 3) == 0)
+		return (pwd_builtin(hold, parsed_node), true);
+	else if (ft_strncmp(parsed_node->args[0], "cd", 2) == 0)
+		return (cd_builtin(hold, parsed_node), true);
+	else if (ft_strncmp(parsed_node->args[0], "exit", 4) == 0)
+		return (exit_builtin(hold, parsed_node), true);
+	else if (ft_strncmp(parsed_node->args[0], "unset", 5) == 0)
+		return (unset_builtin(hold, parsed_node), true);
+	else if (ft_strncmp(parsed_node->args[0], "export", 6) == 0)
+		return (export_builtin(hold, parsed_node), true);
+	return (false);
 }
