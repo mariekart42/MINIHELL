@@ -3,11 +3,9 @@
 bool	echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag)
 {
 	char	**args;
-	int32_t	outfile;
 	int		j;
 
 	args = parsed_node->args;
-	outfile = parsed_node->outfile;
 	j = 1;
 	if (ft_strncmp(args[i], "-n", 2) == 0)
 	{

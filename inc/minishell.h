@@ -116,7 +116,7 @@ char	*get_next_line(int fd);
 //		syntax_errors.c
 int32_t check_syntax_errors(t_hold *hold);
 
-
+char	*ft_strnew(const int size);
 //		builtins
 void	echo_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
 void	env_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
