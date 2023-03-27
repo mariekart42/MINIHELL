@@ -83,16 +83,13 @@ void close_fds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 
 void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env)
 {
-		fprintf(stderr, "error bef exec: %d\n", error_code);
+		// fprintf(stderr, "error bef exec: %d\n", error_code);
 	if (execve(parsed_node->cmd_path, parsed_node->args, ori_env) == -1)
 	{
 		write(2, RED"minihell: ", 16);
 		write(2, parsed_node->args[0], ft_strlen(parsed_node->args[0]));
 		exit_status(RED": command not found!\n"RESET, 127);
-		// exit(127);
 	}
-	// printf("lskjdfh: %s\n",hold->valid_path);
-	// exit(1);
 }
 
 void handle_here_doc(t_parsed_chunk *pars_node)
@@ -105,10 +102,8 @@ void handle_here_doc(t_parsed_chunk *pars_node)
 	tmp1 = NULL;
 	tmp2 = malloc(1);
 	tmp2[0] = '\0';
-
 	if (pars_node->here_doc_delim == NULL)
 		write(2, "problem with delim in handle_here_doc\n", 38);
-printf("infile: %d\n", pars_node->infile);
 	heredoc_sig(); // Signal goes before input of hierdoc
 	while (1)
 	{
@@ -141,19 +136,13 @@ printf("infile: %d\n", pars_node->infile);
 
 void handle_single_builtin(t_hold *hold)
 {
-	// printf("single builtin handeler\n");
 	if (hold->parsed_list->here_doc_delim != NULL)
 		handle_here_doc(hold->parsed_list);
-	// redir
-
-	// clode fds
 	if (hold->parsed_list->infile != 0)
 		close(hold->parsed_list->infile);
 	if (hold->parsed_list->outfile != 1)
 		close(hold->parsed_list->outfile);
-
 	builtin(hold, hold->parsed_list);
-	// printf(MAG"built error code: %d\n"RESET, error_code);
 }
 
 void executer(t_hold *hold, char **ori_env)
@@ -164,7 +153,6 @@ void executer(t_hold *hold, char **ori_env)
 	int32_t pipe_fds[MAX_FD][2];
 
 	int32_t pid[100];
-
 
 	parsed_node = hold->parsed_list;
 	if (error_code != 0)
@@ -182,10 +170,7 @@ void executer(t_hold *hold, char **ori_env)
 			error_code = 0;
 			child_sig(); //Placed at start of child
 			if (parsed_node->here_doc_delim != NULL)
-			{
-				// printf("%s\n", parsed_node->here_doc_delim);
 				handle_here_doc(parsed_node);
-			}
 			redirection(parsed_node, i, pipegroups, pipe_fds);
 
 			close_fds(hold, pipegroups, pipe_fds);
@@ -200,8 +185,6 @@ void executer(t_hold *hold, char **ori_env)
 		}
 		else
 		{
-			// close_all_fds(parsed_node, pipe_fds, i, pipegroups);
-			// waitpid(pids[i], NULL, 0);
 			close(pipe_fds[i][1]);
 			if (i != 0)
 				close(pipe_fds[i-1][0]);
@@ -214,13 +197,10 @@ void executer(t_hold *hold, char **ori_env)
 		parsed_node = parsed_node->next;
 	}
 	close(pipe_fds[i-1][0]);
-
 	i = 0;
 	while (i < pipegroups)
 	{
-		waitpid(pid[i], &error_code, 0);
-		if (error_code == 13)
-			error_code = 0;
+		waitpid(pid[i], &error_code, WUNTRACED);
 		i++;
 	}
 }

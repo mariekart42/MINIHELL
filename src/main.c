@@ -72,7 +72,7 @@ int main(int32_t argc, char **argv, char **env)
 // print_macro_list(hold->lex_struct);
 			executer(hold, env);
 
-			// printf(MAG"error code: %d\n"RESET, error_code);
+			fprintf(stderr, MAG"error code: %d\n"RESET, error_code);
 			free_content(&hold);
 			free(hold->line);
 			hold->line = NULL;
@@ -117,14 +117,10 @@ int main(int32_t argc, char **argv, char **env)
 
 //!  PROBLEMOS:
 //!			SANTI:
-//				-  echoHola				-> wrong output
-//				-  echo-nHola			-> wrong output
-//				-  pwd -p				-> wrong output (not sure if mandatory)
-//				-  pwd --p				-> wrong output (not sure if mandatory)
-//				-  cd ~					-> with space between wrong output
+//				-  ls|exit 42		-> wrong error 
+//				-  exit|ls			-> should not display ls
+//				-  echo hola > test	-> echo is not providing input 
+//				-  env|ls			-> prints newlines
 
 //!			MY:
-//		    !!	-  cat Makefile | cat | cat				-> gets stuck
-//				-  cat Makefile | grep src | cat -e		-> same shit
-//				-  echo hola | cat -e | cat -e | cat -e -> gets stuck
-//				-  echo|ls|pwd
+//		    !!	-  ls | hola | ls	-> prints ls

@@ -50,18 +50,18 @@ void sort_export_list(t_hold *hold)
 		i = 2;
 		tmp = tmp->next;
 	}
-	// tmp = hold->export_list;
-	// while (hold->export_list != NULL && hold->export_list->next != NULL)
-	// {
-	// 	if (ft_strncmp(hold->export_list->var_name, hold->export_list->next->var_name, ft_strlen(hold->export_list->next->var_name)) > 0)
-	// 	{
-	// 		// swap_data(hold->export_list);
-	// 		hold->export_list = tmp;
-	// 	}
-	// 	else
-	// 		hold->export_list = hold->export_list->next;
-	// }
-	// hold->export_list = tmp;
+	tmp = hold->export_list;
+	while (hold->export_list != NULL && hold->export_list->next != NULL)
+	{
+		if (ft_strncmp(hold->export_list->var_name, hold->export_list->next->var_name, ft_strlen(hold->export_list->next->var_name)) > 0)
+		{
+			swap_data(hold->export_list);
+			hold->export_list = tmp;
+		}
+		else
+			hold->export_list = hold->export_list->next;
+	}
+	hold->export_list = tmp;
 }
 
 t_env_export *new_node_env(void)
@@ -120,5 +120,5 @@ void create_env_export_list(t_hold *hold, char **ori_env)
 		add_node_env(hold, ori_env[env_len], "export");
 		env_len++;
 	}
-	sort_export_list(hold);
+	// sort_export_list(hold);
 }
