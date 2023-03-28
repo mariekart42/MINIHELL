@@ -71,6 +71,19 @@ t_env_exp	*new_node_env(void)
 	return (tmp);
 }
 
+void	add_node_env_sub(t_hold *hold, t_env_exp *tmp, t_env_exp *p)
+{
+	if (hold->export_list == NULL)
+			hold->export_list = tmp;
+	else
+	{
+		p = hold->export_list;
+		while (p->next != NULL)
+			p = p->next;
+		p->next = tmp;
+	}
+}
+
 void	add_node_env(t_hold *hold, char *content, char *type)
 {
 	t_env_exp	*tmp;
@@ -78,6 +91,7 @@ void	add_node_env(t_hold *hold, char *content, char *type)
 
 	tmp = new_node_env();
 	tmp->item = content;
+	p = NULL;
 	if (ft_strncmp(type, "env", 3) == 0)
 	{
 		if (hold->env_list == NULL)
@@ -93,15 +107,7 @@ void	add_node_env(t_hold *hold, char *content, char *type)
 	}
 	else
 	{
-		if (hold->export_list == NULL)
-			hold->export_list = tmp;
-		else
-		{
-			p = hold->export_list;
-			while (p->next != NULL)
-				p = p->next;
-			p->next = tmp;
-		}
+		add_node_env_sub(hold, tmp, p);
 		return ;
 	}
 }
