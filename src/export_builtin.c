@@ -21,9 +21,9 @@ void	add_to_export_mod(t_hold *hold, char *var_name, char *var_value,
 {
 	t_env_exp	*new;
 	t_env_exp	*tmp;
-	char			*tmp_add;
-	char			*tmp_add2;
-	char			*tmp_add3;
+	char		*tmp_add;
+	char		*tmp_add2;
+	char		*tmp_add3;
 
 	if (var_class == 1)
 		tmp_add = ft_strjoin(var_name, "=\"\"");
@@ -78,7 +78,8 @@ void	export_builtin(t_hold *hold, t_pars *parsed_node)
 	{
 		if (ft_isdigit(parsed_node->args[i][0]) != 0)
 		{
-			exit_status("export:", parsed_node->args[i], ": not a valid identifier", 1);
+			exit_status("export:", parsed_node->args[i],
+				": not a valid identifier", 1);
 			return ;
 		}
 		var_class = 0;
@@ -86,7 +87,8 @@ void	export_builtin(t_hold *hold, t_pars *parsed_node)
 		{
 			if (ft_isalnum_mod(parsed_node->args[i][j]) == 0)
 			{
-				exit_status("export:", parsed_node->args[i], ": not a valid identifier", 1);
+				exit_status("export:", parsed_node->args[i],
+					": not a valid identifier", 1);
 				return ;
 			}
 			if (parsed_node->args[i][j] == '=')
