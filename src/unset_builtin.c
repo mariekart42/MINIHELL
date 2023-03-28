@@ -27,7 +27,7 @@ void	delete_var(t_hold **hold, char *var, char *structure)
 bool	find_var(t_hold *hold, char *var, char *structure)
 {
 	t_env_exp	*tmp;
-	bool			var_exist;
+	bool		var_exist;
 
 	var_exist = false;
 	if (ft_strncmp(structure, "env", 3) == 0)
@@ -59,18 +59,16 @@ void	unset_builtin(t_hold *hold, t_pars *parsed_node)
 	{
 		if (ft_isdigit(parsed_node->args[i][0]) != 0)
 		{
-			// ft_putstr_fd(RED"minishell: export: ", 2);
-			// ft_putstr_fd(parsed_node->args[i], 2);
-			exit_status("export:", parsed_node->args[i], ": not a valid identifier", 1);
+			exit_status("export:", parsed_node->args[i],
+				": not a valid identifier", 1);
 			return ;
 		}
 		while (args[i][j] != '\0')
 		{
 			if (ft_isalnum_mod(parsed_node->args[i][j]) == 0)
 			{
-				// ft_putstr_fd(RED"minishell: unset: ", 2);
-				// ft_putstr_fd(parsed_node->args[i], 2);
-				exit_status("unset:", parsed_node->args[i], ": not a valid identifier", 1);
+				exit_status("unset:", parsed_node->args[i],
+					": not a valid identifier", 1);
 				return ;
 			}
 			j++;
