@@ -17,6 +17,7 @@ SRC		=	main.c \
 			free_content.c \
 			utils.c \
 			export_struct.c \
+			export_struct_cont.c \
 			lexing.c \
 			parser.c \
 			executer.c \
