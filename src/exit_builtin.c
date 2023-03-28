@@ -37,6 +37,11 @@ void	exit_builtin(t_hold *hold, t_pars *parsed_node)
 
 	if (parsed_node->args[1])
 	{
+		if (parsed_node->args[1] && parsed_node->args[2])
+		{
+			exit_status("exit: too many arguments", "", "", 1);
+			return ;
+		}
 		exit_code = ft_atoi_mod(parsed_node->args[1]);
 		if (exit_code == -1)
 		{
@@ -46,11 +51,6 @@ void	exit_builtin(t_hold *hold, t_pars *parsed_node)
 		}
 		else
 			error_code = exit_code;
-		if (parsed_node->args[1] && parsed_node->args[2])
-		{
-			exit_status("exit: too many arguments", "", "", 1);
-			return ;
-		}
 	}
 	else
 		error_code = 0;
