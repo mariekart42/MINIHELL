@@ -54,7 +54,7 @@ int	update_dir(t_hold *hold, char **args)
 void	change_to_home(t_hold *hold)
 {
 	bool			is_home;
-	t_env_exp	*tmp;
+	t_env_exp		*tmp;
 	char			*home;
 	char			*args[2];
 
@@ -92,16 +92,10 @@ void	cd_builtin(t_hold *hold, t_pars *parsed_node)
 	}
 	if (args[2])
 	{
-		// ft_putstr_fd(RED"minshell: cd: ", 2);
-		// ft_putstr_fd(args[1], 2);
 		exit_status("cd:", args[1], ": too many arguments", 1);
 		return ;
 	}
 	if (update_dir(hold, args) == -1)
-	{
-		// ft_putstr_fd(RED"minshell: cd: ", 2);
-		// ft_putstr_fd(args[1], 2);
 		exit_status("cd:", args[1], ": No such file or directory", 1);
-	}
 	return ;
 }
