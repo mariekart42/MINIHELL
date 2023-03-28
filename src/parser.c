@@ -106,20 +106,21 @@ int32_t init_infile(t_pars *file_node_pars, t_lex *file_node_lex, int32_t type)
 }
 
 /* function counts and returns amount of pipegroups in 'lexed_list' */
-int32_t count_pipegroups(t_lex *lex)
+void count_pipegroups(t_hold *hold)
 {
 	t_lex *tmp;
 	int32_t	pipegroup;
 
 	pipegroup = 1;
-	tmp = lex;
+	tmp = hold->lex_struct;
 	while (tmp != NULL)
 	{
 		if (tmp->macro == PIPE)
 			pipegroup++;
 		tmp = tmp->next;
 	}
-	return (pipegroup);
+	hold->pipegroups = pipegroup;
+	// return (pipegroup);
 }
 
 /* function appends command from 'pars_list' at the end of
@@ -379,12 +380,13 @@ void create_parsed_list(t_hold **hold, t_lex *lex, int32_t pipegroups)
 
 void parser(t_hold *hold)
 {
-	int32_t pipegroups;
+	// int32_t pipegroups;
 
 	recognize_type(hold);
-	pipegroups = count_pipegroups(hold->lex_struct);
+	// hold->pipegroups = 
+	count_pipegroups(hold);
     if (error_code != 0 || check_syntax_errors(hold))
         return ;
 	open_extensions(hold->lex_struct, hold);
-	create_parsed_list(&hold, hold->lex_struct, pipegroups);
+	create_parsed_list(&hold, hold->lex_struct, hold->pipegroups);
 }

@@ -80,6 +80,7 @@ typedef struct s_hold
 	char				*env_path;
 	char				**my_env;
 	char				*line;
+	int32_t				pipegroups;
 	struct s_lex		*lex_struct;
 	struct s_env_exp	*env_list;
 	struct s_env_exp	*export_list;
@@ -205,7 +206,7 @@ void check_closed_quotes(t_hold *hold);
 //		parser.c
 bool builtin_parser(char *node);
 void recognize_type(t_hold *hold);
-int32_t count_pipegroups(t_lex *lex);
+void count_pipegroups(t_hold *hold);
 int32_t init_outfile(t_lex *file_node, int32_t type);
 int32_t init_infile(t_pars *file_node_pars, t_lex *file_node_lex, int32_t type);
 char *get_cmdpath(char *curr_cmd);
@@ -223,9 +224,11 @@ void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
 void execute_cmd(t_pars *parsed_node, char **ori_env);
 void handle_here_doc(t_pars *pars_node);
 void executer(t_hold *hold, char **ori_env);
-
-void close_fds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+void exec_child(t_hold *hold, t_pars *pars_node, char **ori_env, int32_t pipe_fds[MAX_FD][2]);
+void close_fds_child(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
 void close_all_fds(t_pars *parsed_node, int32_t pipe_fds[MAX_FD][2], int32_t i, int32_t pipegroups);
+void close_fds_parent(t_pars **parsed_node);
+
 
 //		utils.c
 void free_list_pars(t_pars* head);

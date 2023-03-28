@@ -194,7 +194,7 @@ int32_t lex_word(t_hold *hold, char *line, int32_t i)
 			i += update_i(quote_chunk_);
 			if (quote_chunk_ != NULL)
 				string = handle_quote_chunk(&string, &quote_chunk_);
-			x = ft_strlen(string);
+			x = ft_strlen(string)-1; // added here -1 -> change back if error somewhere else
 		}
 		else
 			string[x] = line[i];
@@ -254,12 +254,19 @@ void lexer(t_hold *hold)
 		else if (hold->line[i] == '<' || hold->line[i] == '>')
 		{
 			i = lex_redir(hold, i);
-			// i-=1;
+			// i+=1;
 		}
 		else if (hold->line[i] != ' ' && hold->line[i] != '\t')
+		{
 			i = lex_word(hold, hold->line, i);
+	// i-=1;
+		}
 		i++;
 	}
 	if (hold->lex_struct == NULL)
 		exit_status(": :command not found!", "", "", 127);
 }
+
+
+// 'l's
+// "l"s
