@@ -11,7 +11,8 @@ void	env_builtin(t_hold *hold, t_pars *parsed_node)
 	while (args[i] != NULL)
 	{
 		if (ft_strncmp(args[i], "env", 3) != 0)
-			return(exit_status("env:", args[i], ": No such file or directory", 127));
+			return (exit_status("env:", args[i],
+					": No such file or directory", 127));
 		i++;
 	}
 	tmp = hold->env_list;
@@ -37,12 +38,12 @@ void	pwd_builtin(t_hold *hold, t_pars *parsed_node)
 		return ;
 	}
 	if (ft_strncmp(&parsed_node->args[1][0], "-", 1) == 0)
-		return (exit_status("pwd:", parsed_node->args[1], ": invalid option", 2));
+		return (exit_status("pwd:", parsed_node->args[1],
+				": invalid option", 2));
 }
 
 bool	builtin(t_hold *hold, t_pars *parsed_node)
 {
-	// error_code = 0;
 	if (ft_strncmp(parsed_node->args[0], "echo", 4) == 0)
 		return (echo_builtin(hold, parsed_node), true);
 	else if (ft_strncmp(parsed_node->args[0], "env", 3) == 0)
