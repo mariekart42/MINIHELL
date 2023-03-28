@@ -61,11 +61,11 @@ bool	is_nflag_func(char **args, t_pars *parsed_node, int *i)
 
 void	echo_builtin(t_hold *hold, t_pars *parsed_node)
 {
-	(void)hold;
-	char			**args;
-	int				i;
-	bool			is_nflag;
+	char		**args;
+	int			i;
+	bool		is_nflag;
 
+	(void)hold;
 	args = parsed_node->args;
 	i = 1;
 	is_nflag = false;
