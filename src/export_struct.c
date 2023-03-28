@@ -26,8 +26,11 @@ void	sort_export_list(t_hold *hold)
 		tmp_tmp = ft_split(tmp->item, '=');
 		tmp->var_name = tmp_tmp[0];
 		tmp->var_value = tmp_tmp[1];
-		while (tmp_tmp[i++] != NULL)
-			tmp->var_value = ft_strjoin(tmp->var_value, tmp_tmp[i++]);
+		while (tmp_tmp[i] != NULL)
+		{
+			tmp->var_value = ft_strjoin(tmp->var_value, tmp_tmp[i]);
+			i++;
+		}
 		free(tmp_tmp);
 		i = 2;
 		tmp = tmp->next;
