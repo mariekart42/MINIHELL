@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-void	sort_export_end(t_env_export *export_list)
+void	sort_export_end(t_env_exp *export_list)
 {
-	t_env_export	*tmp;
+	t_env_exp	*tmp;
 
 	tmp = export_list;
 	while (export_list->next != NULL)
@@ -19,8 +19,8 @@ void	sort_export_end(t_env_export *export_list)
 void	add_to_export_mod(t_hold *hold, char *var_name, char *var_value,
 							int var_class)
 {
-	t_env_export	*new;
-	t_env_export	*tmp;
+	t_env_exp	*new;
+	t_env_exp	*tmp;
 	char			*tmp_add;
 	char			*tmp_add2;
 	char			*tmp_add3;
@@ -35,7 +35,7 @@ void	add_to_export_mod(t_hold *hold, char *var_name, char *var_value,
 		free(tmp_add2);
 		free(tmp_add3);
 	}
-	new = malloc(sizeof(t_env_export));
+	new = malloc(sizeof(t_env_exp));
 	new->item = ft_strdup(tmp_add);
 	free(tmp_add);
 	new->next = NULL;
@@ -47,19 +47,19 @@ void	add_to_export_mod(t_hold *hold, char *var_name, char *var_value,
 
 void	print_env_export(t_hold *hold)
 {
-	t_env_export	*tmp;
+	t_env_exp	*tmp;
 
 	tmp = hold->export_list;
 	while (tmp != NULL)
 	{
-		ft_putstr_fd("declare -x ", hold->parsed_list->outfile);
-		ft_putstr_fd(tmp->item, hold->parsed_list->outfile);
-		write(hold->parsed_list->outfile, "\n", 1);
+		ft_putstr_fd("declare -x ", hold->pars_list->outfile);
+		ft_putstr_fd(tmp->item, hold->pars_list->outfile);
+		write(hold->pars_list->outfile, "\n", 1);
 		tmp = tmp->next;
 	}
 }
 
-void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
+void	export_builtin(t_hold *hold, t_pars *parsed_node)
 {
 	int		i;
 	int		j;
@@ -78,8 +78,6 @@ void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 	{
 		if (ft_isdigit(parsed_node->args[i][0]) != 0)
 		{
-			// ft_putstr_fd(RED"minishell: export: ", 2);
-			// ft_putstr_fd(parsed_node->args[i], 2);
 			exit_status("export:", parsed_node->args[i], ": not a valid identifier", 1);
 			return ;
 		}
@@ -88,8 +86,6 @@ void	export_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
 		{
 			if (ft_isalnum_mod(parsed_node->args[i][j]) == 0)
 			{
-				// ft_putstr_fd(RED"minishell: export: ", 2);
-				// ft_putstr_fd(parsed_node->args[i], 2);
 				exit_status("export:", parsed_node->args[i], ": not a valid identifier", 1);
 				return ;
 			}

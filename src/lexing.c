@@ -50,11 +50,9 @@ int32_t check_beginning_redir(t_hold *hold)
  *		- in any case this syntax: '><'	(eg. ><, <><, >><)						*/
 int32_t lex_redir(t_hold *hold, int32_t i)
 {
-	if (i == 0)
-    {
-		if (check_beginning_redir(hold) != 0)
-            return (-1);
-    }
+
+	if ((i == 0) && (check_beginning_redir(hold) != 0))
+		return (-1);
 	if (hold->line[i] == '<')
 	{
 		i++;
@@ -65,10 +63,7 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 			i++;
 			i = skip_spaces(hold->line, i);
 			if (hold->line[i] == '<')
-            {
-				exit_status("syntax error near unexpected token '<'", "", "", 69);
-                return (-1);
-            }
+                return (exit_status("syntax error near unexpected token '<'", "", "", 69), -1);
 			return (i-1);
 		}
 		add_node_lex(hold, "<");
@@ -79,20 +74,14 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 		i++;
 		i = skip_spaces(hold->line, i);
 		if (hold->line[i] == '<')
-        {
-			exit_status("syntax error near unexpected token '<'", "", "", 69);
-            return (-1);
-        }
+            return (exit_status("syntax error near unexpected token '<'", "", "", 69), -1);
 		if (hold->line[i] == '>')
 		{
 			add_node_lex(hold, ">>");
 			i++;
 			i = skip_spaces(hold->line, i);
 			if (hold->line[i] == '>' || hold->line[i] == '<')
-            {
-				exit_status("syntax error near unexpected token '>'", "", "", 69);
-                return (-1);
-            }
+                return (exit_status("syntax error near unexpected token '>'", "", "", 69), -1);
 			return (i-1);
 		}
 		add_node_lex(hold, ">");
@@ -117,6 +106,7 @@ char *add_letter(char *pointer, char letter)
 	i++;
 	return_pointer[i] = '\0';
 	free(pointer);
+	pointer = NULL;
 	return (return_pointer);
 }
 
@@ -157,12 +147,10 @@ char *quote_chunk2(char *line, int32_t i)
 		x++;
 		i++;
 	}
-	if (x > 0)
-	{
-		string[x] = '\0';
-		return (string);
-	}
-	return (NULL);
+	if (x <= 0)
+		return (NULL);
+	string[x] = '\0';
+	return (string);
 }
 
 int32_t lex_word(t_hold *hold, char *line, int32_t i)
@@ -214,8 +202,8 @@ int32_t lex_word(t_hold *hold, char *line, int32_t i)
 
 void check_closed_quotes(t_hold *hold)
 {
-	char quote;
-	int32_t i;
+	char	quote;
+	int32_t	i;
 
 	i = 0;
 	while (hold->line[i] != '\0')
@@ -227,10 +215,7 @@ void check_closed_quotes(t_hold *hold)
 			while (hold->line[i] != quote)
 			{
 				if (hold->line[i] == '\0')
-				{
-					exit_status("syntax error: quotes are unclosed!", "", "", 69);
-					return;
-				}
+					return(exit_status("syntax error: quotes are unclosed!", "", "", 69));
 				i++;
 			}
 		}
@@ -255,17 +240,11 @@ void lexer(t_hold *hold)
 			i++;
 		}
 		else if (hold->line[i] == '|')
-        {
 			lex_pipe(hold, i);
-        }
 		else if (hold->line[i] == '<' || hold->line[i] == '>')
-        {
 			i = lex_redir(hold, i);
-        }
 		else if (hold->line[i] != ' ' && hold->line[i] != '\t')
-        {
 			i = lex_word(hold, hold->line, i);
-        }			
 		i++;
 	}
 	if (hold->lex_struct == NULL)

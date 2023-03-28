@@ -2,8 +2,8 @@
 
 void	delete_var(t_hold **hold, char *var, char *structure)
 {
-	t_env_export	*tmp;
-	t_env_export	*prev;
+	t_env_exp	*tmp;
+	t_env_exp	*prev;
 
 	if (ft_strncmp(structure, "env", 3) == 0)
 		tmp = (*hold)->env_list;
@@ -26,7 +26,7 @@ void	delete_var(t_hold **hold, char *var, char *structure)
 
 bool	find_var(t_hold *hold, char *var, char *structure)
 {
-	t_env_export	*tmp;
+	t_env_exp	*tmp;
 	bool			var_exist;
 
 	var_exist = false;
@@ -46,7 +46,7 @@ bool	find_var(t_hold *hold, char *var, char *structure)
 	return (var_exist);
 }
 
-void	unset_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
+void	unset_builtin(t_hold *hold, t_pars *parsed_node)
 {
 	char	**args;
 	int		i;

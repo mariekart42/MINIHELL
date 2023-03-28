@@ -49,61 +49,72 @@ int32_t error_code;
 # define WHT   "\x1B[37m"
 # define RESET "\x1B[0m"
 
-typedef struct s_lexing
+typedef struct s_lex
 {
-	char		*item;
-	int32_t		macro;
-	struct s_lexing	*next;
-}		t_lexing;
+	char			*item;
+	int32_t			macro;
+	struct s_lex	*next;
+}					t_lex;
 
-typedef struct s_env_export
+typedef struct s_env_exp
 {
-	char	 *item;
-	char	*var_name;
-	char	*var_value;
-	struct s_env_export	*next;
-}			t_env_export;
+	char				*item;
+	char				*var_name;
+	char				*var_value;
+	struct s_env_exp	*next;
+}						t_env_exp;
 
-// typedef struct s_here_doc
-// {
-// 	char	*delim;
-// 	bool	is_here_doc;
-// }				t_here_doc;
-
-// maybe include variable with macros later here
-typedef struct s_parsed_chunk
+typedef struct s_pars
 {
-	char	**args;
-	char	*cmd_path;
-	int32_t	infile;
-	int32_t	outfile;
-	char *here_doc_delim;
-	// struct s_here_doc		access;
-	struct s_parsed_chunk	*next;
-}			t_parsed_chunk;
+	char			**args;
+	char			*cmd_path;
+	char			*here_doc_delim;
+	int32_t			infile;
+	int32_t			outfile;
+	struct s_pars	*next;
+}					t_pars;
 
 typedef struct s_hold
 {
-	char *valid_path;
-	char *env_path;
+	char				*valid_path;
+	char				*env_path;
+	char				**my_env;
+	char				*line;
+	struct s_lex		*lex_struct;
+	struct s_env_exp	*env_list;
+	struct s_env_exp	*export_list;
+	struct s_pars		*pars_list;
+}						t_hold;
 
-	char	**my_env;
+//		init_data.c
+int32_t init_structs(t_hold **hold, char **argv, int32_t argc);
+void create_env_export_list(t_hold *hold, char **ori_env);
 
-	char	*line;
-	// int32_t	exit_code;
 
-	struct s_lexing *lex_struct;
+//		free_content.c
+void free_content(t_hold **hold);
+void free_env_export(t_hold *hold);
 
-	struct s_env_export	*env_list;
-	struct s_env_export	*export_list;
 
-	struct s_parsed_chunk	*parsed_list;
+//		builtins.c
+void	env_builtin(t_hold *hold, t_pars *parsed_node);
+void	pwd_builtin(t_hold *hold, t_pars *parsed_node);
+bool	builtin(t_hold *hold, t_pars *parsed_node);
 
-}				t_hold;
+
+
+
+
+
+
+
+
+
+
 
 //		main.c
 void free_content(t_hold **hold);
-int32_t init_structs(t_hold **hold);
+int32_t init_structs(t_hold **hold, char **argv, int32_t argc);
 void free_env_export(t_hold *hold);
 
 
@@ -118,13 +129,13 @@ int32_t check_syntax_errors(t_hold *hold);
 
 char	*ft_strnew(const int size);
 //		builtins
-void	echo_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
-void	env_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
-void	pwd_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
-void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
-void	exit_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
-void 	unset_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
-bool 	builtin(t_hold *hold, t_parsed_chunk *parsed_node);
+void	echo_builtin(t_hold *hold, t_pars *parsed_node);
+void	env_builtin(t_hold *hold, t_pars *parsed_node);
+void	pwd_builtin(t_hold *hold, t_pars *parsed_node);
+void	cd_builtin(t_hold *hold, t_pars *parsed_node);
+void	exit_builtin(t_hold *hold, t_pars *parsed_node);
+void 	unset_builtin(t_hold *hold, t_pars *parsed_node);
+// bool 	builtin(t_hold *hold, t_pars *parsed_node);
 
 //		cd_builtin_cont.c
 void	add_to_env(t_hold *hold, char *add, char *structure);
@@ -138,23 +149,23 @@ void	delete_var(t_hold **hold, char *var, char *structure);
 
 //		export_struct.c
 void			create_env_export_list(t_hold *hold, char **ori_env);
-t_env_export	*new_node_env(void);
+t_env_exp	*new_node_env(void);
 void			add_node_env(t_hold *hold, char *content, char *type);
-void 			swap_data(t_env_export *export_list);
+void 			swap_data(t_env_exp *export_list);
 void 			sort_export_list(t_hold *hold);
 
 //		export_builtin.c
-void 			export_builtin(t_hold *hold, t_parsed_chunk *parsed_node);
+void 			export_builtin(t_hold *hold, t_pars *parsed_node);
 void			add_to_export_mod(t_hold *hold, char *var_name, char *var_value, int var_class);
-void			sort_export_end(t_env_export *export_list);
-void			swap_export(t_env_export *export_list);
+void			sort_export_end(t_env_exp *export_list);
+void			swap_export(t_env_exp *export_list);
 int				ft_isalnum_mod(int val);
 
 //		export_builtin_cont.c
 char			*ft_strndup(const char *s1, size_t n);
 char			*ft_strncpy(char *dest, const char *src, size_t len);
 int				ft_strcmp(char *s1, char *s2);
-void			swap_export(t_env_export *export_list);
+void			swap_export(t_env_exp *export_list);
 
 //		signals.c
 void			signals(void);
@@ -194,34 +205,34 @@ void check_closed_quotes(t_hold *hold);
 //		parser.c
 bool builtin_parser(char *node);
 void recognize_type(t_hold *hold);
-int32_t count_pipegroups(t_lexing *lex);
-int32_t init_outfile(t_lexing *file_node, int32_t type);
-int32_t init_infile(t_parsed_chunk *file_node_pars, t_lexing *file_node_lex, int32_t type);
+int32_t count_pipegroups(t_lex *lex);
+int32_t init_outfile(t_lex *file_node, int32_t type);
+int32_t init_infile(t_pars *file_node_pars, t_lex *file_node_lex, int32_t type);
 char *get_cmdpath(char *curr_cmd);
-void create_parsed_list(t_hold **hold, t_lexing *lex, int32_t pipegroups);
+void create_parsed_list(t_hold **hold, t_lex *lex, int32_t pipegroups);
 void			add_node_pars(t_hold **hold);
-t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst);
-int32_t arg_amount(t_lexing *lex_node);
+t_pars	*last_node_pars(t_pars *lst);
+int32_t arg_amount(t_lex *lex_node);
 void parser(t_hold *hold);
 
 
 //		executer.c
-void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+void redirection(t_pars *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
 void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
-// void close_fds(t_parsed_chunk *parsed_list, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
-void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env);
-void handle_here_doc(t_parsed_chunk *pars_node);
+// void close_fds(t_pars *parsed_list, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+void execute_cmd(t_pars *parsed_node, char **ori_env);
+void handle_here_doc(t_pars *pars_node);
 void executer(t_hold *hold, char **ori_env);
 
 void close_fds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
-void close_all_fds(t_parsed_chunk *parsed_node, int32_t pipe_fds[MAX_FD][2], int32_t i, int32_t pipegroups);
+void close_all_fds(t_pars *parsed_node, int32_t pipe_fds[MAX_FD][2], int32_t i, int32_t pipegroups);
 
 //		utils.c
-void free_list_pars(t_parsed_chunk* head);
-void free_list_lex(t_lexing* head);
-void free_list_env_export(t_env_export* head);
+void free_list_pars(t_pars* head);
+void free_list_lex(t_lex* head);
+void free_list_env_export(t_env_exp* head);
 void			add_node_lex(t_hold *hold, char *content);
-t_lexing		*last_node_lex(t_lexing *lst);
+t_lex		*last_node_lex(t_lex *lst);
 void exit_status(char *msg1, char *msg2, char *msg3, int32_t exit_code_);
 void	print_error_code(void);
 int	ft_isalnum_mod(int val);
@@ -230,10 +241,10 @@ int	ft_isalnum_mod(int val);
 // -----------------------------------------
 //		delete_later.c
 char *return_macro(int32_t m);
-void print_list(t_lexing *list, char *name);
-void print_macro_list(t_lexing *list);
+void print_list(t_lex *list, char *name);
+void print_macro_list(t_lex *list);
 void print_export(t_hold *hold);
-void print_parsed_list(t_parsed_chunk *pars);
+void print_parsed_list(t_pars *pars);
 // -----------------------------------------
 
 #endif

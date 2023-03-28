@@ -54,7 +54,7 @@ int	update_dir(t_hold *hold, char **args)
 void	change_to_home(t_hold *hold)
 {
 	bool			is_home;
-	t_env_export	*tmp;
+	t_env_exp	*tmp;
 	char			*home;
 	char			*args[2];
 
@@ -79,7 +79,7 @@ void	change_to_home(t_hold *hold)
 		exit_status("cd: HOME not set", "", "", 1);
 }
 
-void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
+void	cd_builtin(t_hold *hold, t_pars *parsed_node)
 {
 	char	**args;
 

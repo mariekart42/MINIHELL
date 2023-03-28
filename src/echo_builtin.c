@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-bool	echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag)
+bool	echo_builtin_helper(t_pars *parsed_node, int i, bool is_nflag)
 {
 	char	**args;
 	int		j;
@@ -26,7 +26,7 @@ bool	echo_builtin_helper(t_parsed_chunk *parsed_node, int i, bool is_nflag)
 	return (is_nflag);
 }
 
-void	echo_builtin_cont(t_parsed_chunk *parsed_node, int *i, bool is_nflag)
+void	echo_builtin_cont(t_pars *parsed_node, int *i, bool is_nflag)
 {
 	char	**args;
 
@@ -42,7 +42,7 @@ void	echo_builtin_cont(t_parsed_chunk *parsed_node, int *i, bool is_nflag)
 		ft_putstr_fd("\n", 1);
 }
 
-bool	is_nflag_func(char **args, t_parsed_chunk *parsed_node, int *i)
+bool	is_nflag_func(char **args, t_pars *parsed_node, int *i)
 {
 	bool	temp_flag;
 	bool	is_nflag;
@@ -59,7 +59,7 @@ bool	is_nflag_func(char **args, t_parsed_chunk *parsed_node, int *i)
 	return (is_nflag);
 }
 
-void	echo_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
+void	echo_builtin(t_hold *hold, t_pars *parsed_node)
 {
 	(void)hold;
 	char			**args;

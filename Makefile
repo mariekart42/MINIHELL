@@ -13,6 +13,8 @@ LIB_F = libft
 LIB = libft.a
 
 SRC		=	main.c \
+			init_data.c \
+			free_content.c \
 			utils.c \
 			export_struct.c \
 			lexing.c \

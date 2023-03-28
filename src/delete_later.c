@@ -24,7 +24,7 @@ else
 	return("ERROR PRINTING MACRO");
 }
 
-void print_list(t_lexing *list, char *name)
+void print_list(t_lex *list, char *name)
 {
 printf("----------\n[%s]:\n", name);
 if(list == NULL)
@@ -33,7 +33,7 @@ if(list == NULL)
 	return ;
 }
 int32_t i = 1;
-t_lexing *node = NULL;
+t_lex *node = NULL;
 node = list;
 while (node->next != NULL)
 {
@@ -50,7 +50,7 @@ else
 printf("-- done --\n\n");
 }
 
-void print_macro_list(t_lexing *list)
+void print_macro_list(t_lex *list)
 {
 printf("----------\n\n");
 if(list == NULL)
@@ -59,7 +59,7 @@ if(list == NULL)
 	return ;
 }
 int32_t i = 1;
-t_lexing *node = NULL;
+t_lex *node = NULL;
 node = list;
 while (node->next != NULL)
 {
@@ -77,7 +77,7 @@ printf("-- done --\n\n");
 }
 void print_export(t_hold *hold)
 {
-	t_env_export *tmp = hold->export_list;
+	t_env_exp *tmp = hold->export_list;
 	while (tmp != NULL)
 	{
 		printf(RED"%s\n"RESET, tmp->item);
@@ -85,9 +85,9 @@ void print_export(t_hold *hold)
 	}
 }
 
-void print_parsed_list(t_parsed_chunk *pars)
+void print_parsed_list(t_pars *pars)
 {
-	t_parsed_chunk *tmp_pars = pars;
+	t_pars *tmp_pars = pars;
 	int i = 0;
 	int k = 1;
 	printf(RED"\n    print_parsed_list" RESET);

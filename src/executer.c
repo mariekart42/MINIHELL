@@ -3,9 +3,8 @@
 /* function changes the filedescriptors always
  * 		- from stdin to 'infile' in 'parsed_chunk'
  *		- and from stdout to 'outfile' in 'parsed_chunk' */
-void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
+void redirection(t_pars *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
-	// printf("%d %d\n", i, pipegroups);
 	if (i == 0)
 	{
 		if (parsed_node->infile != 0)
@@ -27,10 +26,7 @@ void redirection(t_parsed_chunk *parsed_node, int32_t i, int32_t pipegroups, int
 	}
 	else if ((i+1) == pipegroups) // end of pipegroups
 	{
-		// pipe(pipe_fds[i + 1]);
 		dup2(pipe_fds[i - 1][0], STDIN_FILENO);
-		// printf("last pipe %d\n", pipe_fds[i - 1][0]);
-
 		if (parsed_node->outfile != 1)
 			dup2(parsed_node->outfile, STDOUT_FILENO);
 	}
@@ -48,7 +44,6 @@ void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 	i = 0;
 	while (i + 1< pipegroups)
 	{
-		// write(2, "opend pipe\n", 11);
 		if (pipe(pipe_fds[i]) < 0)
 		{
 			exit_status("Error! Failed to open pipe!", "", "", 69);
@@ -61,10 +56,10 @@ void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 void close_fds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
 	int32_t i;
-	t_parsed_chunk *tmp;
+	t_pars *tmp;
 
 	i = 0;
-	tmp = hold->parsed_list;
+	tmp = hold->pars_list;
 	while ((i+1) < pipegroups)
 	{
 		close(pipe_fds[i][0]);
@@ -81,18 +76,13 @@ void close_fds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 	}
 }
 
-void execute_cmd(t_parsed_chunk *parsed_node, char **ori_env)
+void execute_cmd(t_pars *parsed_node, char **ori_env)
 {
-		// fprintf(stderr, "error bef exec: %d\n", error_code);
 	if (execve(parsed_node->cmd_path, parsed_node->args, ori_env) == -1)
-	{
-		// write(2, RED"minihell: ", 16);
-		// write(2, parsed_node->args[0], ft_strlen(parsed_node->args[0]));
 		exit_status(parsed_node->args[0], ":command not found!", "", 127);
-	}
 }
 
-void handle_here_doc(t_parsed_chunk *pars_node)
+void handle_here_doc(t_pars *pars_node)
 {
 	char	*input_string;
 	char *tmp1;
@@ -136,25 +126,23 @@ void handle_here_doc(t_parsed_chunk *pars_node)
 
 void handle_single_builtin(t_hold *hold)
 {
-	if (hold->parsed_list->here_doc_delim != NULL)
-		handle_here_doc(hold->parsed_list);
-	if (hold->parsed_list->infile != 0)
-		close(hold->parsed_list->infile);
-	if (hold->parsed_list->outfile != 1)
-		close(hold->parsed_list->outfile);
-	builtin(hold, hold->parsed_list);
+	if (hold->pars_list->here_doc_delim != NULL)
+		handle_here_doc(hold->pars_list);
+	if (hold->pars_list->infile != 0)
+		close(hold->pars_list->infile);
+	if (hold->pars_list->outfile != 1)
+		close(hold->pars_list->outfile);
+	builtin(hold, hold->pars_list);
 }
 
 void executer(t_hold *hold, char **ori_env)
 {
 	int32_t pipegroups;
 	int32_t	i;
-	t_parsed_chunk *parsed_node;
+	t_pars *parsed_node;
 	int32_t pipe_fds[MAX_FD][2];
 
-	// int32_t pid[100];
-
-	parsed_node = hold->parsed_list;
+	parsed_node = hold->pars_list;
 	if (error_code != 0)
 		return ;
 	pipegroups = count_pipegroups(hold->lex_struct);
@@ -171,11 +159,8 @@ void executer(t_hold *hold, char **ori_env)
 			if (parsed_node->here_doc_delim != NULL)
 				handle_here_doc(parsed_node);
 			redirection(parsed_node, i, pipegroups, pipe_fds);
-
 			close_fds(hold, pipegroups, pipe_fds);
-			if (builtin_parser(parsed_node->args[0]) == true)
-				builtin(hold, parsed_node);
-			else
+			if (builtin(hold, parsed_node) == false)
 			{
 				execute_cmd(parsed_node, ori_env);
 				exit(122);

@@ -1,81 +1,33 @@
 #include "minishell.h"
 
-void free_content(t_hold **hold)
-{
-
-	// free((*hold)->line);
-	free_list_lex((*hold)->lex_struct);
-	free_list_pars((*hold)->parsed_list);
-	(*hold)->lex_struct = NULL;
-	(*hold)->parsed_list = NULL;
-}
-
-int32_t init_structs(t_hold **hold)
-{
-	(*hold) = (t_hold *)malloc(sizeof(t_hold));
-	if (!(*hold))
-		return (69);
-	(*hold)->env_list = NULL;
-	(*hold)->parsed_list = NULL;
-	(*hold)->export_list = NULL;
-	(*hold)->lex_struct = NULL;
-	return (0);
-}
-
-void free_env_export(t_hold *hold)
-{
-	free_list_env_export(hold->env_list);
-	free_list_env_export(hold->export_list);
-	hold->env_list = NULL;
-	hold->export_list = NULL;
-}
-
 int main(int32_t argc, char **argv, char **env)
 {
-	t_hold	*hold = NULL;
-	(void) argc;
-	(void) argv;
+	t_hold	*hold;
 
-	if (init_structs(&hold))
+	hold = NULL;
+	if (init_structs(&hold, argv, argc))
 		return (69);
-	hold->line = NULL;
-
-	// using signal function here to catch signal if eg ctr-c is used
-	
-	// Take a look here on how to create export
-	// Found in utils.c
 	create_env_export_list(hold, env);
-			// // important later
-			// char *test;
-			// test = getenv("PATH");
-			// printf("getenv: %s\n", test);
-	signals(); // Signals are applied before the main loop
+	signals();
 	while (1)
 	{
 		error_code = 0;
 		hold->line = readline(BLU"MINIHELL> "RESET);
-		// hold->line = ft_strdup("ls -l");
 		if (!hold->line)
 		{
-			// Signal for Ctrl+D
 			ft_putstr_fd("\b\bexit\n", 1);
 			exit(1);
 		}
-// 		// if line is empty, bash returns 0 and does nothing
 		if (ft_strlen(hold->line) > 0)
 		{
 			add_history(hold->line);
 			lexer(hold);
-// print_list(hold->lex_struct, "lex");
 			parser(hold);
-// print_parsed_list(hold->parsed_list);
-// print_macro_list(hold->lex_struct);
 			executer(hold, env);
-
 			fprintf(stderr, MAG"error code: %d\n"RESET, error_code);
 			free_content(&hold);
-			free(hold->line);
-			hold->line = NULL;
+			// free(hold->line);
+			// hold->line = NULL;
 		}
 	}
 	free_env_export(hold);
@@ -99,28 +51,15 @@ int main(int32_t argc, char **argv, char **env)
 
 
 //!  EXECUTER:
-//	- douple redir not working yet(prolly wrong opening rights)
 // - change 'ori_env' to **char of own env list
 
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-//!  LATER:
-// - exit with exit command -> returns 0
-// - signals shit
-
-
 //!  LEAKS:
-// - in parser:
-//		around 20 leaks (more if using more nodes)
-//	-> deal with it later cause we need to restructure parser anyways a bit
+
 
 
 //!  PROBLEMOS:
-//!			SANTI:
-//				-  ls|exit 42		-> wrong error 
-//				-  exit|ls			-> should not display ls
-//				-  echo hola > test	-> echo is not providing input 
-//				-  env|ls			-> prints newlines
+//		-  ls|exit 42		-> wrong error 
+//		-  echo hola > test	-> echo is not providing input 
+//		-  env|ls			-> prints newlines
 
-//!			MY:
-//		    !!	-  ls | hola | ls	-> prints ls

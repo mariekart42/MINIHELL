@@ -2,10 +2,10 @@
 
 void	add_to_env(t_hold *hold, char *add, char *structure)
 {
-	t_env_export	*new;
-	t_env_export	*tmp;
+	t_env_exp	*new;
+	t_env_exp	*tmp;
 
-	new = malloc(sizeof(t_env_export));
+	new = malloc(sizeof(t_env_exp));
 	new->item = ft_strdup(add);
 	new->next = NULL;
 	tmp = NULL;

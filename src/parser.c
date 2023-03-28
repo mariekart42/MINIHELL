@@ -24,7 +24,7 @@ bool builtin_parser(char *node)
  * 	Macros: QUOTES, PIPE, (SINGLE-/DOUBLE) REDIRECTION, BUILTIN */
 void recognize_type(t_hold *hold)
 {
-	t_lexing *tmp;
+	t_lex *tmp;
 
 	tmp = hold->lex_struct;
 	while (tmp != NULL)
@@ -54,7 +54,7 @@ void recognize_type(t_hold *hold)
 /* function checks and returns outfile on success
  * opens/creates file if it not exists
  * check later for permission issues if the file already exists(how lol?) */
-int32_t init_outfile(t_lexing *file_node, int32_t type)
+int32_t init_outfile(t_lex *file_node, int32_t type)
 {
 	int32_t file_id;
 
@@ -73,8 +73,8 @@ int32_t init_outfile(t_lexing *file_node, int32_t type)
 
 /* function checks and returns infile on success
  * input file must exist and be readable by the user running the command
- * file_node is the current node in parsed_list	*/
-int32_t init_infile(t_parsed_chunk *file_node_pars, t_lexing *file_node_lex, int32_t type)
+ * file_node is the current node in pars_list	*/
+int32_t init_infile(t_pars *file_node_pars, t_lex *file_node_lex, int32_t type)
 {
 	int32_t file_id;
 
@@ -106,9 +106,9 @@ int32_t init_infile(t_parsed_chunk *file_node_pars, t_lexing *file_node_lex, int
 }
 
 /* function counts and returns amount of pipegroups in 'lexed_list' */
-int32_t count_pipegroups(t_lexing *lex)
+int32_t count_pipegroups(t_lex *lex)
 {
-	t_lexing *tmp;
+	t_lex *tmp;
 	int32_t	pipegroup;
 
 	pipegroup = 1;
@@ -122,7 +122,7 @@ int32_t count_pipegroups(t_lexing *lex)
 	return (pipegroup);
 }
 
-/* function appends command from 'parsed_list' at the end of
+/* function appends command from 'pars_list' at the end of
  * each path of $PATH and checks for access
  * in case of access, function returns path
  * otherwise returns NULL		*/
@@ -164,7 +164,7 @@ char *get_cmdpath(char *curr_cmd)
 		return (valid_path);
 }
 
-t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst)
+t_pars	*last_node_pars(t_pars *lst)
 {
 	if (!lst)
 		return (NULL);
@@ -175,29 +175,29 @@ t_parsed_chunk	*last_node_pars(t_parsed_chunk *lst)
 
 void add_node_pars(t_hold **hold)
 {
-	t_parsed_chunk *tmp;
+	t_pars *tmp;
 
-	tmp = (t_parsed_chunk *)malloc(sizeof(t_parsed_chunk));
+	tmp = (t_pars *)malloc(sizeof(t_pars));
 	// if (!tmp)
-	// 	return (exit_status(hold, "Error! Failed to malloc\n", 69), (t_parsed_chunk*)NULL);
+	// 	return (exit_status(hold, "Error! Failed to malloc\n", 69), (t_pars*)NULL);
 	tmp->args = NULL;
 	tmp->cmd_path = NULL;
 	tmp->next = NULL;
 	tmp->here_doc_delim = NULL;
 	tmp->infile = STDIN_FILENO;
 	tmp->outfile = STDOUT_FILENO;
-	if ((*hold)->parsed_list == NULL)
-		(*hold)->parsed_list = tmp;
+	if ((*hold)->pars_list == NULL)
+		(*hold)->pars_list = tmp;
 	else
-		(last_node_pars((*hold)->parsed_list))->next = tmp;
+		(last_node_pars((*hold)->pars_list))->next = tmp;
 }
 
-void add_arg(t_parsed_chunk *pars_node)
+void add_arg(t_pars *pars_node)
 {
 	int32_t i;
 	int32_t x;
 	char **new_args;
-	t_parsed_chunk *tmp;
+	t_pars *tmp;
 
 	i = 0;
 	x = 0;
@@ -216,7 +216,7 @@ void add_arg(t_parsed_chunk *pars_node)
 	}
 }
 
-int32_t arg_amount(t_lexing *lex_node)
+int32_t arg_amount(t_lex *lex_node)
 {
 	int32_t arg_amount;
 
@@ -254,7 +254,7 @@ char	*ft_strnnjoin(char const *s1, int n1, char const *s2, int n2)
 char	*sub_extend(char *var, t_hold *hold)
 {
 	int				i;
-	t_env_export	*tmp;
+	t_env_exp	*tmp;
 
 	i = 0;
 	tmp = hold->env_list;
@@ -301,7 +301,7 @@ char	*extend(char *var, t_hold *hold)
 	return (ret);
 }
 
-void	sub_open_extension(t_lexing	*lex, int i, t_hold *hold)
+void	sub_open_extension(t_lex	*lex, int i, t_hold *hold)
 {
 	char	*to_free;
 	char	*extended;
@@ -313,9 +313,9 @@ void	sub_open_extension(t_lexing	*lex, int i, t_hold *hold)
 	return ;
 }
 
-void	open_extensions(t_lexing *lex, t_hold *hold)
+void	open_extensions(t_lex *lex, t_hold *hold)
 {
-	t_lexing	*tmp;
+	t_lex	*tmp;
 	size_t			i;
 
 	tmp = lex;
@@ -333,11 +333,11 @@ void	open_extensions(t_lexing *lex, t_hold *hold)
 	}
 }
 
-void create_parsed_list(t_hold **hold, t_lexing *lex, int32_t pipegroups)
+void create_parsed_list(t_hold **hold, t_lex *lex, int32_t pipegroups)
 {
 	int32_t i;
-	t_lexing *tmp_lex;
-	t_parsed_chunk *tmp_pars;
+	t_lex *tmp_lex;
+	t_pars *tmp_pars;
 
 	tmp_pars = NULL;
 	tmp_lex = lex;
@@ -348,7 +348,7 @@ void create_parsed_list(t_hold **hold, t_lexing *lex, int32_t pipegroups)
 		pipegroups--;
 	}
 	pipegroups = i;
-	tmp_pars = (*hold)->parsed_list;
+	tmp_pars = (*hold)->pars_list;
 	while (pipegroups > 0)
 	{
 		tmp_pars->args = malloc(sizeof(char *) * (arg_amount(tmp_lex) + 1));

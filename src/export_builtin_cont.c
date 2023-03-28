@@ -60,7 +60,7 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
-void	swap_export(t_env_export *export_list)
+void	swap_export(t_env_exp *export_list)
 {
 	char	*tmp;
 
