@@ -22,7 +22,9 @@ int main(int32_t argc, char **argv, char **env)
 		{
 			add_history(hold->line);
 			lexer(hold);
+			print_list(hold->lex_struct, "grr");
 			parser(hold);
+			fprintf(stderr, "out: %d\n", hold->pars_list->outfile);
 			executer(hold, env);
 			fprintf(stderr, MAG"error code: %d\n"RESET, error_code);
 			free_content(&hold);
@@ -60,6 +62,4 @@ int main(int32_t argc, char **argv, char **env)
 
 //!  PROBLEMOS:
 //		-  ls|exit 42		-> wrong error 
-//		-  echo hola > test	-> echo is not providing input 
-//		-  env|ls			-> prints newlines
 

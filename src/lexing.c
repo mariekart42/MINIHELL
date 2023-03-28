@@ -55,10 +55,8 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 		return (-1);
 	if (hold->line[i] == '<')
 	{
-
-
-		// i++;
-		i = skip_spaces(hold->line, i+1) + 1;
+		i++;
+		i = skip_spaces(hold->line, i);
 		if(hold->line[i] == '<')
 		{
 			add_node_lex(hold, "<<");
@@ -73,8 +71,8 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 	}
 	else if (hold->line[i] == '>')
 	{
-		// i++;
-		i = skip_spaces(hold->line, i+1) + 1;
+		i++;
+		i = skip_spaces(hold->line, i);
 		if (hold->line[i] == '<')
             return (exit_status("syntax error near unexpected token '<'", "", "", 69), -1);
 		if (hold->line[i] == '>')
@@ -196,7 +194,7 @@ int32_t lex_word(t_hold *hold, char *line, int32_t i)
 			i += update_i(quote_chunk_);
 			if (quote_chunk_ != NULL)
 				string = handle_quote_chunk(&string, &quote_chunk_);
-			x = ft_strlen(string) - 1;
+			x = ft_strlen(string);
 		}
 		else
 			string[x] = line[i];
@@ -254,7 +252,10 @@ void lexer(t_hold *hold)
 		else if (hold->line[i] == '|')
 			lex_pipe(hold, i);
 		else if (hold->line[i] == '<' || hold->line[i] == '>')
+		{
 			i = lex_redir(hold, i);
+			// i-=1;
+		}
 		else if (hold->line[i] != ' ' && hold->line[i] != '\t')
 			i = lex_word(hold, hold->line, i);
 		i++;

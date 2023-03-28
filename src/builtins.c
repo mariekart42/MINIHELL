@@ -18,7 +18,7 @@ void	env_builtin(t_hold *hold, t_pars *parsed_node)
 	while (tmp != NULL)
 	{
 		ft_putstr_fd(tmp->item, hold->pars_list->outfile);
-		write(2, "\n", 1);
+		write(hold->pars_list->outfile, "\n", 1);
 		tmp = tmp->next;
 	}
 }
@@ -43,6 +43,7 @@ void	pwd_builtin(t_hold *hold, t_pars *parsed_node)
 bool	builtin(t_hold *hold, t_pars *parsed_node)
 {
 	// error_code = 0;
+
 	if (ft_strncmp(parsed_node->args[0], "echo", 4) == 0)
 		return (echo_builtin(hold, parsed_node), true);
 	else if (ft_strncmp(parsed_node->args[0], "env", 3) == 0)

@@ -126,13 +126,23 @@ void handle_here_doc(t_pars *pars_node)
 
 void handle_single_builtin(t_hold *hold)
 {
+	int32_t tmp_in;
+	int32_t tmp_out;
+
 	if (hold->pars_list->here_doc_delim != NULL)
 		handle_here_doc(hold->pars_list);
+	tmp_in = dup(STDIN_FILENO);
+	tmp_out = dup(STDOUT_FILENO);
+	dup2(hold->pars_list->infile, STDIN_FILENO);
+	dup2(hold->pars_list->outfile, STDOUT_FILENO);
+	builtin(hold, hold->pars_list);
+	dup2(tmp_in, STDIN_FILENO);
+	dup2(tmp_out, STDOUT_FILENO);
 	if (hold->pars_list->infile != 0)
 		close(hold->pars_list->infile);
 	if (hold->pars_list->outfile != 1)
 		close(hold->pars_list->outfile);
-	builtin(hold, hold->pars_list);
+		
 }
 
 void executer(t_hold *hold, char **ori_env)
@@ -148,6 +158,7 @@ void executer(t_hold *hold, char **ori_env)
 	pipegroups = count_pipegroups(hold->lex_struct);
 	if (pipegroups == 1 && hold->lex_struct->macro == BUILTIN)
 		return (handle_single_builtin(hold));
+	fprintf(stderr, "pipe: %d\n", pipegroups);
 	open_pipefds(pipegroups, pipe_fds);
 	i = 0;
 	while (i < pipegroups)
