@@ -59,6 +59,32 @@ void	print_env_export(t_hold *hold)
 	}
 }
 
+
+
+
+
+
+int		export_empty(t_hold *hold, t_pars *parsed_node)
+{
+	if (parsed_node->args[1] == NULL)
+	{
+		print_env_export(hold);
+		return (0);
+	}
+	return (1);
+}
+
+int		var_start_number(t_pars *parsed_node, int i)
+{
+	if (ft_isdigit(parsed_node->args[i][0]) != 0)
+	{
+		exit_status("export:", parsed_node->args[i],
+			": not a valid identifier", 1);
+		return (0);
+	}
+	return (1);
+}
+
 void	export_builtin(t_hold *hold, t_pars *parsed_node)
 {
 	int		i;
@@ -69,19 +95,12 @@ void	export_builtin(t_hold *hold, t_pars *parsed_node)
 
 	i = 1;
 	j = 0;
-	if (parsed_node->args[1] == NULL)
-	{
-		print_env_export(hold);
+	if (export_empty(hold, parsed_node) == 0)
 		return ;
-	}
 	while (parsed_node->args[i] != NULL)
 	{
-		if (ft_isdigit(parsed_node->args[i][0]) != 0)
-		{
-			exit_status("export:", parsed_node->args[i],
-				": not a valid identifier", 1);
+		if (var_start_number(parsed_node, i) == 0)
 			return ;
-		}
 		var_class = 0;
 		while (parsed_node->args[i][j] != '\0')
 		{
