@@ -21,6 +21,19 @@ void	swap_data(t_env_exp *export_list)
 	export_list->next->var_value = tmp_value;
 }
 
+void	sort_export_list_sub(t_hold *hold, t_env_exp	*tmp)
+{
+	if (ft_strncmp(hold->export_list->var_name,
+			hold->export_list->next->var_name,
+			ft_strlen(hold->export_list->next->var_name)) > 0)
+	{
+		swap_data(hold->export_list);
+		hold->export_list = tmp;
+	}
+	else
+		hold->export_list = hold->export_list->next;
+}
+
 void	sort_export_list(t_hold *hold)
 {
 	t_env_exp	*tmp;
@@ -34,28 +47,15 @@ void	sort_export_list(t_hold *hold)
 		tmp_tmp = ft_split(tmp->item, '=');
 		tmp->var_name = tmp_tmp[0];
 		tmp->var_value = tmp_tmp[1];
-		while (tmp_tmp[i] != NULL)
-		{
-			tmp->var_value = ft_strjoin(tmp->var_value, tmp_tmp[i]);
-			i++;
-		}
+		while (tmp_tmp[i++] != NULL)
+			tmp->var_value = ft_strjoin(tmp->var_value, tmp_tmp[i++]);
 		free(tmp_tmp);
 		i = 2;
 		tmp = tmp->next;
 	}
 	tmp = hold->export_list;
 	while (hold->export_list != NULL && hold->export_list->next != NULL)
-	{
-		if (ft_strncmp(hold->export_list->var_name,
-				hold->export_list->next->var_name,
-				ft_strlen(hold->export_list->next->var_name)) > 0)
-		{
-			swap_data(hold->export_list);
-			hold->export_list = tmp;
-		}
-		else
-			hold->export_list = hold->export_list->next;
-	}
+		sort_export_list_sub(hold, tmp);
 	hold->export_list = tmp;
 }
 
@@ -71,7 +71,7 @@ t_env_exp	*new_node_env(void)
 	return (tmp);
 }
 
-void	add_node_env_sub(t_hold *hold, t_env_exp *tmp, t_env_exp *p)
+void	add_node_export_sub(t_hold *hold, t_env_exp *tmp, t_env_exp *p)
 {
 	if (hold->export_list == NULL)
 			hold->export_list = tmp;
@@ -107,7 +107,7 @@ void	add_node_env(t_hold *hold, char *content, char *type)
 	}
 	else
 	{
-		add_node_env_sub(hold, tmp, p);
+		add_node_export_sub(hold, tmp, p);
 		return ;
 	}
 }
