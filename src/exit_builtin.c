@@ -23,6 +23,14 @@ int	ft_atoi_mod(const char *str)
 	return (sign * output);
 }
 
+void	free_exit(t_hold *hold)
+{
+	free_content(&hold);
+	free(hold->line);
+	free_env_export(hold);
+	free(hold);
+}
+
 void	exit_builtin(t_hold *hold, t_pars *parsed_node)
 {
 	int32_t	exit_code;
@@ -32,10 +40,8 @@ void	exit_builtin(t_hold *hold, t_pars *parsed_node)
 		exit_code = ft_atoi_mod(parsed_node->args[1]);
 		if (exit_code == -1)
 		{
-			// ft_putstr_fd(RED"minishell: exit: ", 2);
-			// ft_putstr_fd(parsed_node->args[1], 2);
-			// ft_putstr_fd(": numeric argument required\n"RESET, 2);
-			exit_status("exit:", parsed_node->args[1], ": numeric argument required", 255);
+			exit_status("exit:", parsed_node->args[1],
+				": numeric argument required", 255);
 			exit(255);
 		}
 		else
@@ -48,9 +54,6 @@ void	exit_builtin(t_hold *hold, t_pars *parsed_node)
 	}
 	else
 		error_code = 0;
-	free_content(&hold);
-	free(hold->line);
-	free_env_export(hold);
-	free(hold);
+	free_exit(hold);
 	exit(error_code % 256);
 }
