@@ -158,7 +158,6 @@ void executer(t_hold *hold, char **ori_env)
 	pipegroups = count_pipegroups(hold->lex_struct);
 	if (pipegroups == 1 && hold->lex_struct->macro == BUILTIN)
 		return (handle_single_builtin(hold));
-	fprintf(stderr, "pipe: %d\n", pipegroups);
 	open_pipefds(pipegroups, pipe_fds);
 	i = 0;
 	while (i < pipegroups)
