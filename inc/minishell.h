@@ -103,7 +103,7 @@ bool	builtin(t_hold *hold, t_pars *parsed_node);
 
 
 
-
+char *handle_quote_chunk(char **string, char **quote_chunk);
 
 
 

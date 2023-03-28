@@ -55,8 +55,10 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 		return (-1);
 	if (hold->line[i] == '<')
 	{
-		i++;
-		i = skip_spaces(hold->line, i);
+
+
+		// i++;
+		i = skip_spaces(hold->line, i+1) + 1;
 		if(hold->line[i] == '<')
 		{
 			add_node_lex(hold, "<<");
@@ -71,8 +73,8 @@ int32_t lex_redir(t_hold *hold, int32_t i)
 	}
 	else if (hold->line[i] == '>')
 	{
-		i++;
-		i = skip_spaces(hold->line, i);
+		// i++;
+		i = skip_spaces(hold->line, i+1) + 1;
 		if (hold->line[i] == '<')
             return (exit_status("syntax error near unexpected token '<'", "", "", 69), -1);
 		if (hold->line[i] == '>')
@@ -153,16 +155,36 @@ char *quote_chunk2(char *line, int32_t i)
 	return (string);
 }
 
+char *handle_quote_chunk(char **string, char **quote_chunk)
+{
+	char *tmp;
+
+	tmp = ft_strjoin(*string, *quote_chunk);
+	free(*string);
+	*string = ft_strdup(tmp);
+	free(tmp);
+	free(*quote_chunk);
+	tmp = NULL;
+	quote_chunk = NULL;
+	return (*string);
+}
+
+int32_t update_i(char *quote_chunk)
+{
+	if (quote_chunk == NULL)
+		return (1);
+	else
+		return (ft_strlen(quote_chunk) + 1);
+}
+
 int32_t lex_word(t_hold *hold, char *line, int32_t i)
 {
 	char *quote_chunk_;
 	char *string;
-	char *tmp;
 	int32_t x;
 
 	quote_chunk_ = NULL;
 	string = ft_calloc(ft_strlen(line) + 1, 1);
-	tmp = NULL;
 	x = 0;
 	while (1)
 	{
@@ -171,19 +193,9 @@ int32_t lex_word(t_hold *hold, char *line, int32_t i)
 		else if (line[i] == 34 || line[i] == 39)
 		{
 			quote_chunk_ = quote_chunk2(line, i);
-			if (quote_chunk_ == NULL)
-				i++;
-			else
-			{
-				i += ft_strlen(quote_chunk_) + 1;
-				tmp = ft_strjoin(string, quote_chunk_);
-				free(string);
-				string = ft_strdup(tmp);
-				free(tmp);
-				free(quote_chunk_);
-				tmp = NULL;
-				quote_chunk_ = NULL;
-			}
+			i += update_i(quote_chunk_);
+			if (quote_chunk_ != NULL)
+				string = handle_quote_chunk(&string, &quote_chunk_);
 			x = ft_strlen(string) - 1;
 		}
 		else
