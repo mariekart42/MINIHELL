@@ -85,7 +85,7 @@ int		var_start_number(t_pars *parsed_node, int i)
 	return (1);
 }
 
-int	valid_value_export_var(t_pars *parsed_node, int i, int j)
+int	not_valid_value_export_var(t_pars *parsed_node, int i, int j)
 {
 	if (ft_isalnum_mod(parsed_node->args[i][j]) == 0)
 	{
@@ -96,7 +96,7 @@ int	valid_value_export_var(t_pars *parsed_node, int i, int j)
 	return (1);
 }
 
-void		var_class_zero(int var_class, t_hold *hold, t_pars *parsed_node,
+void	var_class_zero(int var_class, t_hold *hold, t_pars *parsed_node,
 							int i)
 {
 	if (var_class == 0)
@@ -113,7 +113,29 @@ void	non_zero_var(t_hold *hold, t_pars *parsed_node, int i, char *var_name)
 	add_to_env(hold, parsed_node->args[i], "env");
 }
 
+int		get_var_type(t_pars *parsed_node, int i, int j)
+{
+	if (parsed_node->args[i][j + 1] == '\0')
+		return (1);
+	if (parsed_node->args[i][j + 1] != '\0')
+		return (2);
+	return (0);
+}
+
+char	*assign_var_value(t_pars *parsed_node, int i, int j)
+{
+	return (ft_strndup(&parsed_node->args[i][j + 1],
+		ft_strlen(parsed_node->args[i]) + 1));
+}
+
 void	export_builtin(t_hold *hold, t_pars *parsed_node)
+{
+	if (export_empty(hold, parsed_node) == 0)
+		return ;
+	export_not_empty(hold, parsed_node);
+}
+
+void	export_not_empty(t_hold *hold, t_pars *parsed_node)
 {
 	int		i;
 	int		j;
@@ -122,8 +144,6 @@ void	export_builtin(t_hold *hold, t_pars *parsed_node)
 	char	*var_value;
 
 	i = 1;
-	if (export_empty(hold, parsed_node) == 0)
-		return ;
 	while (parsed_node->args[i] != NULL)
 	{
 		j = 0;
@@ -132,17 +152,13 @@ void	export_builtin(t_hold *hold, t_pars *parsed_node)
 		var_class = 0;
 		while (parsed_node->args[i][j] != '\0')
 		{
-			if (valid_value_export_var(parsed_node, i, j) == 0)
+			if (not_valid_value_export_var(parsed_node, i, j) == 0)
 				return ;
 			if (parsed_node->args[i][j] == '=')
 			{
-				if (parsed_node->args[i][j + 1] == '\0')
-					var_class = 1;
-				if (parsed_node->args[i][j + 1] != '\0')
-					var_class = 2;
-				if (parsed_node->args[i][j + 1] != '\0')
-					var_value = ft_strndup(&parsed_node->args[i][j + 1],
-							ft_strlen(parsed_node->args[i]) + 1);
+				var_class = get_var_type(parsed_node, i, j);
+				if (var_class == 2)
+					var_value = assign_var_value(parsed_node, i, j);
 				var_name = ft_strndup(parsed_node->args[i], j);
 				break ;
 			}
