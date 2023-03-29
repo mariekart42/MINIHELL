@@ -93,3 +93,5 @@ void	add_node_env(t_hold *hold, char *content, char *type)
 		return ;
 	}
 }
+<<<<<<< HEAD
+=======
