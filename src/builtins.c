@@ -44,19 +44,19 @@ bool	builtin(t_hold *hold, t_pars *parsed_node)
 {
 	// error_code = 0;
 
-	if (ft_strncmp(parsed_node->args[0], "echo", 4) == 0)
+	if (ft_strncmp(parsed_node->args[0], "echo\0", 5) == 0)
 		return (echo_builtin(hold, parsed_node), true);
-	else if (ft_strncmp(parsed_node->args[0], "env", 3) == 0)
+	else if (ft_strncmp(parsed_node->args[0], "env\0", 4) == 0)
 		return (env_builtin(hold, parsed_node), true);
-	else if (ft_strncmp(parsed_node->args[0], "pwd", 3) == 0)
+	else if (ft_strncmp(parsed_node->args[0], "pwd\0", 4) == 0)
 		return (pwd_builtin(hold, parsed_node), true);
-	else if (ft_strncmp(parsed_node->args[0], "cd", 2) == 0)
+	else if (ft_strncmp(parsed_node->args[0], "cd\0", 3) == 0)
 		return (cd_builtin(hold, parsed_node), true);
-	else if (ft_strncmp(parsed_node->args[0], "exit", 4) == 0)
+	else if (ft_strncmp(parsed_node->args[0], "exit\0", 5) == 0)
 		return (exit_builtin(hold, parsed_node), true);
-	else if (ft_strncmp(parsed_node->args[0], "unset", 5) == 0)
+	else if (ft_strncmp(parsed_node->args[0], "unset\0", 6) == 0)
 		return (unset_builtin(hold, parsed_node), true);
-	else if (ft_strncmp(parsed_node->args[0], "export", 6) == 0)
+	else if (ft_strncmp(parsed_node->args[0], "export\0", 7) == 0)
 		return (export_builtin(hold, parsed_node), true);
 	return (false);
 }

@@ -125,19 +125,13 @@ int32_t quote_len(char *line, int32_t i, char quote)
 	return (-1);
 }
 
-char *quote_chunk2(char *line, int32_t i)
+char *init_string(char *line, char quote, int32_t i, int32_t quote_len_)
 {
-	char quote;
-	char *string;
-	int32_t quote_len_;
 	int32_t x;
+	char *string;
 
-	quote = line[i];
-	quote_len_ = quote_len(line, i+1, quote);
-	if (line[i + 1] == quote || quote_len_ == -1)
-		return (NULL);
-	string = (char *)malloc(quote_len_ + 1);
 	x = 0;
+	string = (char *)malloc(quote_len_ + 1);
 	i++;
 	while (line[i] != '\0')
 	{
@@ -151,6 +145,18 @@ char *quote_chunk2(char *line, int32_t i)
 		return (NULL);
 	string[x] = '\0';
 	return (string);
+}
+
+char *quote_chunk2(char *line, int32_t i)
+{
+	char quote;
+	int32_t quote_len_;
+
+	quote = line[i];
+	quote_len_ = quote_len(line, i+1, quote);
+	if (line[i + 1] == quote || quote_len_ == -1)
+		return (NULL);
+	return (init_string(line, quote, i, quote_len_));
 }
 
 char *handle_quote_chunk(char **string, char **quote_chunk)
