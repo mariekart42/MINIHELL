@@ -31,6 +31,8 @@ SRC		=	main.c \
 			unset_builtin.c \
 			export_builtin.c \
 			export_builtin_cont.c \
+			export_builtin_utils.c \
+			export_builtin_utils_cont.c \
 			signals.c \
 			signal_handlers.c
 

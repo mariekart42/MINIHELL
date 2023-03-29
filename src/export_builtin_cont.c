@@ -1,70 +1,69 @@
 #include "minishell.h"
 
-char	*ft_strncpy(char *dest, const char *src, size_t len)
+void	add_to_export_mod(t_hold *hold, char **vars,
+							int var_class)
 {
-	size_t		index;
-	size_t		src_len;
+	t_env_exp	*new;
+	t_env_exp	*tmp;
+	char		*tmp_add;
+	char		*tmp_add2;
+	char		*tmp_add3;
 
-	src_len = ft_strlen(src);
-	index = 0;
-	while (index < len)
+	if (var_class == 1)
+		tmp_add = ft_strjoin(vars[0], "=\"\"");
+	if (var_class == 2)
 	{
-		if (index <= src_len)
-			dest[index] = src[index];
-		else
-			dest[index] = '\0';
-		index++;
+		tmp_add3 = ft_strjoin(vars[0], "=\"");
+		tmp_add2 = ft_strjoin(tmp_add3, vars[1]);
+		tmp_add = ft_strjoin(tmp_add2, "\"");
+		free(tmp_add2);
+		free(tmp_add3);
 	}
-	return (dest);
+	new = malloc(sizeof(t_env_exp));
+	new->item = ft_strdup(tmp_add);
+	free(tmp_add);
+	new->next = NULL;
+	tmp = hold->export_list;
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	tmp->next = new;
 }
 
-char	*ft_strnew(const int size)
+void	print_env_export(t_hold *hold)
 {
-	int		i;
-	char	*new_string;
+	t_env_exp	*tmp;
 
-	if (size < 0)
+	tmp = hold->export_list;
+	while (tmp != NULL)
 	{
+		ft_putstr_fd("declare -x ", hold->pars_list->outfile);
+		ft_putstr_fd(tmp->item, hold->pars_list->outfile);
+		write(hold->pars_list->outfile, "\n", 1);
+		tmp = tmp->next;
+	}
+}
+
+int	export_empty(t_hold *hold, t_pars *parsed_node)
+{
+	if (parsed_node->args[1] == NULL)
+	{
+		print_env_export(hold);
 		return (0);
 	}
-	i = 0;
-	new_string = (char *)malloc(sizeof(char) * (size + 1));
-	while (i <= size)
-	{
-		new_string[i] = '\0';
-		i++;
-	}
-	return (new_string);
+	return (1);
 }
 
-char	*ft_strndup(const char *s1, size_t n)
+int	get_var_type(t_pars *parsed_node, int i, int j)
 {
-	char	*cpy;
-
-	if (ft_strlen((char *)s1) < n)
-		cpy = ft_strnew(ft_strlen((char *)s1));
-	else
-		cpy = ft_strnew(n);
-	if (cpy == NULL)
-		return (NULL);
-	return (ft_strncpy(cpy, (char *)s1, n));
+	if (parsed_node->args[i][j + 1] == '\0')
+		return (1);
+	if (parsed_node->args[i][j + 1] != '\0')
+		return (2);
+	return (0);
 }
 
-int	ft_strcmp(char *s1, char *s2)
+char	*assign_var_value(t_pars *parsed_node, int i, int j)
 {
-	int	i;
-
-	i = 0;
-	while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
-		i++;
-	return (s1[i] - s2[i]);
-}
-
-void	swap_export(t_env_exp *export_list)
-{
-	char	*tmp;
-
-	tmp = export_list->item;
-	export_list->item = export_list->next->item;
-	export_list->next->item = tmp;
+	return (ft_strndup(&parsed_node->args[i][j + 1],
+		ft_strlen(parsed_node->args[i]) + 1));
 }
