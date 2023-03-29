@@ -210,33 +210,33 @@ t_pars		*last_node_pars(t_pars *lst);
 int32_t 	arg_amount(t_lex *lex_node);
 void 		parser(t_hold *hold);
 //	executer.c //
-void redirection(t_pars *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
-void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
-void execute_cmd(t_pars *parsed_node, char **ori_env);
-void handle_here_doc(t_pars *pars_node);
-void executer(t_hold *hold, char **ori_env);
-void exec_child(t_hold *hold, t_pars *pars_node, char **ori_env, int32_t pipe_fds[MAX_FD][2]);
-void close_fds_child(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
-void close_all_fds(t_pars *parsed_node, int32_t pipe_fds[MAX_FD][2], int32_t i, int32_t pipegroups);
-void close_fds_parent(t_pars **parsed_node);
+void 		redirection(t_pars *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+void 		open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+void 		execute_cmd(t_pars *parsed_node, char **ori_env);
+void 		handle_here_doc(t_pars *pars_node);
+void 		executer(t_hold *hold, char **ori_env);
+void 		exec_child(t_hold *hold, t_pars *pars_node, char **ori_env, int32_t pipe_fds[MAX_FD][2]);
+void 		close_fds_child(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+void 		close_all_fds(t_pars *parsed_node, int32_t pipe_fds[MAX_FD][2], int32_t i, int32_t pipegroups);
+void 		close_fds_parent(t_pars **parsed_node);
 
 //	utils.c //
-void free_list_pars(t_pars* head);
-void free_list_lex(t_lex* head);
-void free_list_env_export(t_env_exp* head);
-void			add_node_lex(t_hold *hold, char *content);
+void		free_list_pars(t_pars* head);
+void		free_list_lex(t_lex* head);
+void		free_list_env_export(t_env_exp* head);
+void		add_node_lex(t_hold *hold, char *content);
 t_lex		*last_node_lex(t_lex *lst);
-void exit_status(char *msg1, char *msg2, char *msg3, int32_t exit_code_);
-void	print_error_code(void);
-int	ft_isalnum_mod(int val);
+void		exit_status(char *msg1, char *msg2, char *msg3, int32_t exit_code_);
+void		print_error_code(void);
+int			ft_isalnum_mod(int val);
 
 // -----------------------------------------
 //	delete_later.c //
-char *return_macro(int32_t m);
-void print_list(t_lex *list, char *name);
-void print_macro_list(t_lex *list);
-void print_export(t_hold *hold);
-void print_parsed_list(t_pars *pars);
+char		*return_macro(int32_t m);
+void 		print_list(t_lex *list, char *name);
+void 		print_macro_list(t_lex *list);
+void 		print_export(t_hold *hold);
+void 		print_parsed_list(t_pars *pars);
 // -----------------------------------------
 
 #endif
