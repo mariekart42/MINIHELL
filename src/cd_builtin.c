@@ -24,8 +24,8 @@ void	update_dir_cont(t_hold *hold, char *new, char *old)
 	add_to_env(hold, oldpwd, "env");
 	find_var(hold, "PWD", "export");
 	find_var(hold, "OLDPWD", "export");
-	add_to_export_mod(hold, "PWD", new, 2);
-	add_to_export_mod(hold, "OLDPWD", old, 2);
+	add_to_export_cd(hold, "PWD", new, 2);
+	add_to_export_cd(hold, "OLDPWD", old, 2);
 	sort_export_end(hold->export_list);
 	free(pwd);
 	free(oldpwd);

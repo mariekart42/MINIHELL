@@ -139,9 +139,8 @@ void 	unset_builtin(t_hold *hold, t_pars *parsed_node);
 
 //		cd_builtin_cont.c
 void	add_to_env(t_hold *hold, char *add, char *structure);
-// void	update_env(t_hold *hold, char *old, char *new, char *structure);
-// void	add_to_var(t_hold *hold, char *add, char *structure);
-// void	update_var_value(t_hold *hold, char *old, char *new, char *structure);
+void	add_to_export_cd(t_hold *hold, char *var_name, char *var_value,
+			int var_class);
 
 //		unset.c
 bool	find_var(t_hold *hold, char *var, char *structure);
@@ -156,7 +155,7 @@ void 			sort_export_list(t_hold *hold);
 
 //		export_builtin.c
 void 			export_builtin(t_hold *hold, t_pars *parsed_node);
-void			add_to_export_mod(t_hold *hold, char *var_name, char *var_value, int var_class);
+void			add_to_export_mod(t_hold *hold, char **vars, int var_class);
 void			sort_export_end(t_env_exp *export_list);
 void			swap_export(t_env_exp *export_list);
 int				ft_isalnum_mod(int val);
