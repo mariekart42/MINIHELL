@@ -87,7 +87,7 @@ void	lexer(t_hold *hold)
 	check_closed_quotes(hold);
 	while (hold->line[i] != '\0' && hold->line[i] != '\n')
 	{
-		if (error_code != 0)
+		if (g_error_code != 0)
 			return ;
 		if (hold->line[i] == '$' && hold->line[i + 1] == '?')
 		{

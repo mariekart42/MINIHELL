@@ -29,7 +29,7 @@
 
 # define MAX_FD 1024
 
-int32_t error_code;
+int32_t g_error_code;
 
 // get_next_line
 # ifndef BUFFER_SIZE
@@ -197,7 +197,8 @@ void 	unset_builtin(t_hold *hold, t_pars *parsed_node);
 
 //		cd_builtin_cont.c
 void	add_to_env(t_hold *hold, char *add, char *structure);
-
+void	add_to_export_cd(t_hold *hold, char *var_name, char *var_value,
+							int var_class);
 
 //		unset.c
 bool	find_var(t_hold *hold, char *var, char *structure);

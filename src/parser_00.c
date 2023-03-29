@@ -90,7 +90,7 @@ void	parser(t_hold *hold)
 {
 	recognize_type(hold);
 	count_pipegroups(hold);
-	if (error_code != 0 || check_syntax_errors(hold))
+	if (g_error_code != 0 || check_syntax_errors(hold))
 		return ;
 	open_extensions(hold->lex_struct, hold);
 	create_parsed_list(&hold, hold->lex_struct, hold->pipegroups);
