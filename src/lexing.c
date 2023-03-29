@@ -275,7 +275,7 @@ void lexer(t_hold *hold)
 		i++;
 	}
 	if (hold->lex_struct == NULL)
-		exit_status(": :command not found!", "", "", 127);
+		exit_status(": :command not found!", "", "", 127); // commentet dis out
 }
 
 

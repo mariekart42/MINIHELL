@@ -60,4 +60,5 @@ int main(int32_t argc, char **argv, char **env)
 
 
 //!  PROBLEMOS:
+//	- |		-> 2 error msgs, no sure if i can comment out the sec one (very bottom of lexer)
 
