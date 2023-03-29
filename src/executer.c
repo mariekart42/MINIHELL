@@ -166,7 +166,7 @@ void exec_child(t_hold *hold, t_pars *pars_node, char **ori_env, int32_t pipe_fd
 		execute_cmd(pars_node, ori_env);
 		exit(122);
 	}
-	exit(error_code);
+	exit(g_error_code);
 }
 
 void executer(t_hold *hold, char **ori_env)
@@ -176,7 +176,7 @@ void executer(t_hold *hold, char **ori_env)
 	int32_t pipe_fds[MAX_FD][2];
 
 	parsed_node = hold->pars_list;
-	if (error_code != 0)
+	if (g_error_code != 0)
 		return ;
 	if (hold->pipegroups == 1 && hold->lex_struct->macro == BUILTIN)
 		return (handle_single_builtin(hold));
@@ -202,5 +202,5 @@ void executer(t_hold *hold, char **ori_env)
 	close(pipe_fds[i-1][0]);
 	i = 0;
 	while (i++ < hold->pipegroups)
-		waitpid(-1, &error_code, WUNTRACED);
+		waitpid(-1, &g_error_code, WUNTRACED);
 }

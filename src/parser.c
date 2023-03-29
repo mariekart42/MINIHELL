@@ -270,7 +270,7 @@ char	*extend(char *var, t_hold *hold)
 			if(ft_strlen(var) == 1)
 				return (strdup("$"));
 			if(var[i + 1] == '?')
-				ext = ft_itoa(error_code);
+				ext = ft_itoa(g_error_code);
 			else
 				ext = sub_extend(&var[i + 1], hold);
 			ret = ft_strnnjoin(ret,ft_strlen(ret), ext, ft_strlen(ext));
@@ -366,7 +366,7 @@ void parser(t_hold *hold)
 {
 	recognize_type(hold);
 	count_pipegroups(hold);
-    if (error_code != 0 || check_syntax_errors(hold))
+    if (g_error_code != 0 || check_syntax_errors(hold))
         return ;
 	open_extensions(hold->lex_struct, hold);
 	create_parsed_list(&hold, hold->lex_struct, hold->pipegroups);

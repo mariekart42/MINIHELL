@@ -11,7 +11,7 @@ int main(int32_t argc, char **argv, char **env)
 	signals();
 	while (1)
 	{
-		error_code = 0;
+		g_error_code = 0;
 		hold->line = readline(BLU"MINIHELL> "RESET);
 		if (!hold->line)
 		{
@@ -25,7 +25,7 @@ int main(int32_t argc, char **argv, char **env)
 			// print_list(hold->lex_struct, "fuck");
 			parser(hold);
 			executer(hold, env);
-			fprintf(stderr, MAG"error code: %d\n"RESET, error_code);
+			fprintf(stderr, MAG"error code: %d\n"RESET, g_error_code);
 			free_content(&hold);
 			// free(hold->line);
 			// hold->line = NULL;

@@ -50,10 +50,10 @@ void	exit_builtin(t_hold *hold, t_pars *parsed_node)
 			exit(255);
 		}
 		else
-			error_code = exit_code;
+			g_error_code = exit_code;
 	}
 	else
-		error_code = 0;
+		g_error_code = 0;
 	free_exit(hold);
-	exit(error_code % 256);
+	exit(g_error_code % 256);
 }
