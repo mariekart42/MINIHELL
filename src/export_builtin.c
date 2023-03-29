@@ -85,6 +85,34 @@ int		var_start_number(t_pars *parsed_node, int i)
 	return (1);
 }
 
+int	valid_value_export_var(t_pars *parsed_node, int i, int j)
+{
+	if (ft_isalnum_mod(parsed_node->args[i][j]) == 0)
+	{
+		exit_status("export:", parsed_node->args[i],
+			": not a valid identifier", 1);
+		return (0);
+	}
+	return (1);
+}
+
+void		var_class_zero(int var_class, t_hold *hold, t_pars *parsed_node,
+							int i)
+{
+	if (var_class == 0)
+	{
+		find_var(hold, parsed_node->args[i], "export");
+		add_to_env(hold, parsed_node->args[i], "export");
+	}
+}
+
+void	non_zero_var(t_hold *hold, t_pars *parsed_node, int i, char *var_name)
+{
+	find_var(hold, var_name, "env");
+	find_var(hold, var_name, "export");
+	add_to_env(hold, parsed_node->args[i], "env");
+}
+
 void	export_builtin(t_hold *hold, t_pars *parsed_node)
 {
 	int		i;
@@ -94,51 +122,38 @@ void	export_builtin(t_hold *hold, t_pars *parsed_node)
 	char	*var_value;
 
 	i = 1;
-	j = 0;
 	if (export_empty(hold, parsed_node) == 0)
 		return ;
 	while (parsed_node->args[i] != NULL)
 	{
+		j = 0;
 		if (var_start_number(parsed_node, i) == 0)
 			return ;
 		var_class = 0;
 		while (parsed_node->args[i][j] != '\0')
 		{
-			if (ft_isalnum_mod(parsed_node->args[i][j]) == 0)
-			{
-				exit_status("export:", parsed_node->args[i],
-					": not a valid identifier", 1);
+			if (valid_value_export_var(parsed_node, i, j) == 0)
 				return ;
-			}
 			if (parsed_node->args[i][j] == '=')
 			{
 				if (parsed_node->args[i][j + 1] == '\0')
 					var_class = 1;
-				else
-				{
+				if (parsed_node->args[i][j + 1] != '\0')
 					var_class = 2;
+				if (parsed_node->args[i][j + 1] != '\0')
 					var_value = ft_strndup(&parsed_node->args[i][j + 1],
 							ft_strlen(parsed_node->args[i]) + 1);
-				}
 				var_name = ft_strndup(parsed_node->args[i], j);
 				break ;
 			}
 			j++;
 		}
-		if (var_class == 0)
-		{
-			find_var(hold, parsed_node->args[i], "export");
-			add_to_env(hold, parsed_node->args[i], "export");
-		}
-		else
-		{
-			find_var(hold, var_name, "env");
-			find_var(hold, var_name, "export");
-			add_to_env(hold, parsed_node->args[i], "env");
+		var_class_zero(var_class, hold, parsed_node, i);
+		if (var_class != 0)
+			non_zero_var(hold, parsed_node, i, var_name);
+		if (var_class != 0)
 			add_to_export_mod(hold, var_name, var_value, var_class);
-		}
 		sort_export_end(hold->export_list);
-		j = 0;
 		i++;
 	}
 }
