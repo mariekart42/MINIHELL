@@ -1,0 +1,9 @@
+total 176
+-rw-r--r--   1 mmensing  2022_wolfsburg   1245 Mar 29 19:27 Makefile
+-rw-r--r--   1 mmensing  2022_wolfsburg      0 Mar 29 19:54 TEST
+drwxr-xr-x   3 mmensing  2022_wolfsburg    102 Mar 29 17:42 inc
+drwxr-xr-x  89 mmensing  2022_wolfsburg   3026 Mar 29 19:17 libft
+-rwxr-xr-x   1 mmensing  2022_wolfsburg  84432 Mar 29 19:53 minishell
+drwxr-xr-x  33 mmensing  2022_wolfsburg   1122 Mar 29 19:53 obj
+drwxr-xr-x  12 mmensing  2022_wolfsburg    408 Mar 29 17:42 previous
+drwxr-xr-x  30 mmensing  2022_wolfsburg   1020 Mar 29 19:28 src

@@ -55,5 +55,3 @@ char	*quote_chunk2(char *line, int32_t i)
 		return (NULL);
 	return (init_string(line, quote, i, quote_len_));
 }
-
-

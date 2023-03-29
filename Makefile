@@ -14,15 +14,18 @@ LIB_F = libft
 LIB = libft.a
 
 SRC		=	main.c \
-			00_lexer.c \
-			01_lexer.c \
-			02_lexer.c \
-			03_lexer.c \
+			lexer_00.c \
+			lexer_01.c \
+			lexer_02.c \
+			lexer_03.c \
+			parser_00.c \
+			parser_01.c \
+			parser_02.c \
+			parser_03.c \
 			init_data.c \
 			free_content.c \
 			utils.c \
 			export_struct.c \
-			parser.c \
 			executer.c \
 			syntax_errors.c \
 			delete_later.c \
