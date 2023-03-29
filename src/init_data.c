@@ -25,6 +25,6 @@ void create_env_export_list(t_hold *hold, char **ori_env)
 		add_node_env(hold, ori_env[env_len], "export");
 		env_len++;
 	}
-	// sort_export_list(hold);
+	sort_export_end(hold->export_list);
 }
 
