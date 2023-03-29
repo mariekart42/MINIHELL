@@ -138,11 +138,20 @@ int	is_equal_sign(t_pars *parsed_node, int i[], char**vars)
 	return (var_class);
 }
 
+void	var_class_non_zero(t_hold *hold, t_pars *parsed_node, int i[],
+			char **vars)
+{
+	if (i[2] != 0)
+	{
+		non_zero_var(hold, parsed_node, i[0], vars[0]);
+		add_to_export_mod(hold, vars, i[2]);
+	}
+}
+
 void	export_not_empty(t_hold *hold, t_pars *parsed_node)
 {
-	int		var_class;
 	char	*vars[2];
-	int		i[2];
+	int		i[3];
 
 	i[0] = 1;
 	while (parsed_node->args[i[0]] != NULL)
@@ -150,21 +159,18 @@ void	export_not_empty(t_hold *hold, t_pars *parsed_node)
 		i[1] = 0;
 		if (var_start_number(parsed_node, i[0]) == 0)
 			return ;
-		var_class = 0;
+		i[2] = 0;
 		while (parsed_node->args[i[0]][i[1]] != '\0')
 		{
 			if (not_valid_value_export_var(parsed_node, i[0], i[1]) == 0)
 				return ;
-			var_class = is_equal_sign(parsed_node, i, vars);
-			if (var_class != 0)
+			i[2] = is_equal_sign(parsed_node, i, vars);
+			if (i[2] != 0)
 				break ;
 			i[1]++;
 		}
-		var_class_zero(var_class, hold, parsed_node, i[0]);
-		if (var_class != 0)
-			non_zero_var(hold, parsed_node, i[0], vars[0]);
-		if (var_class != 0)
-			add_to_export_mod(hold, vars, var_class);
+		var_class_zero(i[2], hold, parsed_node, i[0]);
+		var_class_non_zero(hold, parsed_node, i, vars);
 		sort_export_end(hold->export_list);
 		i[0]++;
 	}
