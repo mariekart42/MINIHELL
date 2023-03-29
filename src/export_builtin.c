@@ -59,12 +59,7 @@ void	print_env_export(t_hold *hold)
 	}
 }
 
-
-
-
-
-
-int		export_empty(t_hold *hold, t_pars *parsed_node)
+int	export_empty(t_hold *hold, t_pars *parsed_node)
 {
 	if (parsed_node->args[1] == NULL)
 	{
@@ -74,7 +69,7 @@ int		export_empty(t_hold *hold, t_pars *parsed_node)
 	return (1);
 }
 
-int		var_start_number(t_pars *parsed_node, int i)
+int	var_start_number(t_pars *parsed_node, int i)
 {
 	if (ft_isdigit(parsed_node->args[i][0]) != 0)
 	{
@@ -113,7 +108,7 @@ void	non_zero_var(t_hold *hold, t_pars *parsed_node, int i, char *var_name)
 	add_to_env(hold, parsed_node->args[i], "env");
 }
 
-int		get_var_type(t_pars *parsed_node, int i, int j)
+int	get_var_type(t_pars *parsed_node, int i, int j)
 {
 	if (parsed_node->args[i][j + 1] == '\0')
 		return (1);
@@ -126,6 +121,19 @@ char	*assign_var_value(t_pars *parsed_node, int i, int j)
 {
 	return (ft_strndup(&parsed_node->args[i][j + 1],
 		ft_strlen(parsed_node->args[i]) + 1));
+}
+
+int	is_equal_sign(t_pars *parsed_node, int i[], int var_class, char**vars)
+{
+	if (parsed_node->args[i[0]][i[1]] == '=')
+	{
+		var_class = get_var_type(parsed_node, i[0], i[1]);
+		if (var_class == 2)
+			vars[1] = assign_var_value(parsed_node, i[0], i[1]);
+		vars[0] = ft_strndup(parsed_node->args[i[0]], i[1]);
+		return (0);
+	}
+	return (1);
 }
 
 void	export_not_empty(t_hold *hold, t_pars *parsed_node)
@@ -145,14 +153,8 @@ void	export_not_empty(t_hold *hold, t_pars *parsed_node)
 		{
 			if (not_valid_value_export_var(parsed_node, i[0], i[1]) == 0)
 				return ;
-			if (parsed_node->args[i[0]][i[1]] == '=')
-			{
-				var_class = get_var_type(parsed_node, i[0], i[1]);
-				if (var_class == 2)
-					vars[1] = assign_var_value(parsed_node, i[0], i[1]);
-				vars[0] = ft_strndup(parsed_node->args[i[0]], i[1]);
+			if (is_equal_sign(parsed_node, i, var_class, vars) == 0)
 				break ;
-			}
 			i[1]++;
 		}
 		var_class_zero(var_class, hold, parsed_node, i[0]);
