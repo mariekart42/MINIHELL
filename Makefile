@@ -21,16 +21,12 @@ SRC		=	main.c \
 			parser_01.c \
 			parser_02.c \
 			parser_03.c \
-			init_data.c \
-			free_content.c \
 			utils.c \
-			export_struct.c \
 			executer.c \
 			init_data.c \
 			export_struct.c \
 			export_struct_cont.c \
 			free_content.c \
-			utils.c \
 			syntax_errors.c \
 			delete_later.c \
 			$(addprefix builtins/,\

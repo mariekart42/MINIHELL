@@ -213,16 +213,30 @@ void 			sort_export_list(t_hold *hold);
 
 //		export_builtin.c
 void 			export_builtin(t_hold *hold, t_pars *parsed_node);
-void			add_to_export_mod(t_hold *hold, char *var_name, char *var_value, int var_class);
 void			sort_export_end(t_env_exp *export_list);
 void			swap_export(t_env_exp *export_list);
 int				ft_isalnum_mod(int val);
 
 //		export_builtin_cont.c
-char			*ft_strndup(const char *s1, size_t n);
-char			*ft_strncpy(char *dest, const char *src, size_t len);
-int				ft_strcmp(char *s1, char *s2);
-void			swap_export(t_env_exp *export_list);
+int	is_equal_sign(t_pars *parsed_node, int i[], char**vars);
+int	not_valid_value_export_var(t_pars *parsed_node, int i, int j);
+int	var_start_number(t_pars *parsed_node, int i);
+void	export_not_empty(t_hold *hold, t_pars *parsed_node);
+void	export_builtin(t_hold *hold, t_pars *parsed_node);
+void	add_to_export_mod(t_hold *hold, char **vars, int var_class);
+void	print_env_export(t_hold *hold);
+int	export_empty(t_hold *hold, t_pars *parsed_node);
+int	get_var_type(t_pars *parsed_node, int i, int j);
+char	*assign_var_value(t_pars *parsed_node, int i, int j);
+void	var_class_zero(int var_class, t_hold *hold, t_pars *parsed_node, int i);
+void	var_class_non_zero(t_hold *hold, t_pars *parsed_node, int i[], char **vars);
+void	non_zero_var(t_hold *hold, t_pars *parsed_node, int i, char *var_name);
+void	sort_export_end(t_env_exp *export_list);
+void	swap_export(t_env_exp *export_list);
+char	*ft_strncpy(char *dest, const char *src, size_t len);
+char	*ft_strnew(const int size);
+char	*ft_strndup(const char *s1, size_t n);
+int	ft_strcmp(char *s1, char *s2);
 
 //		signals.c
 void			signals(void);
