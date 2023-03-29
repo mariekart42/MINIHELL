@@ -61,11 +61,10 @@ int32_t init_outfile(t_lex *file_node, int32_t type)
 	file_id = 1;
 	if (type != SING_CLOSE_REDIR && type != DOUBL_CLOSE_REDIR)
 		return (1);
-// not 100% sure about opening macros (in both open calls)
 	if (type == SING_CLOSE_REDIR)
 		file_id = open(file_node->item, O_CREAT | O_WRONLY | O_TRUNC , 0644);
 	else if (type == DOUBL_CLOSE_REDIR)
-		file_id = open(file_node->item, O_CREAT | O_WRONLY | O_APPEND); // check if its right
+		file_id = open(file_node->item, O_CREAT | O_WRONLY | O_APPEND);
 	if (file_id < 0)
 		exit_status("Error!: unable to open outfile (in check_outfile func)", "", "", 69);
 	return (file_id);
@@ -81,25 +80,16 @@ int32_t init_infile(t_pars *file_node_pars, t_lex *file_node_lex, int32_t type)
 	file_id = 0;
 	if (type == SING_OPEN_REDIR)
 	{
-	// not 100% sure about opening macros
 		file_id = open(file_node_lex->item, O_RDONLY);
 		if (file_id < 0)
-		{
-			// write(2, RED"minihell: ", 16);
-			// ft_putstr_fd(file_node_lex->item, 2);
 			exit_status(file_node_lex->item, ": no such file or directory", "", 69);
-		}
 		file_node_pars->here_doc_delim = NULL;
 	}
 	else if (type == DOUBL_OPEN_REDIR)
 	{
 		file_id = open("tmp.hd", O_WRONLY | O_CREAT, 0777);
 		if (file_id < 0)
-		{
-			// write(2, RED"minihell: ", 16);
-			// ft_putstr_fd(file_node_lex->item, 2);
 			exit_status(file_node_lex->item, ": no such file or directory", "", 69);
-		}
 		file_node_pars->here_doc_delim = ft_strdup(file_node_lex->next->item);
 	}
 	return (file_id);
@@ -120,7 +110,6 @@ void count_pipegroups(t_hold *hold)
 		tmp = tmp->next;
 	}
 	hold->pipegroups = pipegroup;
-	// return (pipegroup);
 }
 
 /* function appends command from 'pars_list' at the end of
@@ -139,8 +128,6 @@ char *get_cmdpath(char *curr_cmd)
 	while (env_path[i] != NULL)
 	{
 		tmp = ft_strjoin(env_path[i], "/");
-		// env_path[i] = ft_strjoin(env_path[i], "/");
-		// valid_path = ft_strjoin(env_path[i], curr_cmd);
 		valid_path = ft_strjoin(tmp, curr_cmd);
 		free(tmp);
 		tmp = NULL;
@@ -179,8 +166,6 @@ void add_node_pars(t_hold **hold)
 	t_pars *tmp;
 
 	tmp = (t_pars *)malloc(sizeof(t_pars));
-	// if (!tmp)
-	// 	return (exit_status(hold, "Error! Failed to malloc\n", 69), (t_pars*)NULL);
 	tmp->args = NULL;
 	tmp->cmd_path = NULL;
 	tmp->next = NULL;
@@ -196,24 +181,20 @@ void add_node_pars(t_hold **hold)
 void add_arg(t_pars *pars_node)
 {
 	int32_t i;
-	int32_t x;
 	char **new_args;
 	t_pars *tmp;
 
 	i = 0;
-	x = 0;
 	tmp = pars_node;
-	while (tmp->args[i] != NULL)
-	{
+	while (tmp->args[i++] != NULL)
 		tmp = tmp->next;
-		i++;
-	}
 	new_args = malloc(sizeof(char *) * i + 1);
 	tmp = pars_node;
-	while (tmp->args[x] != NULL)
+	i = 0;
+	while (tmp->args[i] != NULL)
 	{
-		new_args[x] = ft_strdup(tmp->args[x]);
-		x++;
+		new_args[i] = ft_strdup(tmp->args[i]);
+		i++;
 	}
 }
 
@@ -259,18 +240,16 @@ char	*sub_extend(char *var, t_hold *hold)
 
 	i = 0;
 	tmp = hold->env_list;
-	while(var[i])
+	while (var[i])
 	{
-		if(var[i] == '$')
+		if (var[i] == '$')
 			break ;
 		i++;
 	}
 	while (tmp != NULL)
 	{
 		if (ft_strncmp(var, tmp->item, i) == 0)
-		{
 			return(ft_strdup(&tmp->item[i + 1]));
-		}
 		tmp = tmp->next;
 	}
 	return (NULL);
@@ -375,23 +354,6 @@ void create_parsed_list(t_hold **hold, t_lex *lex, int32_t pipegroups)
 	while (pipegroups > 0)
 	{
 		i = init_pars_node(&tmp_pars, &tmp_lex, i);
-		// tmp_pars->args = malloc(sizeof(char *) * (arg_amount(tmp_lex) + 1));
-		// i = 0;
-		// while (tmp_lex->macro != PIPE)
-		// {
-		// 	tmp_pars->outfile = init_outfile(tmp_lex->next, tmp_lex->macro);
-		// 	tmp_pars->infile = init_infile(tmp_pars, tmp_lex->next, tmp_lex->macro);
-		// 	if (tmp_lex->macro == SING_CLOSE_REDIR || tmp_lex->macro == DOUBL_CLOSE_REDIR || tmp_lex->macro == SING_OPEN_REDIR || tmp_lex->macro == DOUBL_OPEN_REDIR)
-		// 		tmp_lex = tmp_lex->next;
-		// 	else
-		// 	{
-		// 		tmp_pars->args[i] = ft_strdup(tmp_lex->item);
-		// 		i++;
-		// 	}
-		// 	if (tmp_lex->next == NULL)
-		// 		break ;
-		// 	tmp_lex = tmp_lex->next;
-		// }
 		tmp_pars->args[i] = NULL;
 		tmp_pars->cmd_path = get_cmdpath(tmp_pars->args[0]);
 		tmp_lex = tmp_lex->next;
