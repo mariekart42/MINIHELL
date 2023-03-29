@@ -28,32 +28,14 @@ void	redir_first(t_pars *pars_node, int32_t pipe_fds[MAX_FD][2], int32_t i, \
 void redirection(t_pars *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
 	if (i == 0)
-	{
 		redir_first(parsed_node, pipe_fds, i, pipegroups);
-		// if (parsed_node->infile != 0)
-		// 	dup2(parsed_node->infile, STDIN_FILENO);
-		// if (pipegroups > i + 1)
-		// {
-		// 	if (parsed_node->outfile != 1)
-		// 	{
-		// 		write(2, "uhm outfile before pipe, duh? (how to handle redir?) | EXIT\n", 60);
-		// 		exit(0);
-		// 	}
-		// 	dup2(pipe_fds[i][1], STDOUT_FILENO);
-		// }
-		// else
-		// {
-		// 	if (parsed_node->outfile != 1)
-		// 		dup2(parsed_node->outfile, STDOUT_FILENO);
-		// }
-	}
 	else if ((i + 1) == pipegroups)
 	{
 		dup2(pipe_fds[i - 1][0], STDIN_FILENO);
 		if (parsed_node->outfile != 1)
 			dup2(parsed_node->outfile, STDOUT_FILENO);
 	}
-	else // in the middle of pipegroups
+	else
 	{
 		dup2(pipe_fds[i-1][0], STDIN_FILENO);
 		dup2(pipe_fds[i][1], STDOUT_FILENO);
@@ -65,7 +47,7 @@ void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 	int32_t i;
 
 	i = 0;
-	while (i + 1< pipegroups)
+	while ((i + 1) < pipegroups)
 	{
 		if (pipe(pipe_fds[i]) < 0)
 		{
