@@ -221,6 +221,11 @@ char *add_letter(char *pointer, char letter);
 // void prep_line(t_hold *hold);
 void lexer(t_hold *hold);
 
+// num_lexer
+int32_t	update_i(char *quote_chunk);
+int32_t	quote_len(char *line, int32_t i, char quote);
+
+
 // char *cut_string(char *line, int32_t start, int32_t end);
 // int32_t lex_WORD(t_hold *hold, char *line, int32_t i);
 
