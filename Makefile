@@ -13,18 +13,18 @@ LIB_F = libft
 LIB = libft.a
 
 SRC		=	main.c \
+			lexing.c \
 			00_lexer.c \
 			01_lexer.c \
 			02_lexer.c \
 			03_lexer.c \
-			init_data.c \
-			free_content.c \
-			utils.c \
-			export_struct.c \
-			export_struct_cont.c \
-			lexing.c \
 			parser.c \
 			executer.c \
+			init_data.c \
+			export_struct.c \
+			export_struct_cont.c \
+			free_content.c \
+			utils.c \
 			syntax_errors.c \
 			delete_later.c \
 			$(addprefix builtins/,\
