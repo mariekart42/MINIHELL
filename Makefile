@@ -1,7 +1,8 @@
 NAME	= minishell
 CC		= cc
-# CFLAGS	= -Wall -Werror -Wextra -g
-CFLAGS	= -g
+CFLAGS	= -Wall -Werror -Wextra -g
+# -fsanitize=address
+# -fsanitize=address
 # CFLAGS	=  -fsanitize=address
 RM		= rm -rf
 
@@ -13,10 +14,18 @@ LIB_F = libft
 LIB = libft.a
 
 SRC		=	main.c \
+			lexer_00.c \
+			lexer_01.c \
+			lexer_02.c \
+			lexer_03.c \
+			parser_00.c \
+			parser_01.c \
+			parser_02.c \
+			parser_03.c \
+			init_data.c \
+			free_content.c \
 			utils.c \
 			export_struct.c \
-			lexing.c \
-			parser.c \
 			executer.c \
 			syntax_errors.c \
 			delete_later.c \
@@ -26,7 +35,10 @@ SRC		=	main.c \
 			echo_builtin.c \
 			exit_builtin.c \
 			unset_builtin.c \
-			export_builtin.c
+			export_builtin.c \
+			export_builtin_cont.c \
+			signals.c \
+			signal_handlers.c
 
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRC:.c=.o)

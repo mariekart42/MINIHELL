@@ -1,19 +1,40 @@
 #include "minishell.h"
 
-void	update_dir_cont(t_hold *hold, char *old, char *new)
+char	*create_path_var(char *var_name, char *var_value)
 {
-	update_var_value(hold, old, new, "export");
-	update_env(hold, old, new, "env");
-	update_env(hold, old, new, "export");
-	free(old);
-	free(new);
+	char			*tmp_add;
+	char			*tmp_add2;
+
+	tmp_add2 = ft_strjoin(var_name, "=");
+	tmp_add = ft_strjoin(tmp_add2, var_value);
+	free(tmp_add2);
+	return (tmp_add);
+}
+
+void	update_dir_cont(t_hold *hold, char *new, char *old)
+{
+	char	*pwd;
+	char	*oldpwd;
+
+	pwd = create_path_var("PWD", new);
+	oldpwd = create_path_var("OLDPWD", old);
+	find_var(hold, "PWD", "env");
+	find_var(hold, "OLDPWD", "env");
+	add_to_env(hold, pwd, "env");
+	add_to_env(hold, oldpwd, "env");
+	find_var(hold, "PWD", "export");
+	find_var(hold, "OLDPWD", "export");
+	add_to_export_mod(hold, "PWD", new, 2);
+	add_to_export_mod(hold, "OLDPWD", old, 2);
+	sort_export_end(hold->export_list);
+	free(pwd);
+	free(oldpwd);
 }
 
 int	update_dir(t_hold *hold, char **args)
 {
 	char			*old;
 	char			*new;
-	t_env_export	*tmp;
 
 	old = NULL;
 	old = getcwd(old, 0);
@@ -24,31 +45,25 @@ int	update_dir(t_hold *hold, char **args)
 	}
 	new = NULL;
 	new = getcwd(new, 0);
-	tmp = hold->export_list;
-	while (tmp != NULL)
-	{
-		if (ft_strncmp(tmp->var_name, "PWD", 3) == 0)
-			tmp->var_value = new;
-		if (ft_strncmp(tmp->var_name, "OLDPWD", 6) == 0)
-			tmp->var_value = old;
-		tmp = tmp->next;
-	}
-	update_dir_cont(hold, old, new);
+	update_dir_cont(hold, new, old);
+	free(old);
+	free(new);
 	return (0);
 }
 
 void	change_to_home(t_hold *hold)
 {
 	bool			is_home;
-	t_env_export	*tmp;
+	t_env_exp	*tmp;
 	char			*home;
 	char			*args[2];
 
 	is_home = true;
+	home = NULL;
 	tmp = hold->export_list;
-	while (tmp != NULL)
+	while (tmp != NULL && tmp->item)
 	{
-		if (ft_strncmp(tmp->var_name, "HOME", 4) == 0)
+		if (ft_strncmp(tmp->item, "HOME", 4) == 0)
 			home = tmp->var_value;
 		tmp = tmp->next;
 	}
@@ -61,21 +76,32 @@ void	change_to_home(t_hold *hold)
 		update_dir(hold, args);
 	}
 	else
-		exit_status(RED"minishell: cd: HOME not set\n"RESET, 69);
+		exit_status("cd: HOME not set", "", "", 1);
 }
 
-void	cd_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
+void	cd_builtin(t_hold *hold, t_pars *parsed_node)
 {
-	if (parsed_node->args[1] == NULL)
+	char	**args;
+
+	args = parsed_node->args;
+	if (args[1] == NULL || ft_strncmp(args[0], "cd~", 3) == 0
+		|| args[1][0] == '~')
 	{
 		change_to_home(hold);
 		return ;
 	}
-	if (update_dir(hold, parsed_node->args) == -1)
+	if (args[2])
 	{
-		ft_putstr_fd(RED"minshell: cd: ", 2);
-		ft_putstr_fd(parsed_node->args[1], 2);
-		exit_status(": No such file or directory\n"RESET, 69);
+		// ft_putstr_fd(RED"minshell: cd: ", 2);
+		// ft_putstr_fd(args[1], 2);
+		exit_status("cd:", args[1], ": too many arguments", 1);
+		return ;
+	}
+	if (update_dir(hold, args) == -1)
+	{
+		// ft_putstr_fd(RED"minshell: cd: ", 2);
+		// ft_putstr_fd(args[1], 2);
+		exit_status("cd:", args[1], ": No such file or directory", 1);
 	}
 	return ;
 }

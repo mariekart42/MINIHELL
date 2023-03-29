@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void swap_data(t_env_export *export_list)
+void swap_data(t_env_exp *export_list)
 {
 	char	*tmp_item;
 	char	*tmp_value;
@@ -31,7 +31,7 @@ void swap_data(t_env_export *export_list)
 void sort_export_list(t_hold *hold)
 {
 	// init var name and value in struct
-	t_env_export *tmp;
+	t_env_exp *tmp;
 	char **tmp_tmp;
 
 	int i = 2;
@@ -64,11 +64,11 @@ void sort_export_list(t_hold *hold)
 	hold->export_list = tmp;
 }
 
-t_env_export *new_node_env(void)
+t_env_exp *new_node_env(void)
 {
-	t_env_export *tmp;
+	t_env_exp *tmp;
 
-	tmp = (t_env_export*)malloc(sizeof(t_env_export));
+	tmp = (t_env_exp*)malloc(sizeof(t_env_exp));
 	tmp->next = NULL;
 	tmp->item = NULL;
 	tmp->var_name = NULL;
@@ -78,8 +78,8 @@ t_env_export *new_node_env(void)
 
 void add_node_env(t_hold *hold, char *content, char *type)
 {
-	t_env_export *tmp;
-	t_env_export *p;
+	t_env_exp *tmp;
+	t_env_exp *p;
 	tmp = new_node_env();
 	tmp->item = content;
 	if (ft_strncmp(type, "env", 3) == 0)
@@ -110,15 +110,3 @@ void add_node_env(t_hold *hold, char *content, char *type)
 	}
 }
 
-void create_env_export_list(t_hold *hold, char **ori_env)
-{
-	int32_t env_len = 0;
-
-	while (ori_env[env_len] != NULL)
-	{
-		add_node_env(hold, ori_env[env_len], "env");
-		add_node_env(hold, ori_env[env_len], "export");
-		env_len++;
-	}
-	sort_export_list(hold);
-}

@@ -1,11 +1,14 @@
 #include "minishell.h"
 
-void	delete_var(t_hold **hold, char *var)
+void	delete_var(t_hold **hold, char *var, char *structure)
 {
-	t_env_export	*tmp;
-	t_env_export	*prev;
+	t_env_exp	*tmp;
+	t_env_exp	*prev;
 
-	tmp = (*hold)->env_list;
+	if (ft_strncmp(structure, "env", 3) == 0)
+		tmp = (*hold)->env_list;
+	if (ft_strncmp(structure, "export", 6) == 0)
+		tmp = (*hold)->export_list;
 	if (tmp != NULL && (ft_strncmp(tmp->item, var, ft_strlen(var)) == 0))
 	{
 		(*hold)->env_list = tmp->next;
@@ -21,45 +24,61 @@ void	delete_var(t_hold **hold, char *var)
 	prev->next = tmp->next;
 }
 
-bool	find_var(t_hold *hold, char *var)
+bool	find_var(t_hold *hold, char *var, char *structure)
 {
-	t_env_export	*tmp;
+	t_env_exp	*tmp;
 	bool			var_exist;
 
 	var_exist = false;
-	tmp = hold->env_list;
+	if (ft_strncmp(structure, "env", 3) == 0)
+		tmp = hold->env_list;
+	if (ft_strncmp(structure, "export", 6) == 0)
+		tmp = hold->export_list;
 	while (tmp != NULL)
 	{
 		if (ft_strncmp(tmp->item, var, ft_strlen(var)) == 0)
 		{
 			var_exist = true;
-			delete_var(&hold, var);
+			delete_var(&hold, var, structure);
 		}
 		tmp = tmp->next;
 	}
 	return (var_exist);
 }
 
-void	unset_builtin(t_hold *hold, t_parsed_chunk *parsed_node)
+void	unset_builtin(t_hold *hold, t_pars *parsed_node)
 {
 	char	**args;
 	int		i;
+	int		j;
 
 	args = parsed_node->args;
 	i = 1;
+	j = 0;
 	while (args[i] != NULL)
 	{
-		if (find_var(hold, args[i]) == false)
+		if (ft_isdigit(parsed_node->args[i][0]) != 0)
 		{
-			// ft_putstr_fd(RED"minshell: unset: ", 2);
-			// ft_putstr_fd(args[i], 2);
-			// exit_status(hold, ": not a valid identifier\n"RESET, 69);
+			// ft_putstr_fd(RED"minishell: export: ", 2);
+			// ft_putstr_fd(parsed_node->args[i], 2);
+			exit_status("export:", parsed_node->args[i], ": not a valid identifier", 1);
 			return ;
 		}
+		while (args[i][j] != '\0')
+		{
+			if (ft_isalnum_mod(parsed_node->args[i][j]) == 0)
+			{
+				// ft_putstr_fd(RED"minishell: unset: ", 2);
+				// ft_putstr_fd(parsed_node->args[i], 2);
+				exit_status("unset:", parsed_node->args[i], ": not a valid identifier", 1);
+				return ;
+			}
+			j++;
+		}
+		find_var(hold, args[i], "export");
+		if (find_var(hold, args[i], "env") == false)
+			return ;
+		j = 0;
 		i++;
 	}
 }
-
-// void export_builtin(t_hold *hold)
-// {
-// }
