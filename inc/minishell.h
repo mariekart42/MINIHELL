@@ -80,11 +80,30 @@ typedef struct s_hold
 	char				*env_path;
 	char				**my_env;
 	char				*line;
+	int32_t				pipegroups;
 	struct s_lex		*lex_struct;
 	struct s_env_exp	*env_list;
 	struct s_env_exp	*export_list;
 	struct s_pars		*pars_list;
 }						t_hold;
+
+//!  	LEXER:
+//		00_lexer.c
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //		init_data.c
 int32_t init_structs(t_hold **hold, char **argv, int32_t argc);
@@ -104,13 +123,6 @@ bool	builtin(t_hold *hold, t_pars *parsed_node);
 
 
 char *handle_quote_chunk(char **string, char **quote_chunk);
-
-
-
-
-
-
-
 
 //		main.c
 void free_content(t_hold **hold);
@@ -189,6 +201,11 @@ void			sig_handle_child(int sig);
 void			heredoc_sig_handle(int sig);
 
 //		lexing.c
+char *init_string(char *line, char quote, int32_t i, int32_t quote_len_);
+
+int32_t check_in_redir_syntax(t_hold **hold, int32_t i);
+int32_t check_out_redir_syntax(t_hold **hold, int32_t i);
+
 // int32_t	lex_quote(t_hold *hold, int32_t i);
 // char *calloc_string(t_hold *hold, int32_t i);
 // int32_t new_lex_quote(t_hold *hold, int32_t i);
@@ -214,9 +231,11 @@ void check_closed_quotes(t_hold *hold);
 
 
 //		parser.c
+int32_t init_pars_node(t_pars **pars_node, t_lex **lex_node, int32_t i);
+
 bool builtin_parser(char *node);
 void recognize_type(t_hold *hold);
-int32_t count_pipegroups(t_lex *lex);
+void count_pipegroups(t_hold *hold);
 int32_t init_outfile(t_lex *file_node, int32_t type);
 int32_t init_infile(t_pars *file_node_pars, t_lex *file_node_lex, int32_t type);
 char *get_cmdpath(char *curr_cmd);
@@ -234,9 +253,11 @@ void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
 void execute_cmd(t_pars *parsed_node, char **ori_env);
 void handle_here_doc(t_pars *pars_node);
 void executer(t_hold *hold, char **ori_env);
-
-void close_fds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
+void exec_child(t_hold *hold, t_pars *pars_node, char **ori_env, int32_t pipe_fds[MAX_FD][2]);
+void close_fds_child(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
 void close_all_fds(t_pars *parsed_node, int32_t pipe_fds[MAX_FD][2], int32_t i, int32_t pipegroups);
+void close_fds_parent(t_pars **parsed_node);
+
 
 //		utils.c
 void free_list_pars(t_pars* head);

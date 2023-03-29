@@ -22,6 +22,7 @@ int main(int32_t argc, char **argv, char **env)
 		{
 			add_history(hold->line);
 			lexer(hold);
+			// print_list(hold->lex_struct, "fuck");
 			parser(hold);
 			executer(hold, env);
 			fprintf(stderr, MAG"error code: %d\n"RESET, error_code);
@@ -59,7 +60,5 @@ int main(int32_t argc, char **argv, char **env)
 
 
 //!  PROBLEMOS:
-//		-  ls|exit 42		-> wrong error 
-//		-  echo hola > test	-> echo is not providing input 
-//		-  env|ls			-> prints newlines
-
+//	- |			-> 2 error msgs, no sure if i can comment out the sec one (very bottom of lexer)
+//	- echo $?? 	-> output is with space, guess not that important

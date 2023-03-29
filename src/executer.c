@@ -53,7 +53,7 @@ void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 	}
 }
 
-void close_fds(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
+void close_fds_child(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
 	int32_t i;
 	t_pars *tmp;
@@ -126,18 +126,51 @@ void handle_here_doc(t_pars *pars_node)
 
 void handle_single_builtin(t_hold *hold)
 {
+	int32_t tmp_in;
+	int32_t tmp_out;
+
 	if (hold->pars_list->here_doc_delim != NULL)
 		handle_here_doc(hold->pars_list);
+	tmp_in = dup(STDIN_FILENO);
+	tmp_out = dup(STDOUT_FILENO);
+	dup2(hold->pars_list->infile, STDIN_FILENO);
+	dup2(hold->pars_list->outfile, STDOUT_FILENO);
+	builtin(hold, hold->pars_list);
+	dup2(tmp_in, STDIN_FILENO);
+	dup2(tmp_out, STDOUT_FILENO);
 	if (hold->pars_list->infile != 0)
 		close(hold->pars_list->infile);
 	if (hold->pars_list->outfile != 1)
 		close(hold->pars_list->outfile);
-	builtin(hold, hold->pars_list);
+}
+
+void close_fds_parent(t_pars **parsed_node)
+{
+	// close(*(pipe_fds[i][1]));
+	// if (i != 0)
+	// 	close(*(pipe_fds[i-1][0]));
+	if ((*parsed_node)->infile != 0)
+		close((*parsed_node)->infile);
+	if ((*parsed_node)->outfile != 1)
+		close((*parsed_node)->outfile);
+}
+
+void exec_child(t_hold *hold, t_pars *pars_node, char **ori_env, int32_t pipe_fds[MAX_FD][2])
+{
+	child_sig(); //Placed at start of child
+	if (pars_node->here_doc_delim != NULL)
+		handle_here_doc(pars_node);
+	close_fds_child(hold, hold->pipegroups, pipe_fds);
+	if (builtin(hold, pars_node) == false)
+	{
+		execute_cmd(pars_node, ori_env);
+		exit(122);
+	}
+	exit(error_code);
 }
 
 void executer(t_hold *hold, char **ori_env)
 {
-	int32_t pipegroups;
 	int32_t	i;
 	t_pars *parsed_node;
 	int32_t pipe_fds[MAX_FD][2];
@@ -145,46 +178,29 @@ void executer(t_hold *hold, char **ori_env)
 	parsed_node = hold->pars_list;
 	if (error_code != 0)
 		return ;
-	pipegroups = count_pipegroups(hold->lex_struct);
-	if (pipegroups == 1 && hold->lex_struct->macro == BUILTIN)
+	if (hold->pipegroups == 1 && hold->lex_struct->macro == BUILTIN)
 		return (handle_single_builtin(hold));
-	open_pipefds(pipegroups, pipe_fds);
+	open_pipefds(hold->pipegroups, pipe_fds);
 	i = 0;
-	while (i < pipegroups)
+	while (i < hold->pipegroups)
 	{
 		if (fork() == 0)
 		{
-			error_code = 0;
-			child_sig(); //Placed at start of child
-			if (parsed_node->here_doc_delim != NULL)
-				handle_here_doc(parsed_node);
-			redirection(parsed_node, i, pipegroups, pipe_fds);
-			close_fds(hold, pipegroups, pipe_fds);
-			if (builtin(hold, parsed_node) == false)
-			{
-				execute_cmd(parsed_node, ori_env);
-				exit(122);
-			}
-			exit(error_code);
+			redirection(parsed_node, i, hold->pipegroups, pipe_fds);
+			exec_child(hold, parsed_node, ori_env, pipe_fds);
 		}
 		else
 		{
+			close_fds_parent(&parsed_node);
 			close(pipe_fds[i][1]);
 			if (i != 0)
 				close(pipe_fds[i-1][0]);
-			if (parsed_node->infile != 0)
-				close(parsed_node->infile);
-			if (parsed_node->outfile != 1)
-				close(parsed_node->outfile);
 		}
 		i++;
 		parsed_node = parsed_node->next;
 	}
 	close(pipe_fds[i-1][0]);
 	i = 0;
-	while (i < pipegroups)
-	{
+	while (i++ < hold->pipegroups)
 		waitpid(-1, &error_code, WUNTRACED);
-		i++;
-	}
 }
