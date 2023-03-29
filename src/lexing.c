@@ -43,6 +43,41 @@ int32_t check_beginning_redir(t_hold *hold)
     return (-1);
 }
 
+int32_t check_out_redir_syntax(t_hold **hold, int32_t i)
+{
+	i++;
+	i = skip_spaces((*hold)->line, i);
+	if ((*hold)->line[i] == '<')
+		return (exit_status("syntax error near unexpected token '<'", "", "", 69), -1);
+	if ((*hold)->line[i] == '>')
+	{
+		add_node_lex((*hold), ">>");
+		i++;
+		i = skip_spaces((*hold)->line, i);
+		if ((*hold)->line[i] == '>' || (*hold)->line[i] == '<')
+			return (exit_status("syntax error near unexpected token '>'", "", "", 69), -1);
+		return (i-1);
+	}
+	add_node_lex((*hold), ">");
+	return (i-1);
+}
+int32_t check_in_redir_syntax(t_hold **hold, int32_t i)
+{
+	i++;
+	i = skip_spaces((*hold)->line, i);
+	if((*hold)->line[i] == '<')
+	{
+		add_node_lex((*hold), "<<");
+		i++;
+		i = skip_spaces((*hold)->line, i);
+		if ((*hold)->line[i] == '<')
+			return (exit_status("syntax error near unexpected token '<'", "", "", 69), -1);
+		return (i-1);
+	}
+	add_node_lex((*hold), "<");
+	return (i-1);
+}
+
 /* function adds redirection symbol(s) as a new node to the 'lex_struct'
  * THROWS ERROR IF:
  *		- redir sign at the very beginning and nothing else (except spaces)
@@ -50,44 +85,14 @@ int32_t check_beginning_redir(t_hold *hold)
  *		- in any case this syntax: '><'	(eg. ><, <><, >><)						*/
 int32_t lex_redir(t_hold *hold, int32_t i)
 {
-
 	if ((i == 0) && (check_beginning_redir(hold) != 0))
 		return (-1);
 	if (hold->line[i] == '<')
-	{
-		i++;
-		i = skip_spaces(hold->line, i);
-		if(hold->line[i] == '<')
-		{
-			add_node_lex(hold, "<<");
-			i++;
-			i = skip_spaces(hold->line, i);
-			if (hold->line[i] == '<')
-                return (exit_status("syntax error near unexpected token '<'", "", "", 69), -1);
-			return (i-1);
-		}
-		add_node_lex(hold, "<");
-		return (i-1);
-	}
+		return (check_in_redir_syntax(&hold, i));
 	else if (hold->line[i] == '>')
-	{
-		i++;
-		i = skip_spaces(hold->line, i);
-		if (hold->line[i] == '<')
-            return (exit_status("syntax error near unexpected token '<'", "", "", 69), -1);
-		if (hold->line[i] == '>')
-		{
-			add_node_lex(hold, ">>");
-			i++;
-			i = skip_spaces(hold->line, i);
-			if (hold->line[i] == '>' || hold->line[i] == '<')
-                return (exit_status("syntax error near unexpected token '>'", "", "", 69), -1);
-			return (i-1);
-		}
-		add_node_lex(hold, ">");
-		return (i-1);
-	}
-	return (69);
+		return (check_out_redir_syntax(&hold, i));
+	else
+		return (69);
 }
 
 char *add_letter(char *pointer, char letter)

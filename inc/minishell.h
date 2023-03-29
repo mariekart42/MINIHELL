@@ -181,6 +181,9 @@ void			heredoc_sig_handle(int sig);
 //		lexing.c
 char *init_string(char *line, char quote, int32_t i, int32_t quote_len_);
 
+int32_t check_in_redir_syntax(t_hold **hold, int32_t i);
+int32_t check_out_redir_syntax(t_hold **hold, int32_t i);
+
 // int32_t	lex_quote(t_hold *hold, int32_t i);
 // char *calloc_string(t_hold *hold, int32_t i);
 // int32_t new_lex_quote(t_hold *hold, int32_t i);

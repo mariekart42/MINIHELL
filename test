@@ -1,1 +1,16 @@
-hola
+total 208
+-rw-r--r--   1 mariemensing  staff      0 Mar 28 16:41 >
+-rw-r--r--   1 mariemensing  staff   1141 Mar 28 20:47 Makefile
+-rw-r--r--   1 mariemensing  staff      0 Mar 28 16:57 OO
+-rw-r--r--   1 mariemensing  staff     12 Mar 28 16:59 TT
+-rw-r--r--   1 mariemensing  staff      5 Mar 28 17:27 a
+-rw-r--r--   1 mariemensing  staff     32 Mar 28 17:27 b
+-rw-r--r--   1 mariemensing  staff     13 Mar 28 17:41 bonjour
+-rw-r--r--   1 mariemensing  staff      0 Mar 28 16:44 est
+drwxr-xr-x   3 mariemensing  staff     96 Mar 28 12:53 inc
+drwxr-xr-x  89 mariemensing  staff   2848 Mar 29 00:10 libft
+-rwxr-xr-x   1 mariemensing  staff  83008 Mar 29 14:37 minishell
+drwxr-xr-x  22 mariemensing  staff    704 Mar 29 14:37 obj
+drwxr-xr-x  12 mariemensing  staff    384 Mar 27 17:19 previous
+drwxr-xr-x  23 mariemensing  staff    736 Mar 28 13:46 src
+-rw-r--r--   1 mariemensing  staff      0 Mar 29 14:39 test
