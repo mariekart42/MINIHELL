@@ -263,21 +263,11 @@ void lexer(t_hold *hold)
 		else if (hold->line[i] == '|')
 			lex_pipe(hold, i);
 		else if (hold->line[i] == '<' || hold->line[i] == '>')
-		{
 			i = lex_redir(hold, i);
-			// i+=1;
-		}
 		else if (hold->line[i] != ' ' && hold->line[i] != '\t')
-		{
 			i = lex_word(hold, hold->line, i);
-	// i-=1;
-		}
 		i++;
 	}
 	if (hold->lex_struct == NULL)
 		exit_status(": :command not found!", "", "", 127); // commentet dis out
 }
-
-
-// 'l's
-// "l"s

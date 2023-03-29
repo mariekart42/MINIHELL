@@ -334,6 +334,28 @@ void	open_extensions(t_lex *lex, t_hold *hold)
 	}
 }
 
+int32_t init_pars_node(t_pars **pars_node, t_lex **lex_node, int32_t i)
+{
+	(*pars_node)->args = malloc(sizeof(char *) * (arg_amount((*lex_node)) + 1));
+	i = 0;
+	while ((*lex_node)->macro != PIPE)
+	{
+		(*pars_node)->outfile = init_outfile((*lex_node)->next, (*lex_node)->macro);
+		(*pars_node)->infile = init_infile((*pars_node), (*lex_node)->next, (*lex_node)->macro);
+		if ((*lex_node)->macro == SING_CLOSE_REDIR || (*lex_node)->macro == DOUBL_CLOSE_REDIR || (*lex_node)->macro == SING_OPEN_REDIR || (*lex_node)->macro == DOUBL_OPEN_REDIR)
+			(*lex_node) = (*lex_node)->next;
+		else
+		{
+			(*pars_node)->args[i] = ft_strdup((*lex_node)->item);
+			i++;
+		}
+		if ((*lex_node)->next == NULL)
+			break ;
+		(*lex_node) = (*lex_node)->next;
+	}
+	return (i);
+}
+
 void create_parsed_list(t_hold **hold, t_lex *lex, int32_t pipegroups)
 {
 	int32_t i;
@@ -352,24 +374,24 @@ void create_parsed_list(t_hold **hold, t_lex *lex, int32_t pipegroups)
 	tmp_pars = (*hold)->pars_list;
 	while (pipegroups > 0)
 	{
-		tmp_pars->args = malloc(sizeof(char *) * (arg_amount(tmp_lex) + 1));
-		i = 0;
-		while (tmp_lex->macro != PIPE)
-		{
-			tmp_pars->outfile = init_outfile(tmp_lex->next, tmp_lex->macro);
-			tmp_pars->infile = init_infile(tmp_pars, tmp_lex->next, tmp_lex->macro);
-			if (tmp_lex->macro == SING_CLOSE_REDIR || tmp_lex->macro == DOUBL_CLOSE_REDIR || tmp_lex->macro == SING_OPEN_REDIR || tmp_lex->macro == DOUBL_OPEN_REDIR)
-				tmp_lex = tmp_lex->next;
-			else
-			{
-				tmp_pars->args[i] = ft_strdup(tmp_lex->item);
-				i++;
-			}
-
-			if (tmp_lex->next == NULL)
-				break ;
-			tmp_lex = tmp_lex->next;
-		}
+		i = init_pars_node(&tmp_pars, &tmp_lex, i);
+		// tmp_pars->args = malloc(sizeof(char *) * (arg_amount(tmp_lex) + 1));
+		// i = 0;
+		// while (tmp_lex->macro != PIPE)
+		// {
+		// 	tmp_pars->outfile = init_outfile(tmp_lex->next, tmp_lex->macro);
+		// 	tmp_pars->infile = init_infile(tmp_pars, tmp_lex->next, tmp_lex->macro);
+		// 	if (tmp_lex->macro == SING_CLOSE_REDIR || tmp_lex->macro == DOUBL_CLOSE_REDIR || tmp_lex->macro == SING_OPEN_REDIR || tmp_lex->macro == DOUBL_OPEN_REDIR)
+		// 		tmp_lex = tmp_lex->next;
+		// 	else
+		// 	{
+		// 		tmp_pars->args[i] = ft_strdup(tmp_lex->item);
+		// 		i++;
+		// 	}
+		// 	if (tmp_lex->next == NULL)
+		// 		break ;
+		// 	tmp_lex = tmp_lex->next;
+		// }
 		tmp_pars->args[i] = NULL;
 		tmp_pars->cmd_path = get_cmdpath(tmp_pars->args[0]);
 		tmp_lex = tmp_lex->next;
@@ -380,10 +402,7 @@ void create_parsed_list(t_hold **hold, t_lex *lex, int32_t pipegroups)
 
 void parser(t_hold *hold)
 {
-	// int32_t pipegroups;
-
 	recognize_type(hold);
-	// hold->pipegroups = 
 	count_pipegroups(hold);
     if (error_code != 0 || check_syntax_errors(hold))
         return ;

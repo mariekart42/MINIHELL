@@ -209,6 +209,8 @@ void check_closed_quotes(t_hold *hold);
 
 
 //		parser.c
+int32_t init_pars_node(t_pars **pars_node, t_lex **lex_node, int32_t i);
+
 bool builtin_parser(char *node);
 void recognize_type(t_hold *hold);
 void count_pipegroups(t_hold *hold);
