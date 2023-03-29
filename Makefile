@@ -27,6 +27,7 @@ SRC		=	main.c \
 			executer.c \
 			syntax_errors.c \
 			delete_later.c \
+			$(addprefix builtins/,\
 			builtins.c \
 			cd_builtin.c \
 			cd_builtin_cont.c \
@@ -36,9 +37,10 @@ SRC		=	main.c \
 			export_builtin.c \
 			export_builtin_cont.c \
 			export_builtin_utils.c \
-			export_builtin_utils_cont.c \
+			export_builtin_utils_cont.c) \
+			$(addprefix signals/,\
 			signals.c \
-			signal_handlers.c
+			signal_handlers.c)
 
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 OBJ		= $(SRC:.c=.o)
@@ -49,6 +51,7 @@ all: $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@mkdir -p $(OBJ_PATH)
+	@mkdir -p obj/signals obj/builtins
 	$(CC) $(CFLAGS) -c $< -o $@ $(INC)
 
 $(NAME): $(OBJS) $(LIB_F)/$(LIB)
