@@ -128,13 +128,6 @@ char	*assign_var_value(t_pars *parsed_node, int i, int j)
 		ft_strlen(parsed_node->args[i]) + 1));
 }
 
-void	export_builtin(t_hold *hold, t_pars *parsed_node)
-{
-	if (export_empty(hold, parsed_node) == 0)
-		return ;
-	export_not_empty(hold, parsed_node);
-}
-
 void	export_not_empty(t_hold *hold, t_pars *parsed_node)
 {
 	int		i;
@@ -172,4 +165,11 @@ void	export_not_empty(t_hold *hold, t_pars *parsed_node)
 		sort_export_end(hold->export_list);
 		i++;
 	}
+}
+
+void	export_builtin(t_hold *hold, t_pars *parsed_node)
+{
+	if (export_empty(hold, parsed_node) == 0)
+		return ;
+	export_not_empty(hold, parsed_node);
 }
