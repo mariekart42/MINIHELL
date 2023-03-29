@@ -87,6 +87,24 @@ typedef struct s_hold
 	struct s_pars		*pars_list;
 }						t_hold;
 
+//!  	LEXER:
+//		00_lexer.c
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //		init_data.c
 int32_t init_structs(t_hold **hold, char **argv, int32_t argc);
 void create_env_export_list(t_hold *hold, char **ori_env);
@@ -105,13 +123,6 @@ bool	builtin(t_hold *hold, t_pars *parsed_node);
 
 
 char *handle_quote_chunk(char **string, char **quote_chunk);
-
-
-
-
-
-
-
 
 //		main.c
 void free_content(t_hold **hold);
