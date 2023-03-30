@@ -1,5 +1,11 @@
 #include "minishell.h"
 
+void	free_list_pars_helper(t_pars *tmp)
+{
+	unlink("tmp.hd");
+	free(tmp->here_doc_delim);
+}
+
 /* function frees all nodes of linked list 'pars_list'
  * and all its variables:
  *	-> args, cmd_path 					*/
@@ -17,8 +23,7 @@ void	free_list_pars(t_pars *head)
 		tmp->cmd_path = NULL;
 		if (tmp->here_doc_delim != NULL)
 		{
-			unlink("tmp.hd");
-			free(tmp->here_doc_delim);
+			free_list_pars_helper(tmp);
 			tmp->here_doc_delim = NULL;
 		}
 		while (tmp->args[i] != NULL)
