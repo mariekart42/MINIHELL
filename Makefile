@@ -22,6 +22,7 @@ SRC		=	main.c \
 			parser_02.c \
 			parser_03.c \
 			utils.c \
+			utils_cont.c \
 			executer.c \
 			init_data.c \
 			export_struct.c \
