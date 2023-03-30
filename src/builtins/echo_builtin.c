@@ -1,5 +1,21 @@
 #include "minishell.h"
 
+void	echo_builtin_cont(t_pars *parsed_node, int *i, bool is_nflag)
+{
+	char	**args;
+
+	args = parsed_node->args;
+	while (args[*i] != NULL)
+	{
+		ft_putstr_fd(args[*i], 1);
+		if (args[*i + 1] != NULL)
+			ft_putstr_fd(" ", 1);
+		(*i)++;
+	}
+	if (!is_nflag)
+		ft_putstr_fd("\n", 1);
+}
+
 bool	echo_builtin_helper(t_pars *parsed_node, int i, bool is_nflag)
 {
 	char	**args;
@@ -7,6 +23,7 @@ bool	echo_builtin_helper(t_pars *parsed_node, int i, bool is_nflag)
 
 	args = parsed_node->args;
 	j = 1;
+	is_nflag = false;
 	if (ft_strncmp(args[i], "-n", 2) == 0)
 	{
 		while (args[i][j] != '\0')
@@ -24,22 +41,6 @@ bool	echo_builtin_helper(t_pars *parsed_node, int i, bool is_nflag)
 		}
 	}
 	return (is_nflag);
-}
-
-void	echo_builtin_cont(t_pars *parsed_node, int *i, bool is_nflag)
-{
-	char	**args;
-
-	args = parsed_node->args;
-	while (args[*i] != NULL)
-	{
-		ft_putstr_fd(args[*i], 1);
-		if (args[*i + 1] != NULL)
-			ft_putstr_fd(" ", 1);
-		(*i)++;
-	}
-	if (!is_nflag)
-		ft_putstr_fd("\n", 1);
 }
 
 bool	is_nflag_func(char **args, t_pars *parsed_node, int *i)
