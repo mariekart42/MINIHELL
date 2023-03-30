@@ -179,7 +179,7 @@ int32_t		check_syntax_errors(t_hold *hold);
 
 char		*ft_strnew(const int size);
 //		builtins
-void		echo_builtin(t_hold *hold, t_pars *parsed_node);
+void		echo_builtin(t_pars *parsed_node);
 void		env_builtin(t_hold *hold, t_pars *parsed_node);
 void		pwd_builtin(t_hold *hold, t_pars *parsed_node);
 void		cd_builtin(t_hold *hold, t_pars *parsed_node);
