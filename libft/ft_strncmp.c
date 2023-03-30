@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 19:38:03 by mmensing          #+#    #+#             */
-/*   Updated: 2022/06/06 17:46:22 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/03/30 21:06:54 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	size_t	i;
 
 	i = 0;
+	// fprintf(stderr, "s1: %s\n", s1);
+	// fprintf(stderr, "s2: %s\n", s2);
 	while ((i < n) && (s1[i] != '\0' || s2[i] != '\0'))
 	{
 		if (s1[i] != s2[i])

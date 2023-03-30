@@ -1,5 +1,31 @@
 #include "minishell.h"
 
+bool	is_invalid_char(char *s, int32_t i)
+{
+	if (s[i] == '\0' || s[i] == ' ' || s[i] == '|' || s[i] == '>'
+		|| s[i] == '<' || (s[i] == '$' && s[i + 1] == '?'))
+	{
+		return (true);
+	}
+	return (false);
+}
+
+void	when_x_positive(t_hold *hold, int32_t x, char *string)
+{
+	if (x > 0)
+	{
+		string[x] = '\0';
+		add_node_lex(hold, string);
+		free(string);
+	}
+}
+
+void	increase_counters(int32_t *i, int32_t *x)
+{
+	(*i)++;
+	(*x)++;
+}
+
 int32_t	lex_word(t_hold *hold, char *s, int32_t i)
 {
 	char	*quote_chunk_;
@@ -11,8 +37,7 @@ int32_t	lex_word(t_hold *hold, char *s, int32_t i)
 	x = 0;
 	while (1)
 	{
-		if (s[i] == '\0' || s[i] == ' ' || s[i] == '|' || s[i] == '>' \
-							|| s[i] == '<' || (s[i] == '$' && s[i + 1] == '?'))
+		if (is_invalid_char(s, i))
 			break ;
 		else if (s[i] == 34 || s[i] == 39)
 		{
@@ -24,15 +49,9 @@ int32_t	lex_word(t_hold *hold, char *s, int32_t i)
 		}
 		else
 			string[x] = s[i];
-		i++;
-		x++;
+		increase_counters(&i, &x);
 	}
-	if (x > 0)
-	{
-		string[x] = '\0';
-		add_node_lex(hold, string);
-		free(string);
-	}
+	when_x_positive(hold, x, string);
 	return (i - 1);
 }
 
@@ -87,7 +106,7 @@ void	lexer(t_hold *hold)
 	check_closed_quotes(hold);
 	while (hold->line[i] != '\0' && hold->line[i] != '\n')
 	{
-		if (error_code != 0)
+		if (g_error_code != 0)
 			return ;
 		if (hold->line[i] == '$' && hold->line[i + 1] == '?')
 		{

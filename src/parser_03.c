@@ -93,7 +93,9 @@ int32_t	init_infile(t_pars *file_node_pars, t_lex *file_node_lex, int32_t type)
 		if (file_id < 0)
 			exit_status(file_node_lex->item, ": no such file or directory", \
 																		"", 69);
-		file_node_pars->here_doc_delim = ft_strdup(file_node_lex->next->item);
+		// fprintf(stderr, "lex: %s\n", file_node_lex->item);
+		// fprintf(stderr, "lex next: %s\n", file_node_lex->next->item);
+		file_node_pars->here_doc_delim = ft_strdup(file_node_lex->item);
 	}
 	return (file_id);
 }

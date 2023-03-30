@@ -21,11 +21,10 @@ void	redir_first(t_pars *pars_node, int32_t pipe_fds[MAX_FD][2], int32_t i, \
 	}
 }
 
-
 /* function changes the filedescriptors always
  * 		- from stdin to 'infile' in 'parsed_chunk'
  *		- and from stdout to 'outfile' in 'parsed_chunk' */
-void redirection(t_pars *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
+void	redirection(t_pars *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
 	if (i == 0)
 	{
@@ -55,17 +54,17 @@ void redirection(t_pars *parsed_node, int32_t i, int32_t pipegroups, int32_t pip
 	}
 	else // in the middle of pipegroups
 	{
-		dup2(pipe_fds[i-1][0], STDIN_FILENO);
+		dup2(pipe_fds[i - 1][0], STDIN_FILENO);
 		dup2(pipe_fds[i][1], STDOUT_FILENO);
 	}
 }
 
-void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
+void	open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
-	int32_t i;
+	int32_t	i;
 
 	i = 0;
-	while (i + 1< pipegroups)
+	while (i + 1 < pipegroups)
 	{
 		if (pipe(pipe_fds[i]) < 0)
 		{
@@ -76,14 +75,14 @@ void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 	}
 }
 
-void close_fds_child(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
+void	close_fds_child(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
-	int32_t i;
-	t_pars *tmp;
+	int32_t	i;
+	t_pars	*tmp;
 
 	i = 0;
 	tmp = hold->pars_list;
-	while ((i+1) < pipegroups)
+	while ((i + 1) < pipegroups)
 	{
 		close(pipe_fds[i][0]);
 		close(pipe_fds[i][1]);
@@ -99,17 +98,17 @@ void close_fds_child(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][
 	}
 }
 
-void execute_cmd(t_pars *parsed_node, char **ori_env)
+void	execute_cmd(t_pars *parsed_node, char **ori_env)
 {
 	if (execve(parsed_node->cmd_path, parsed_node->args, ori_env) == -1)
 		exit_status(parsed_node->args[0], ":command not found!", "", 127);
 }
 
-void handle_here_doc(t_pars *pars_node)
+void	handle_here_doc(t_pars *pars_node)
 {
 	char	*input_string;
-	char *tmp1;
-	char *tmp2;
+	char	*tmp1;
+	char	*tmp2;
 
 	input_string = NULL;
 	tmp1 = NULL;
@@ -121,12 +120,17 @@ void handle_here_doc(t_pars *pars_node)
 	while (1)
 	{
 		input_string = readline(CYN"heredoc> "RESET);
+
+		ft_strlen(input_string);
+		ft_strlen(pars_node->here_doc_delim);
+		// fprintf(stderr, "del: %s\n", pars_node->here_doc_delim);
+		// fprintf(stderr, "input: %s\n", input_string);
 		if (ft_strncmp(input_string, pars_node->here_doc_delim, ft_strlen(pars_node->here_doc_delim)) == 0 && (ft_strlen(pars_node->here_doc_delim) == ft_strlen(input_string)))
 		{
 			ft_putstr_fd(tmp2, pars_node->infile);
 			free(tmp2);
 			free(input_string);
-			break;
+			break ;
 		}
 		if (tmp1 == NULL)
 		{
@@ -144,13 +148,13 @@ void handle_here_doc(t_pars *pars_node)
 		free(input_string);
 	}
 	close(pars_node->infile);
-	pars_node->infile = open("tmp.hd", O_CREAT | O_RDONLY , 0777);
+	pars_node->infile = open("tmp.hd", O_CREAT | O_RDONLY, 0777);
 }
 
-void handle_single_builtin(t_hold *hold)
+void	handle_single_builtin(t_hold *hold)
 {
-	int32_t tmp_in;
-	int32_t tmp_out;
+	int32_t	tmp_in;
+	int32_t	tmp_out;
 
 	if (hold->pars_list->here_doc_delim != NULL)
 		handle_here_doc(hold->pars_list);
@@ -167,7 +171,7 @@ void handle_single_builtin(t_hold *hold)
 		close(hold->pars_list->outfile);
 }
 
-void close_fds_parent(t_pars **parsed_node)
+void	close_fds_parent(t_pars **parsed_node)
 {
 	// close(*(pipe_fds[i][1]));
 	// if (i != 0)
@@ -178,37 +182,51 @@ void close_fds_parent(t_pars **parsed_node)
 		close((*parsed_node)->outfile);
 }
 
-void exec_child(t_hold *hold, t_pars *pars_node, char **ori_env, int32_t pipe_fds[MAX_FD][2])
+void	exec_child(t_hold *hold, t_pars *pars_node, char **ori_env, int32_t pipe_fds[MAX_FD][2])
 {
-	child_sig(); //Placed at start of child
-	if (pars_node->here_doc_delim != NULL)
-		handle_here_doc(pars_node);
+	 //Placed at start of child
 	close_fds_child(hold, hold->pipegroups, pipe_fds);
 	if (builtin(hold, pars_node) == false)
 	{
 		execute_cmd(pars_node, ori_env);
 		exit(122);
 	}
-	exit(error_code);
+	exit(g_error_code);
 }
 
-void executer(t_hold *hold, char **ori_env)
+int32_t prep_exec(t_hold *hold)
+{
+	if (g_error_code != 0)
+		return (1);
+	if (hold->pipegroups == 1 && hold->lex_struct->macro == BUILTIN)
+	{
+		handle_single_builtin(hold);
+		return (1);
+	}
+	return (0);
+}
+
+void	executer(t_hold *hold, char **ori_env)
 {
 	int32_t	i;
-	t_pars *parsed_node;
-	int32_t pipe_fds[MAX_FD][2];
+	t_pars	*parsed_node;
+	int32_t	pipe_fds[MAX_FD][2];
 
 	parsed_node = hold->pars_list;
-	if (error_code != 0)
+	if (prep_exec(hold))
 		return ;
-	if (hold->pipegroups == 1 && hold->lex_struct->macro == BUILTIN)
-		return (handle_single_builtin(hold));
 	open_pipefds(hold->pipegroups, pipe_fds);
 	i = 0;
 	while (i < hold->pipegroups)
 	{
 		if (fork() == 0)
 		{
+			child_sig();
+			if (parsed_node->here_doc_delim != NULL)
+			{
+				fprintf(stderr, "del: %s\n", parsed_node->here_doc_delim);
+				handle_here_doc(parsed_node);
+			}
 			redirection(parsed_node, i, hold->pipegroups, pipe_fds);
 			exec_child(hold, parsed_node, ori_env, pipe_fds);
 		}
@@ -217,13 +235,13 @@ void executer(t_hold *hold, char **ori_env)
 			close_fds_parent(&parsed_node);
 			close(pipe_fds[i][1]);
 			if (i != 0)
-				close(pipe_fds[i-1][0]);
+				close(pipe_fds[i - 1][0]);
 		}
 		i++;
 		parsed_node = parsed_node->next;
 	}
-	close(pipe_fds[i-1][0]);
+	close(pipe_fds[i - 1][0]);
 	i = 0;
 	while (i++ < hold->pipegroups)
-		waitpid(-1, &error_code, WUNTRACED);
+		waitpid(-1, &g_error_code, WUNTRACED);
 }
