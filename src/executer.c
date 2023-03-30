@@ -21,11 +21,10 @@ void	redir_first(t_pars *pars_node, int32_t pipe_fds[MAX_FD][2], int32_t i, \
 	}
 }
 
-
 /* function changes the filedescriptors always
  * 		- from stdin to 'infile' in 'parsed_chunk'
  *		- and from stdout to 'outfile' in 'parsed_chunk' */
-void redirection(t_pars *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
+void	redirection(t_pars *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
 	if (i == 0)
 	{
@@ -55,17 +54,17 @@ void redirection(t_pars *parsed_node, int32_t i, int32_t pipegroups, int32_t pip
 	}
 	else // in the middle of pipegroups
 	{
-		dup2(pipe_fds[i-1][0], STDIN_FILENO);
+		dup2(pipe_fds[i - 1][0], STDIN_FILENO);
 		dup2(pipe_fds[i][1], STDOUT_FILENO);
 	}
 }
 
-void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
+void	open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
-	int32_t i;
+	int32_t	i;
 
 	i = 0;
-	while (i + 1< pipegroups)
+	while (i + 1 < pipegroups)
 	{
 		if (pipe(pipe_fds[i]) < 0)
 		{
@@ -76,14 +75,14 @@ void open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 	}
 }
 
-void close_fds_child(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
+void	close_fds_child(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
-	int32_t i;
-	t_pars *tmp;
+	int32_t	i;
+	t_pars	*tmp;
 
 	i = 0;
 	tmp = hold->pars_list;
-	while ((i+1) < pipegroups)
+	while ((i + 1) < pipegroups)
 	{
 		close(pipe_fds[i][0]);
 		close(pipe_fds[i][1]);
@@ -99,17 +98,17 @@ void close_fds_child(t_hold *hold, int32_t pipegroups, int32_t pipe_fds[MAX_FD][
 	}
 }
 
-void execute_cmd(t_pars *parsed_node, char **ori_env)
+void	execute_cmd(t_pars *parsed_node, char **ori_env)
 {
 	if (execve(parsed_node->cmd_path, parsed_node->args, ori_env) == -1)
 		exit_status(parsed_node->args[0], ":command not found!", "", 127);
 }
 
-void handle_here_doc(t_pars *pars_node)
+void	handle_here_doc(t_pars *pars_node)
 {
 	char	*input_string;
-	char *tmp1;
-	char *tmp2;
+	char	*tmp1;
+	char	*tmp2;
 
 	input_string = NULL;
 	tmp1 = NULL;
@@ -126,7 +125,7 @@ void handle_here_doc(t_pars *pars_node)
 			ft_putstr_fd(tmp2, pars_node->infile);
 			free(tmp2);
 			free(input_string);
-			break;
+			break ;
 		}
 		if (tmp1 == NULL)
 		{
@@ -144,13 +143,13 @@ void handle_here_doc(t_pars *pars_node)
 		free(input_string);
 	}
 	close(pars_node->infile);
-	pars_node->infile = open("tmp.hd", O_CREAT | O_RDONLY , 0777);
+	pars_node->infile = open("tmp.hd", O_CREAT | O_RDONLY, 0777);
 }
 
-void handle_single_builtin(t_hold *hold)
+void	handle_single_builtin(t_hold *hold)
 {
-	int32_t tmp_in;
-	int32_t tmp_out;
+	int32_t	tmp_in;
+	int32_t	tmp_out;
 
 	if (hold->pars_list->here_doc_delim != NULL)
 		handle_here_doc(hold->pars_list);
@@ -167,7 +166,7 @@ void handle_single_builtin(t_hold *hold)
 		close(hold->pars_list->outfile);
 }
 
-void close_fds_parent(t_pars **parsed_node)
+void	close_fds_parent(t_pars **parsed_node)
 {
 	// close(*(pipe_fds[i][1]));
 	// if (i != 0)
@@ -178,7 +177,7 @@ void close_fds_parent(t_pars **parsed_node)
 		close((*parsed_node)->outfile);
 }
 
-void exec_child(t_hold *hold, t_pars *pars_node, char **ori_env, int32_t pipe_fds[MAX_FD][2])
+void	exec_child(t_hold *hold, t_pars *pars_node, char **ori_env, int32_t pipe_fds[MAX_FD][2])
 {
 	child_sig(); //Placed at start of child
 	if (pars_node->here_doc_delim != NULL)
@@ -192,11 +191,11 @@ void exec_child(t_hold *hold, t_pars *pars_node, char **ori_env, int32_t pipe_fd
 	exit(g_error_code);
 }
 
-void executer(t_hold *hold, char **ori_env)
+void	executer(t_hold *hold, char **ori_env)
 {
 	int32_t	i;
-	t_pars *parsed_node;
-	int32_t pipe_fds[MAX_FD][2];
+	t_pars	*parsed_node;
+	int32_t	pipe_fds[MAX_FD][2];
 
 	parsed_node = hold->pars_list;
 	if (g_error_code != 0)
@@ -217,12 +216,12 @@ void executer(t_hold *hold, char **ori_env)
 			close_fds_parent(&parsed_node);
 			close(pipe_fds[i][1]);
 			if (i != 0)
-				close(pipe_fds[i-1][0]);
+				close(pipe_fds[i - 1][0]);
 		}
 		i++;
 		parsed_node = parsed_node->next;
 	}
-	close(pipe_fds[i-1][0]);
+	close(pipe_fds[i - 1][0]);
 	i = 0;
 	while (i++ < hold->pipegroups)
 		waitpid(-1, &g_error_code, WUNTRACED);
