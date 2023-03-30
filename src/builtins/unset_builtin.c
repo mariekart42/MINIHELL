@@ -46,28 +46,24 @@ bool	find_var(t_hold *hold, char *var, char *structure)
 	return (var_exist);
 }
 
-int	print_unset_exit(t_pars *parsed_node, int i)
-{
-	if (ft_isdigit(parsed_node->args[i][0]) != 0)
-	{
-		exit_status("export:", parsed_node->args[i],
-			": not a valid identifier", 1);
-	}
-	return (0);
-}
-
 void	unset_builtin(t_hold *hold, t_pars *parsed_node)
 {
+	char	**args;
 	int		i;
 	int		j;
 
+	args = parsed_node->args;
 	i = 1;
 	j = 0;
-	while (parsed_node->args[i] != NULL)
+	while (args[i] != NULL)
 	{
-		if (print_unset_exit(parsed_node, i) == 0)
+		if (ft_isdigit(parsed_node->args[i][0]) != 0)
+		{
+			exit_status("export:", parsed_node->args[i],
+				": not a valid identifier", 1);
 			return ;
-		while (parsed_node->args[i][j] != '\0')
+		}
+		while (args[i][j] != '\0')
 		{
 			if (ft_isalnum_mod(parsed_node->args[i][j]) == 0)
 			{
@@ -77,8 +73,8 @@ void	unset_builtin(t_hold *hold, t_pars *parsed_node)
 			}
 			j++;
 		}
-		find_var(hold, parsed_node->args[i], "export");
-		if (find_var(hold, parsed_node->args[i], "env") == false)
+		find_var(hold, args[i], "export");
+		if (find_var(hold, args[i], "env") == false)
 			return ;
 		j = 0;
 		i++;
