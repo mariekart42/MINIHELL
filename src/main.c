@@ -19,9 +19,10 @@ int32_t	prep_minihell(t_hold *hold)
 	hold->line = readline(BLU"MINIHELL> "RESET);
 	if (!hold->line)
 	{
-		free_main(hold);
-		free_list_env_export(hold->env_list);
-		free_list_env_export(hold->export_list);
+		// free_main(hold);
+		// free_list_env_export(hold->env_list);
+		// free_list_env_export(hold->export_list);
+		free_exit(hold);
 		ft_putstr_fd("\b\b exit\n", 1);
 		exit(g_error_code);
 	}
