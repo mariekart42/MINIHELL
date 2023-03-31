@@ -4,6 +4,7 @@ int32_t	init_structs(t_hold **hold, char **argv, int32_t argc)
 {
 	(void)argv;
 	(void)argc;
+	g_error_code = 0;
 	(*hold) = (t_hold *)malloc(sizeof(t_hold));
 	if (!(*hold))
 		return (69);

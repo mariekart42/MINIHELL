@@ -7,13 +7,27 @@ void	free_main(t_hold *hold)
 	clear_history();
 }
 
-void	exit_when_no_line(char *line)
+int32_t	prep_minihell(t_hold *hold)
 {
-	if (!line)
+	g_error_code = 0;
+	hold->line = readline(BLU"MINIHELL> "RESET);
+	if (!hold->line)
 	{
 		ft_putstr_fd("\b\bexit\n", 1);
 		exit(1);
 	}
+	if (ft_strlen(hold->line) > 0)
+		return (1);
+	else
+		return (0);
+}
+
+void	init_error_code(t_hold *hold)
+{
+	if (g_error_code > 255)
+		hold->prev_error = g_error_code % 255;
+	else
+		hold->prev_error = g_error_code;
 }
 
 int	main(int32_t argc, char **argv, char **env)
@@ -25,31 +39,16 @@ int	main(int32_t argc, char **argv, char **env)
 		return (69);
 	create_env_export_list(hold, env);
 	signals();
-	g_error_code = 0;
 	while (1)
 	{
-		hold->line = readline(BLU"MINIHELL> "RESET);
-		exit_when_no_line(hold->line);
-		if (ft_strlen(hold->line) > 0)
+		if (prep_minihell(hold))
 		{
 			add_history(hold->line);
-			if (ft_strncmp(hold->line, "echo $?", 8) == 0)
-			{
-				print_error_code();
-				g_error_code = 0;
-				free_content(&hold);
-			}
-			else
-			{
-				lexer(hold);
-				// print_list(hold->lex_struct, "fuck");
-				parser(hold);
-				executer(hold, env);
-				fprintf(stderr, MAG"error code: %d\n"RESET, g_error_code);
-				free_content(&hold);
-				// free(hold->line);
-				// hold->line = NULL;
-			}
+			lexer(hold);
+			parser(hold);
+			executer(hold, env);
+			free_content(&hold);
+			init_error_code(hold);
 		}
 	}
 	free_main(hold);

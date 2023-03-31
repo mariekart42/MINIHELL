@@ -1,10 +1,8 @@
 NAME	= minishell
 CC		= cc
 CFLAGS	= -Wall -Werror -Wextra -g
-# -fsanitize=address
-# CFLAGS	=  -fsanitize=address
+# DEBUG	=  -fsanitize=address
 RM		= rm -rf
-
 SRC_PATH = src/
 OBJ_PATH = obj/
 INC_PATH = inc/
@@ -13,14 +11,6 @@ LIB_F = libft
 LIB = libft.a
 
 SRC		=	main.c \
-			lexer_00.c \
-			lexer_01.c \
-			lexer_02.c \
-			lexer_03.c \
-			parser_00.c \
-			parser_01.c \
-			parser_02.c \
-			parser_03.c \
 			utils.c \
 			utils_cont.c \
 			executer.c \
@@ -30,6 +20,16 @@ SRC		=	main.c \
 			free_content.c \
 			syntax_errors.c \
 			delete_later.c \
+			$(addprefix lexing/,\
+			lexer_00.c \
+			lexer_01.c \
+			lexer_02.c \
+			lexer_03.c) \
+			$(addprefix parsing/,\
+			parser_00.c \
+			parser_01.c \
+			parser_02.c \
+			parser_03.c) \
 			$(addprefix builtins/,\
 			builtins.c \
 			cd_builtin.c \
@@ -54,11 +54,11 @@ all: $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@mkdir -p $(OBJ_PATH)
-	@mkdir -p obj/signals obj/builtins
+	@mkdir -p obj/signals obj/builtins obj/parsing obj/lexing
 	$(CC) $(CFLAGS) -c $< -o $@ $(INC)
 
 $(NAME): $(OBJS) $(LIB_F)/$(LIB)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIB_F)/$(LIB) -o $(NAME) -lreadline
+	@$(CC) $(CFLAGS) $(OBJS) $(LIB_F)/$(LIB) $(DEBUG) -o $(NAME) -lreadline
 
 $(LIB_F)/$(LIB):
 	@make -C $(LIB_F)

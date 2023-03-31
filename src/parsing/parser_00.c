@@ -5,6 +5,8 @@ void	sub_open_extension(t_lex	*lex, int i, t_hold *hold)
 	char	*to_free;
 	char	*extended;
 
+	if (lex->item[i + 1] == '?' && lex->item[i + 2] == '\0')
+		return ;
 	to_free = lex->item;
 	extended = extend(&lex->item[i], hold);
 	lex->item = ft_strnnjoin(lex->item, i, extended, ft_strlen(extended));

@@ -52,8 +52,7 @@ void	recognize_type(t_hold *hold)
 }
 
 /* function checks and returns outfile on success
- * opens/creates file if it not exists
- * check later for permission issues if the file already exists(how lol?) */
+ * opens/creates file if it not exists */
 int32_t	init_outfile(t_lex *file_node, int32_t type)
 {
 	int32_t	file_id;
@@ -66,34 +65,33 @@ int32_t	init_outfile(t_lex *file_node, int32_t type)
 	else if (type == DOUBL_CLOSE_REDIR)
 		file_id = open(file_node->item, O_CREAT | O_WRONLY | O_APPEND);
 	if (file_id < 0)
-		exit_status("Error!: unable to open outfile (in check_outfile func)", \
-																	"", "", 69);
+		exit_status("Error!: unable to open outfile!", "", "", 69);
 	return (file_id);
 }
 
 /* function checks and returns infile on success
  * input file must exist and be readable by the user running the command
  * file_node is the current node in pars_list	*/
-int32_t	init_infile(t_pars *file_node_pars, t_lex *file_node_lex, int32_t type)
+int32_t	init_infile(t_pars *p_file_node, t_lex *l_file_node, int32_t type)
 {
 	int32_t	file_id;
 
 	file_id = 0;
 	if (type == SING_OPEN_REDIR)
 	{
-		file_id = open(file_node_lex->item, O_RDONLY);
+		file_id = open(l_file_node->item, O_RDONLY);
 		if (file_id < 0)
-			exit_status(file_node_lex->item, ": no such file or directory", \
-																		"", 69);
-		file_node_pars->here_doc_delim = NULL;
+			exit_status(l_file_node->item, ": no such file/directory", "", 69);
+		p_file_node->here_doc_delim = NULL;
 	}
 	else if (type == DOUBL_OPEN_REDIR)
 	{
 		file_id = open("tmp.hd", O_WRONLY | O_CREAT, 0777);
 		if (file_id < 0)
-			exit_status(file_node_lex->item, ": no such file or directory", \
-																		"", 69);
-		file_node_pars->here_doc_delim = ft_strdup(file_node_lex->next->item);
+			exit_status(l_file_node->item, ": no such file/directory", "", 69);
+		// fprintf(stderr, "lex: %s\n", file_node_lex->item);
+		// fprintf(stderr, "lex next: %s\n", file_node_lex->next->item);
+		p_file_node->here_doc_delim = ft_strdup(l_file_node->item);
 	}
 	return (file_id);
 }
