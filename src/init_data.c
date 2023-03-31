@@ -1,19 +1,16 @@
 #include "minishell.h"
 
-int32_t	init_structs(t_hold **hold, char **argv, int32_t argc)
+int32_t	init_structs(t_hold *hold, char **argv, int32_t argc)
 {
 	(void)argv;
 	(void)argc;
 	g_error_code = 0;
-	(*hold) = (t_hold *)malloc(sizeof(t_hold));
-	if (!(*hold))
-		return (69);
-	(*hold)->prev_error = 0;
-	(*hold)->line = NULL;
-	(*hold)->env_list = NULL;
-	(*hold)->pars_list = NULL;
-	(*hold)->export_list = NULL;
-	(*hold)->lex_struct = NULL;
+	hold->prev_error = 0;
+	hold->line = NULL;
+	hold->env_list = NULL;
+	hold->pars_list = NULL;
+	hold->export_list = NULL;
+	hold->lex_struct = NULL;
 	return (0);
 }
 

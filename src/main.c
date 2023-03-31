@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	free_main(t_hold **hold)
+void	free_main(t_hold *hold)
 {
 	int32_t	i;
 
@@ -10,9 +10,7 @@ void	free_main(t_hold **hold)
 		close(i);
 		i++;
 	}
-	free_env_export(*hold);
-	free(*hold);
-	free(hold);
+	free_env_export(hold);
 	clear_history();
 }
 
@@ -22,6 +20,7 @@ int32_t	prep_minihell(t_hold *hold)
 	hold->line = readline(BLU"MINIHELL> "RESET);
 	if (!hold->line)
 	{
+		// free_main(&hold);
 		ft_putstr_fd("\b\b exit\n", 1);
 		exit(1);
 	}
@@ -41,28 +40,25 @@ void	init_error_code(t_hold *hold)
 
 int	main(int32_t argc, char **argv, char **env)
 {
-	t_hold	*hold;
+	t_hold	hold;
 
-	hold = NULL;
 	if (init_structs(&hold, argv, argc))
 		return (69);
-	create_env_export_list(hold, env);
+	create_env_export_list(&hold, env);
 	signals();
 	while (1)
 	{
-		if (prep_minihell(hold))
+		if (prep_minihell(&hold))
 		{
-			add_history(hold->line);
-			lexer(hold);
-			parser(hold);
-			executer(hold, env);
+			add_history(hold.line);
+			lexer(&hold);
+			parser(&hold);
+			executer(&hold, env);
 			free_content(&hold);
-			init_error_code(hold);
+			init_error_code(&hold);
 		}
 	}
 	free_main(&hold);
-	free(&hold);
-	hold = NULL;
 }
 
 
