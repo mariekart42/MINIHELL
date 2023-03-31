@@ -161,3 +161,7 @@ void	lexer(t_hold *hold)
 	if (hold->lex_struct == NULL)
 		exit_status(": :command not found!", "", "", 127);
 }
+
+
+// is not working
+// echo '$'e
