@@ -162,8 +162,9 @@ int32_t		init_infile(t_pars *file_node_pars, t_lex *file_node_lex,
 
 //
 //! --- EXECUTER: ------------------------------------------------------
-void		redir_first(t_pars *pars_node, int32_t pipe_fds[MAX_FD][2], int32_t i, int32_t pipegroups);
-int32_t prep_exec(t_hold *hold);
+void		redir_first(t_pars *pars_node, int32_t pipe_fds[MAX_FD][2],
+				int32_t i, int32_t pipegroups);
+int32_t		prep_exec(t_hold *hold);
 
 //		init_data.c
 int32_t		init_structs(t_hold **hold, char **argv, int32_t argc);
