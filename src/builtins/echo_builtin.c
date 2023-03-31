@@ -74,6 +74,12 @@ void	echo_builtin(t_pars *parsed_node)
 		ft_putstr_fd("\n", 1);
 		return ;
 	}
+	if (ft_strncmp(args[1], "$?\0", 3) == 0)
+	{
+		ft_putnbr_fd(g_error_code, 2);
+		write(1, "\n", 1);
+		return ;
+	}
 	is_nflag = is_nflag_func(args, parsed_node, &i);
 	echo_builtin_cont(parsed_node, &i, is_nflag);
 }
