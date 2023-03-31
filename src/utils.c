@@ -32,6 +32,8 @@ void	free_list_pars(t_pars *head)
 			tmp->args[i] = NULL;
 			i++;
 		}
+		free(tmp->args);
+		tmp->args = NULL;
 		i = 0;
 		free(tmp);
 		tmp = NULL;

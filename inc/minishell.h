@@ -108,7 +108,7 @@ typedef struct s_hold
 void	init_error_code(t_hold *hold);
 int32_t prep_minihell(t_hold *hold);
 t_env_exp	*new_node_env(void);
-void	free_main(t_hold **hold);
+void	free_main(t_hold *hold);
 
 
 //!- - - -  LEXER: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -175,11 +175,11 @@ int32_t		prep_exec(t_hold *hold);
 
 
 //		init_data.c
-int32_t		init_structs(t_hold **hold, char **argv, int32_t argc);
+int32_t		init_structs(t_hold *hold, char **argv, int32_t argc);
 void		create_env_export_list(t_hold *hold, char **ori_env);
 
 //		free_content.c
-void		free_content(t_hold **hold);
+void	free_content(t_hold *hold);
 void		free_env_export(t_hold *hold);
 
 //		builtins.c
@@ -188,11 +188,6 @@ void		pwd_builtin(t_hold *hold, t_pars *parsed_node);
 bool		builtin(t_hold *hold, t_pars *parsed_node);
 
 char		*handle_quote_chunk(char **string, char **quote_chunk);
-
-//		main.c
-void		free_content(t_hold **hold);
-int32_t		init_structs(t_hold **hold, char **argv, int32_t argc);
-void		free_env_export(t_hold *hold);
 
 //		get_next_line.c
 void		buff_after_line(char *buff);

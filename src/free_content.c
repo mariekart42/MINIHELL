@@ -1,13 +1,13 @@
 #include "minishell.h"
 
-void	free_content(t_hold **hold)
+void	free_content(t_hold *hold)
 {
-	free((*hold)->line);
-	(*hold)->line = NULL;
-	free_list_lex((*hold)->lex_struct);
-	free_list_pars((*hold)->pars_list);
-	(*hold)->lex_struct = NULL;
-	(*hold)->pars_list = NULL;
+	free(hold->line);
+	hold->line = NULL;
+	free_list_lex(hold->lex_struct);
+	free_list_pars(hold->pars_list);
+	hold->lex_struct = NULL;
+	hold->pars_list = NULL;
 }
 
 void	free_env_export(t_hold *hold)
