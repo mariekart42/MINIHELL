@@ -16,7 +16,6 @@ void	free_main(t_hold *hold)
 
 int32_t	prep_minihell(t_hold *hold)
 {
-	g_error_code = 0;
 	hold->line = readline(BLU"MINIHELL> "RESET);
 	if (!hold->line)
 	{
@@ -24,8 +23,9 @@ int32_t	prep_minihell(t_hold *hold)
 		free_list_env_export(hold->env_list);
 		free_list_env_export(hold->export_list);
 		ft_putstr_fd("\b\b exit\n", 1);
-		exit(1);
+		exit(g_error_code);
 	}
+	g_error_code = 0;
 	if (ft_strlen(hold->line) > 0)
 		return (1);
 	else
@@ -44,6 +44,7 @@ int	main(int32_t argc, char **argv, char **env)
 {
 	t_hold	hold;
 
+	g_error_code = 0;
 	if (init_structs(&hold, argv, argc))
 		return (69);
 	create_env_export_list(&hold, env);
