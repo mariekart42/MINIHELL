@@ -97,6 +97,7 @@ typedef struct s_hold
 	char				**my_env;
 	char				*line;
 	int32_t				pipegroups;
+	int32_t				prev_error;
 	struct s_lex		*lex_struct;
 	struct s_env_exp	*env_list;
 	struct s_env_exp	*export_list;
@@ -105,6 +106,8 @@ typedef struct s_hold
 
 /* Functions */
 //
+void	init_error_code(t_hold *hold);
+int32_t prep_minihell(t_hold *hold);
 t_env_exp	*new_node_env(void);
 //!- - - -  LEXER: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //			lexer_00.c
@@ -199,7 +202,7 @@ int32_t		check_syntax_errors(t_hold *hold);
 
 char		*ft_strnew(const int size);
 //		builtins
-void		echo_builtin(t_pars *parsed_node);
+void		echo_builtin(t_hold *hold, t_pars *parsed_node);
 void		env_builtin(t_hold *hold, t_pars *parsed_node);
 void		pwd_builtin(t_hold *hold, t_pars *parsed_node);
 void		cd_builtin(t_hold *hold, t_pars *parsed_node);

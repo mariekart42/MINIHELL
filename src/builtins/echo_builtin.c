@@ -60,7 +60,7 @@ bool	is_nflag_func(char **args, t_pars *parsed_node, int *i)
 	return (is_nflag);
 }
 
-void	echo_builtin(t_pars *parsed_node)
+void	echo_builtin(t_hold *hold, t_pars *parsed_node)
 {
 	char		**args;
 	int			i;
@@ -76,7 +76,7 @@ void	echo_builtin(t_pars *parsed_node)
 	}
 	if (ft_strncmp(args[1], "$?\0", 3) == 0)
 	{
-		ft_putnbr_fd(g_error_code, 2);
+		ft_putnbr_fd(hold->prev_error, 2);
 		write(1, "\n", 1);
 		return ;
 	}

@@ -45,7 +45,7 @@ void	pwd_builtin(t_hold *hold, t_pars *parsed_node)
 bool	builtin(t_hold *hold, t_pars *parsed_node)
 {
 	if (ft_strncmp(parsed_node->args[0], "echo\0", 5) == 0)
-		return (echo_builtin(parsed_node), true);
+		return (echo_builtin(hold, parsed_node), true);
 	else if (ft_strncmp(parsed_node->args[0], "env\0", 4) == 0)
 		return (env_builtin(hold, parsed_node), true);
 	else if (ft_strncmp(parsed_node->args[0], "pwd\0", 4) == 0)
