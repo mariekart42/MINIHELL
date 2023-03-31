@@ -5,7 +5,7 @@ void	free_main(t_hold *hold)
 	int32_t	i;
 
 	i = 3;
-	while (i < 100)
+	while (i < MAX_FD)
 	{
 		close(i);
 		i++;
@@ -20,7 +20,9 @@ int32_t	prep_minihell(t_hold *hold)
 	hold->line = readline(BLU"MINIHELL> "RESET);
 	if (!hold->line)
 	{
-		// free_main(&hold);
+		free_main(hold);
+		free_list_env_export(hold->env_list);
+		free_list_env_export(hold->export_list);
 		ft_putstr_fd("\b\b exit\n", 1);
 		exit(1);
 	}

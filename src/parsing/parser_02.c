@@ -14,7 +14,10 @@ void	count_pipegroups(t_hold *hold)
 			pipegroup++;
 		tmp = tmp->next;
 	}
-	hold->pipegroups = pipegroup;
+	if (pipegroup > 1000)
+		exit_status("fugguUUUUUUU!", "", "", 69);
+	else
+		hold->pipegroups = pipegroup;
 }
 
 void	free_env_path(char **env_path)
