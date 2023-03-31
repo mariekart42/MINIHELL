@@ -104,12 +104,13 @@ typedef struct s_hold
 	struct s_pars		*pars_list;
 }						t_hold;
 
-/* Functions */
 //
 void	init_error_code(t_hold *hold);
 int32_t prep_minihell(t_hold *hold);
 t_env_exp	*new_node_env(void);
 void	free_main(t_hold **hold);
+
+
 //!- - - -  LEXER: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //			lexer_00.c
 int32_t		lex_word(t_hold *hold, char *s, int32_t i); //shit too long

@@ -2,6 +2,14 @@
 
 void	free_main(t_hold **hold)
 {
+	int32_t	i;
+
+	i = 3;
+	while (i < 100)
+	{
+		close(i);
+		i++;
+	}
 	free_env_export(*hold);
 	free(*hold);
 	free(hold);
@@ -14,7 +22,7 @@ int32_t	prep_minihell(t_hold *hold)
 	hold->line = readline(BLU"MINIHELL> "RESET);
 	if (!hold->line)
 	{
-		ft_putstr_fd("\b\bexit\n", 1);
+		ft_putstr_fd("\b\b exit\n", 1);
 		exit(1);
 	}
 	if (ft_strlen(hold->line) > 0)
@@ -53,12 +61,10 @@ int	main(int32_t argc, char **argv, char **env)
 		}
 	}
 	free_main(&hold);
-	free(hold);
+	free(&hold);
 	hold = NULL;
 }
 
-//!!!NEXT:
-// - change permissions for open in and outfile
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //!  GENERAL:
@@ -73,7 +79,7 @@ int	main(int32_t argc, char **argv, char **env)
 // - change 'ori_env' to **char of own env list
 
 //!  LEAKS:
+// 2,200 bytes in 62 blocks
 
 //!  PROBLEMOS:
-//	- |			-> 2 error msgs, no sure if i can comment out the sec one (very bottom of lexer)
-//	- echo $?? 	-> output is with space, guess not that important
+//	
