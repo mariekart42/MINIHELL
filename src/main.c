@@ -25,22 +25,31 @@ int	main(int32_t argc, char **argv, char **env)
 		return (69);
 	create_env_export_list(hold, env);
 	signals();
+	g_error_code = 0;
 	while (1)
 	{
-		g_error_code = 0;
 		hold->line = readline(BLU"MINIHELL> "RESET);
 		exit_when_no_line(hold->line);
 		if (ft_strlen(hold->line) > 0)
 		{
 			add_history(hold->line);
-			lexer(hold);
-			// print_list(hold->lex_struct, "fuck");
-			parser(hold);
-			executer(hold, env);
-			fprintf(stderr, MAG"error code: %d\n"RESET, g_error_code);
-			free_content(&hold);
-			// free(hold->line);
-			// hold->line = NULL;
+			if (ft_strncmp(hold->line, "echo $?", 8) == 0)
+			{
+				print_error_code();
+				g_error_code = 0;
+				free_content(&hold);
+			}
+			else
+			{
+				lexer(hold);
+				// print_list(hold->lex_struct, "fuck");
+				parser(hold);
+				executer(hold, env);
+				fprintf(stderr, MAG"error code: %d\n"RESET, g_error_code);
+				free_content(&hold);
+				// free(hold->line);
+				// hold->line = NULL;
+			}
 		}
 	}
 	free_main(hold);
