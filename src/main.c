@@ -54,7 +54,9 @@ int	main(int32_t argc, char **argv, char **env)
 		{
 			add_history(hold.line);
 			lexer(&hold);
+			print_list(hold.lex_struct, "ksjdfgh");
 			parser(&hold);
+			print_macro_list(hold.lex_struct);
 			executer(&hold, env);
 			free_content(&hold);
 			init_error_code(&hold);

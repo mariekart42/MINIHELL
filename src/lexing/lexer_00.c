@@ -2,20 +2,31 @@
 
 bool	is_invalid_char(char *s, int32_t i)
 {
-	if (s[i] == '\0' || s[i] == ' ' || s[i] == '|' || s[i] == '>'
-		|| s[i] == '<' || (s[i] == '$' && s[i + 1] == '?'))
+	// if (s[i] == '\0' || s[i] == ' ' || s[i] == '|' || s[i] == '>'
+		// || s[i] == '<' || (s[i] == '$' && s[i + 1] == '?'))
+	if (s[i] == '\0' || s[i] == ' ' || s[i] == '|' || s[i] == '>' || s[i] == '<')
 	{
 		return (true);
 	}
 	return (false);
 }
 
-void	when_x_positive(t_hold *hold, int32_t x, char *string)
+void	when_x_positive(t_hold *hold, int32_t x, char *string, bool single_expand)
 {
+	t_lex *tmp;
+
 	if (x > 0)
 	{
 		string[x] = '\0';
 		add_node_lex(hold, string);
+		if (single_expand == true)
+		{
+			fprintf(stderr, "update do not expand\n");
+			tmp = last_node_lex(hold->lex_struct);
+			fprintf(stderr, "arg: %s\n", tmp->item);
+
+			tmp->macro = DO_NOT_EXPAND;
+		}
 		free(string);
 	}
 }
@@ -26,11 +37,23 @@ void	increase_counters(int32_t *i, int32_t *x)
 	(*x)++;
 }
 
+bool check_single_expand(char *s, int32_t i)
+{
+	if (s[i] == '\'' && s[i + 1] == '$')
+	{
+		fprintf(stderr,"single expand\n");
+		return (true);
+	}
+	else
+		return (false);
+}
+
 int32_t	lex_word(t_hold *hold, char *s, int32_t i)
 {
 	char	*quote_chunk_;
 	char	*string;
 	int32_t	x;
+	bool	single_expand;
 
 	quote_chunk_ = NULL;
 	string = ft_calloc(ft_strlen(s) + 1, 1);
@@ -41,7 +64,9 @@ int32_t	lex_word(t_hold *hold, char *s, int32_t i)
 			break ;
 		else if (s[i] == 34 || s[i] == 39)
 		{
-			quote_chunk_ = quote_chunk2(s, i);
+			single_expand = check_single_expand(s, i);
+			quote_chunk_ = quote_chunk2(hold, s, i);
+			fprintf(stderr, "quote_chunk: %s\n", quote_chunk_);
 			i += update_i(quote_chunk_);
 			if (quote_chunk_ != NULL)
 				string = handle_quote_chunk(&string, &quote_chunk_);
@@ -51,7 +76,7 @@ int32_t	lex_word(t_hold *hold, char *s, int32_t i)
 			string[x] = s[i];
 		increase_counters(&i, &x);
 	}
-	when_x_positive(hold, x, string);
+	when_x_positive(hold, x, string, single_expand);
 	return (i - 1);
 }
 
@@ -97,6 +122,11 @@ void	check_closed_quotes(t_hold *hold)
 	}
 }
 
+// int32_t lex_expand(t_hold *hold)
+// {
+
+// }
+
 // devide chunks of commands etc in single linked list
 void	lexer(t_hold *hold)
 {
@@ -108,12 +138,19 @@ void	lexer(t_hold *hold)
 	{
 		if (g_error_code != 0)
 			return ;
-		if (hold->line[i] == '$' && hold->line[i + 1] == '?')
-		{
-			add_node_lex(hold, "$?");
-			i++;
-		}
-		else if (hold->line[i] == '|')
+		// if (hold->line[i] == '$')
+		// {
+		// 	i = lex_expand(hold);
+		// }
+
+		// if (hold->line[i] == '$' && hold->line[i + 1] == '?')
+		// {
+		// 	add_node_lex(hold, "$?");
+		// 	i++;
+		// }
+
+		// else 
+		if (hold->line[i] == '|')
 			lex_pipe(hold, i);
 		else if (hold->line[i] == '<' || hold->line[i] == '>')
 			i = lex_redir(hold, i);
