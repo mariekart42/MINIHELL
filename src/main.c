@@ -62,7 +62,6 @@ int	main(int32_t argc, char **argv, char **env)
 			init_error_code(&hold);
 		}
 	}
-	free_main(&hold);
 }
 
 
