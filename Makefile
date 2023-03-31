@@ -1,7 +1,7 @@
 NAME	= minishell
 CC		= cc
 CFLAGS	= -Wall -Werror -Wextra -g
-DEBUG	=  -fsanitize=address
+# DEBUG	=  -fsanitize=address
 RM		= rm -rf
 SRC_PATH = src/
 OBJ_PATH = obj/

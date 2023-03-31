@@ -5,7 +5,7 @@ void	redir_first(t_pars *pars_node, int32_t pipe_fds[MAX_FD][2], int32_t i, \
 {
 	if (pars_node->infile != 0)
 		dup2(pars_node->infile, STDIN_FILENO);
-	if (pipegroups > i + 1)
+	if (pipegroups > (i + 1))
 	{
 		if (pars_node->outfile != 1)
 		{
@@ -13,6 +13,7 @@ void	redir_first(t_pars *pars_node, int32_t pipe_fds[MAX_FD][2], int32_t i, \
 			exit(0);
 		}
 		dup2(pipe_fds[i][1], STDOUT_FILENO);
+		// fprintf(stderr, "hi: %s", pars_node->args[0]);	
 	}
 	else
 	{
@@ -48,6 +49,7 @@ void	redirection(t_pars *parsed_node, int32_t i, int32_t pipegroups, int32_t pip
 	}
 	else if ((i + 1) == pipegroups)
 	{
+		// fprintf(stderr, "hi: %s", parsed_node->args[0]);
 		dup2(pipe_fds[i - 1][0], STDIN_FILENO);
 		if (parsed_node->outfile != 1)
 			dup2(parsed_node->outfile, STDOUT_FILENO);
@@ -121,9 +123,9 @@ void	handle_here_doc(t_pars *pars_node)
 	{
 		input_string = readline(CYN"heredoc> "RESET);
 
-		ft_strlen(input_string);
-		ft_strlen(pars_node->here_doc_delim);
-		// fprintf(stderr, "del: %s\n", pars_node->here_doc_delim);
+		// ft_strlen(input_string);
+		// ft_strlen(pars_node->here_doc_delim);
+		fprintf(stderr, "del: %s\n", pars_node->here_doc_delim);
 		// fprintf(stderr, "input: %s\n", input_string);
 		if (ft_strncmp(input_string, pars_node->here_doc_delim, ft_strlen(pars_node->here_doc_delim)) == 0 && (ft_strlen(pars_node->here_doc_delim) == ft_strlen(input_string)))
 		{
@@ -224,8 +226,10 @@ void	executer(t_hold *hold, char **ori_env)
 			child_sig();
 			if (parsed_node->here_doc_delim != NULL)
 			{
-				fprintf(stderr, "del: %s\n", parsed_node->here_doc_delim);
+				// dup2(pipe_fds[0][1], STDOUT_FILENO);
+				// fprintf(stderr, "del: %s\n", parsed_node->here_doc_delim);
 				handle_here_doc(parsed_node);
+				// fprintf(stderr, "file id: %d\n", parsed_node->outfile);
 			}
 			redirection(parsed_node, i, hold->pipegroups, pipe_fds);
 			exec_child(hold, parsed_node, ori_env, pipe_fds);
