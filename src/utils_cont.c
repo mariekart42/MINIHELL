@@ -2,7 +2,7 @@
 
 void	exit_status(char *msg1, char *msg2, char *msg3, int32_t exit_code_)
 {
-	write(2, RED"minihell: ", 16);
+	write(2, RED"minishell: ", 16);
 	write(2, msg1, ft_strlen(msg1));
 	write(2, " ", 1);
 	write(2, msg2, ft_strlen(msg2));

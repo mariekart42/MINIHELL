@@ -60,11 +60,11 @@ void	change_to_home(t_hold *hold)
 
 	is_home = true;
 	home = NULL;
-	tmp = hold->export_list;
+	tmp = hold->env_list;
 	while (tmp != NULL && tmp->item)
 	{
 		if (ft_strncmp(tmp->item, "HOME", 4) == 0)
-			home = tmp->var_value;
+			home = ft_strndup(&tmp->item[5], (ft_strlen(tmp->item) - 5));
 		tmp = tmp->next;
 	}
 	if (home == NULL)
@@ -74,6 +74,7 @@ void	change_to_home(t_hold *hold)
 		args[0] = NULL;
 		args[1] = home;
 		update_dir(hold, args);
+		free(args[1]);
 	}
 	else
 		exit_status("cd: HOME not set", "", "", 1);
