@@ -39,9 +39,9 @@ void	increase_counters(int32_t *i, int32_t *x)
 
 bool check_single_expand(char *s, int32_t i)
 {
-	if (s[i] == '\'' && s[i + 1] == '$')
+	if (s[i] == '\'' && s[i + 1] == '$' && s[i + 2] != '\0')
 	{
-		fprintf(stderr,"single expand\n");
+		fprintf(stderr, "single expand\n");
 		return (true);
 	}
 	else
