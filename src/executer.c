@@ -196,22 +196,16 @@ void	executer(t_hold *hold, char **ori_env)
 	i = 0;
 	while (i < hold->pipegroups)
 	{
+		if (parsed_node->here_doc_delim != NULL)
+			handle_here_doc(parsed_node);
 		if (fork() == 0)
 		{
 			child_sig();
-			if (parsed_node->here_doc_delim != NULL)
-			{
-				// fprintf(stderr, "del: %s\n", parsed_node->here_doc_delim);
-				handle_here_doc(parsed_node);
-				// fprintf(stderr, "file id: %d\n", parsed_node->outfile);
-			}
 			redirection(parsed_node, i, hold->pipegroups, pipe_fds);
 			exec_child(hold, parsed_node, ori_env, pipe_fds);
 		}
 		else
 		{
-			// waitpid(-1, NULL, 0); // if i wait here, heredoc with pipe is working
-
 			close_fds_parent(&parsed_node);
 			close(pipe_fds[i][1]);
 			if (i != 0)

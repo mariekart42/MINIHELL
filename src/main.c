@@ -1,8 +1,9 @@
 #include "minishell.h"
 
-void	free_main(t_hold *hold)
+void	free_main(t_hold **hold)
 {
-	free_env_export(hold);
+	free_env_export(*hold);
+	free(*hold);
 	free(hold);
 	clear_history();
 }
@@ -51,7 +52,9 @@ int	main(int32_t argc, char **argv, char **env)
 			init_error_code(hold);
 		}
 	}
-	free_main(hold);
+	free_main(&hold);
+	free(hold);
+	hold = NULL;
 }
 
 //!!!NEXT:
