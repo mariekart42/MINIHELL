@@ -206,7 +206,7 @@ void	executer(t_hold *hold, char **ori_env)
 		}
 		else
 		{
-			close_fds_parent(&parsed_node);
+			// close_fds_parent(&parsed_node);
 			close(pipe_fds[i][1]);
 			if (i != 0)
 				close(pipe_fds[i - 1][0]);

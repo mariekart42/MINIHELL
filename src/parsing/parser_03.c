@@ -63,7 +63,7 @@ int32_t	init_outfile(t_lex *file_node, int32_t type)
 	if (type == SING_CLOSE_REDIR)
 		file_id = open(file_node->item, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	else if (type == DOUBL_CLOSE_REDIR)
-		file_id = open(file_node->item, O_CREAT | O_WRONLY | O_APPEND);
+		file_id = open(file_node->item, O_CREAT | O_WRONLY | O_APPEND, 0777);
 	if (file_id < 0)
 		exit_status("Error!: unable to open outfile!", "", "", 69);
 	return (file_id);
@@ -80,18 +80,14 @@ int32_t	init_infile(t_pars *p_file_node, t_lex *l_file_node, int32_t type)
 	if (type == SING_OPEN_REDIR)
 	{
 		file_id = open(l_file_node->item, O_RDONLY);
-		if (file_id < 0)
-			exit_status(l_file_node->item, ": no such file/directory", "", 69);
 		p_file_node->here_doc_delim = NULL;
 	}
 	else if (type == DOUBL_OPEN_REDIR)
 	{
 		file_id = open("tmp.hd", O_WRONLY | O_CREAT, 0777);
-		if (file_id < 0)
-			exit_status(l_file_node->item, ": no such file/directory", "", 69);
-		// fprintf(stderr, "lex: %s\n", file_node_lex->item);
-		// fprintf(stderr, "lex next: %s\n", file_node_lex->next->item);
 		p_file_node->here_doc_delim = ft_strdup(l_file_node->item);
 	}
+	if (file_id < 0)
+		exit_status(l_file_node->item, ": no such file/directory", "", 69);
 	return (file_id);
 }
