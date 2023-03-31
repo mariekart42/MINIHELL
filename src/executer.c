@@ -28,28 +28,9 @@ void	redir_first(t_pars *pars_node, int32_t pipe_fds[MAX_FD][2], int32_t i, \
 void	redirection(t_pars *parsed_node, int32_t i, int32_t pipegroups, int32_t pipe_fds[MAX_FD][2])
 {
 	if (i == 0)
-	{
 		redir_first(parsed_node, pipe_fds, i, pipegroups);
-		// if (parsed_node->infile != 0)
-		// 	dup2(parsed_node->infile, STDIN_FILENO);
-		// if (pipegroups > i + 1)
-		// {
-		// 	if (parsed_node->outfile != 1)
-		// 	{
-		// 		write(2, "uhm outfile before pipe, duh? (how to handle redir?) | EXIT\n", 60);
-		// 		exit(0);
-		// 	}
-		// 	dup2(pipe_fds[i][1], STDOUT_FILENO);
-		// }
-		// else
-		// {
-		// 	if (parsed_node->outfile != 1)
-		// 		dup2(parsed_node->outfile, STDOUT_FILENO);
-		// }
-	}
 	else if ((i + 1) == pipegroups)
 	{
-		// fprintf(stderr, "hi: %s", parsed_node->args[0]);
 		dup2(pipe_fds[i - 1][0], STDIN_FILENO);
 		if (parsed_node->outfile != 1)
 			dup2(parsed_node->outfile, STDOUT_FILENO);
@@ -122,10 +103,7 @@ void	handle_here_doc(t_pars *pars_node)
 	while (1)
 	{
 		input_string = readline(CYN"heredoc> "RESET);
-
-		// ft_strlen(input_string);
-		// ft_strlen(pars_node->here_doc_delim);
-		fprintf(stderr, "del: %s\n", pars_node->here_doc_delim);
+		// fprintf(stderr, "del: %s\n", pars_node->here_doc_delim);
 		// fprintf(stderr, "input: %s\n", input_string);
 		if (ft_strncmp(input_string, pars_node->here_doc_delim, ft_strlen(pars_node->here_doc_delim)) == 0 && (ft_strlen(pars_node->here_doc_delim) == ft_strlen(input_string)))
 		{
@@ -175,9 +153,6 @@ void	handle_single_builtin(t_hold *hold)
 
 void	close_fds_parent(t_pars **parsed_node)
 {
-	// close(*(pipe_fds[i][1]));
-	// if (i != 0)
-	// 	close(*(pipe_fds[i-1][0]));
 	if ((*parsed_node)->infile != 0)
 		close((*parsed_node)->infile);
 	if ((*parsed_node)->outfile != 1)
@@ -226,7 +201,6 @@ void	executer(t_hold *hold, char **ori_env)
 			child_sig();
 			if (parsed_node->here_doc_delim != NULL)
 			{
-				// dup2(pipe_fds[0][1], STDOUT_FILENO);
 				// fprintf(stderr, "del: %s\n", parsed_node->here_doc_delim);
 				handle_here_doc(parsed_node);
 				// fprintf(stderr, "file id: %d\n", parsed_node->outfile);
@@ -236,6 +210,8 @@ void	executer(t_hold *hold, char **ori_env)
 		}
 		else
 		{
+			// waitpid(-1, NULL, 0); // if i wait here, heredoc with pipe is working
+
 			close_fds_parent(&parsed_node);
 			close(pipe_fds[i][1]);
 			if (i != 0)
