@@ -106,65 +106,68 @@ typedef struct s_hold
 /* Functions */
 //
 t_env_exp	*new_node_env(void);
-//! --- LEXER: ---------------------------------------------------------
-//		lexer_00.c
+//!- - - -  LEXER: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//			lexer_00.c
 int32_t		lex_word(t_hold *hold, char *s, int32_t i); //shit too long
 void		lex_pipe(t_hold *hold, int32_t i);
 void		check_closed_quotes(t_hold *hold);
 void		lexer(t_hold *hold);
 
-//		lexer_01.c
+//			lexer_01.c
 int32_t		skip_spaces(char *str, int32_t i);
 int32_t		check_out_redir_syntax(t_hold **hold, int32_t i);
 int32_t		check_in_redir_syntax(t_hold **hold, int32_t i);
 int32_t		check_beginning_redir(t_hold *hold);
 int32_t		lex_redir(t_hold *hold, int32_t i);
 
-//		lexer_02.c
+//			lexer_02.c
 char		*init_string(char *line, char quote, int32_t i, int32_t quote_len_);
 char		*handle_quote_chunk(char **string, char **quote_chunk);
 int32_t		update_i(char *quote_chunk);
 char		*quote_chunk2(char *line, int32_t i);
 
-//		lexer_03.c
+//			lexer_03.c
 char		*add_letter(char *pointer, char letter);
 int32_t		quote_len(char *line, int32_t i, char quote);
 
 //
-//! --- PARSER: --------------------------------------------------------
-//		parser_00.c
+//!- - - -  PARSER:  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//			parser_00.c
 void		sub_open_extension(t_lex	*lex, int i, t_hold *hold);
 void		open_extensions(t_lex *lex, t_hold *hold);
 int32_t		init_pars_node(t_pars **pars_node, t_lex **lex_node, int32_t i);
 void		create_parsed_list(t_hold **hold, t_lex *lex, int32_t pipegroups);
 void		parser(t_hold *hold);
 
-//		parser_01.c
+//			parser_01.c
 void		add_arg(t_pars *pars_node);
 int32_t		arg_amount(t_lex *lex_node);
 char		*ft_strnnjoin(char const *s1, int n1, char const *s2, int n2);
 char		*sub_extend(char *var, t_hold *hold);
 char		*extend(char *var, t_hold *hold);
 
-//		parser_02.c
+//  	    parser_02.c
 void		count_pipegroups(t_hold *hold);
 void		free_env_path(char **env_path);
 char		*get_cmdpath(char *curr_cmd);
 t_pars		*last_node_pars(t_pars *lst);
 void		add_node_pars(t_hold **hold);
 
-//		parser_03.c
+//          parser_03.c
 bool		builtin_parser(char *node);
 void		recognize_type(t_hold *hold);
 int32_t		init_outfile(t_lex *file_node, int32_t type);
-int32_t		init_infile(t_pars *file_node_pars, t_lex *file_node_lex,
-				int32_t type);
+int32_t		init_infile(t_pars *p_file_node, t_lex *l_file_node, int32_t type);
 
 //
-//! --- EXECUTER: ------------------------------------------------------
+//!- - - -  EXECUTER:  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void		redir_first(t_pars *pars_node, int32_t pipe_fds[MAX_FD][2],
 				int32_t i, int32_t pipegroups);
 int32_t		prep_exec(t_hold *hold);
+
+
+
+
 
 //		init_data.c
 int32_t		init_structs(t_hold **hold, char **argv, int32_t argc);
