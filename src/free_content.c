@@ -10,7 +10,6 @@ void	free_main(t_hold *hold)
 		close(i);
 		i++;
 	}
-	free_env_export(hold);
 	clear_history();
 }
 
@@ -22,14 +21,6 @@ void	free_content(t_hold *hold)
 	free_list_pars(hold->pars_list);
 	hold->lex_struct = NULL;
 	hold->pars_list = NULL;
-}
-
-void	free_env_export(t_hold *hold)
-{
-	free_list_env_export(hold->env_list);
-	free_list_env_export(hold->export_list);
-	hold->env_list = NULL;
-	hold->export_list = NULL;
 }
 
 void	free_env_path(char **env_path)
