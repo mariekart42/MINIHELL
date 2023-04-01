@@ -25,9 +25,16 @@ int	ft_atoi_mod(const char *str)
 
 void	free_exit(t_hold *hold)
 {
-	free_content(hold);
-	free(hold->line);
-	free_env_export(hold);
+	if (hold->line)
+		free(hold->line);
+	if (hold->lex_struct)
+		free_list_lex(hold->lex_struct);
+	if (hold->pars_list)
+		free_list_pars(hold->pars_list);
+	if (hold->env_list)
+		free_list_env_export(hold->env_list);
+	if (hold->export_list)
+		free_list_env_export(hold->export_list);
 }
 
 bool	multiple_args(t_pars *parsed_node)

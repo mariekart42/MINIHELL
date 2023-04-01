@@ -214,6 +214,9 @@ void		cd_builtin(t_hold *hold, t_pars *parsed_node);
 void		exit_builtin(t_hold *hold, t_pars *parsed_node);
 void		unset_builtin(t_hold *hold, t_pars *parsed_node);
 
+//		exit_builtin.c
+void		free_exit(t_hold *hold);
+
 //		cd_builtin_cont.c
 void		add_to_env(t_hold *hold, char *add, char *structure);
 void		add_to_export_cd(t_hold *hold, char *var_name, char *var_value,
