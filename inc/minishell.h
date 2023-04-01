@@ -187,7 +187,7 @@ void		create_env_export_list(t_hold *hold, char **ori_env);
 
 //		free_content.c
 void		free_content(t_hold *hold);
-void		free_env_export(t_hold *hold);
+// void		free_env_export(t_hold *hold);
 void		free_main(t_hold *hold);
 void		free_list_pars_helper(t_pars *tmp);
 void		free_list_pars(t_pars *head);
