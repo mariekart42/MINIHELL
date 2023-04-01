@@ -18,6 +18,7 @@ SRC		=	main.c \
 			export_struct.c \
 			export_struct_cont.c \
 			free_content.c \
+			free_content_cont.c \
 			syntax_errors.c \
 			delete_later.c \
 			$(addprefix lexing/,\

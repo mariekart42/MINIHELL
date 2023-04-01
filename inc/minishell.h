@@ -185,8 +185,15 @@ int32_t		init_structs(t_hold *hold, char **argv, int32_t argc);
 void		create_env_export_list(t_hold *hold, char **ori_env);
 
 //		free_content.c
-void	free_content(t_hold *hold);
+void		free_content(t_hold *hold);
 void		free_env_export(t_hold *hold);
+void		free_main(t_hold *hold);
+void		free_list_pars_helper(t_pars *tmp);
+void		free_list_pars(t_pars *head);
+void		free_list_lex(t_lex *head);
+void		free_list_env_export(t_env_exp *head);
+void		free_exit(t_hold *hold);
+void		free_env_path(char **env_path);
 
 //		builtins.c
 void		env_builtin(t_hold *hold, t_pars *parsed_node);
