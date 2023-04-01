@@ -94,8 +94,9 @@ void	handle_here_doc(t_pars *pars_node)
 
 	input_string = NULL;
 	tmp1 = NULL;
-	tmp2 = malloc(1);
-	tmp2[0] = '\0';
+	tmp2 = NULL;
+	// tmp2 = malloc(1);
+	// tmp2[0] = '\0';
 	if (pars_node->here_doc_delim == NULL)
 		write(2, "problem with delim in handle_here_doc\n", 38);
 	heredoc_sig();
@@ -111,13 +112,14 @@ void	handle_here_doc(t_pars *pars_node)
 		}
 		if (tmp1 == NULL)
 		{
+			fprintf(stderr, "heee\n");
 			tmp1 = ft_strdup(input_string);
 			tmp2 = ft_strjoin(tmp1, "\n");
 			free(tmp1);
 		}
 		else
 		{
-			tmp1 = ft_strjoin(tmp2, input_string);
+			tmp1 = ft_strnnjoin(tmp2, ft_strlen(tmp2), input_string, ft_strlen(input_string));
 			free(tmp2);
 			tmp2 = ft_strjoin(tmp1, "\n");
 			free(tmp1);
