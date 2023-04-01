@@ -66,7 +66,7 @@ int	var_start_number(t_pars *parsed_node, int i)
 	{
 		exit_status("export:", parsed_node->args[i],
 			": not a valid identifier", 1);
-		return (0);
+		return (1);
 	}
 	return (1);
 }

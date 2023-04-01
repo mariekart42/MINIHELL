@@ -21,7 +21,7 @@ int	not_valid_value_export_var(t_pars *parsed_node, int i, int j)
 	{
 		exit_status("export:", parsed_node->args[i],
 			": not a valid identifier", 1);
-		return (0);
+		return (1);
 	}
 	return (1);
 }
