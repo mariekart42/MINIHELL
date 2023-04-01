@@ -1,20 +1,5 @@
 #include "minishell.h"
 
-void	free_exit(t_hold *hold)
-{
-	if (hold->line)
-		free(hold->line);
-	if (hold->lex_struct)
-		free_list_lex(hold->lex_struct);
-	if (hold->pars_list)
-		free_list_pars(hold->pars_list);
-	if (hold->env_list)
-		free_list_env_export(hold->env_list);
-	if (hold->export_list)
-		free_list_env_export(hold->export_list);
-	free_main();
-}
-
 /* function frees all nodes of linked list 'lexed_list'
  * and all its variables:
  *	-> item 					*/
@@ -40,6 +25,17 @@ void	free_list_pars_helper(t_pars *tmp)
 	unlink("tmp.hd");
 	if (tmp->here_doc_delim)
 		free(tmp->here_doc_delim);
+	tmp->here_doc_delim = NULL;
+}
+
+void	free_list_pars_tmp(t_pars *tmp)
+{
+	if (tmp->args)
+		free(tmp->args);
+	tmp->args = NULL;
+	if (tmp)
+		free(tmp);
+	tmp = NULL;
 }
 
 /* function frees all nodes of linked list 'pars_list'
@@ -59,10 +55,7 @@ void	free_list_pars(t_pars *head)
 			free(tmp->cmd_path);
 		tmp->cmd_path = NULL;
 		if (tmp->here_doc_delim != NULL)
-		{
 			free_list_pars_helper(tmp);
-			tmp->here_doc_delim = NULL;
-		}
 		while (tmp->args[i] != NULL)
 		{
 			if (tmp->args[i])
@@ -70,13 +63,8 @@ void	free_list_pars(t_pars *head)
 			tmp->args[i] = NULL;
 			i++;
 		}
-		if (tmp->args)
-			free(tmp->args);
-		tmp->args = NULL;
+		free_list_pars_tmp(tmp);
 		i = 0;
-		if (tmp)
-			free(tmp);
-		tmp = NULL;
 	}
 }
 

@@ -1,5 +1,20 @@
 #include "minishell.h"
 
+void	free_exit(t_hold *hold)
+{
+	if (hold->line)
+		free(hold->line);
+	if (hold->lex_struct)
+		free_list_lex(hold->lex_struct);
+	if (hold->pars_list)
+		free_list_pars(hold->pars_list);
+	if (hold->env_list)
+		free_list_env_export(hold->env_list);
+	if (hold->export_list)
+		free_list_env_export(hold->export_list);
+	free_main();
+}
+
 int32_t	prep_minihell(t_hold *hold)
 {
 	hold->line = readline(BLU"MINIHELL> "RESET);
