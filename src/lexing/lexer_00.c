@@ -42,16 +42,14 @@ bool	check_single_expand(char *s, int32_t i)
 		return (false);
 }
 
-int32_t	lex_word(t_hold *hold, char *s, int32_t i)
+int32_t	lex_word_cont(t_hold *hold, char *s, int32_t i, int32_t	x)
 {
 	char	*quote_chunk_;
 	char	*string;
-	int32_t	x;
 	bool	single_expand;
 
 	quote_chunk_ = NULL;
 	string = ft_calloc(ft_strlen(s) + 1, 1);
-	x = 0;
 	while (1)
 	{
 		if (is_invalid_char(s, i))
@@ -71,6 +69,14 @@ int32_t	lex_word(t_hold *hold, char *s, int32_t i)
 	}
 	when_x_positive(hold, x, string, single_expand);
 	return (i - 1);
+}
+
+int32_t	lex_word(t_hold *hold, char *s, int32_t i)
+{
+	int32_t	x;
+	
+	x = 0;
+	return(lex_word_cont(hold, s, i, x));
 }
 
 /* function adds pipe symbol as a new node to the 'lex_struct'
