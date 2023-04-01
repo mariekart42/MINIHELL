@@ -43,6 +43,8 @@ void	export_not_empty(t_hold *hold, t_pars *parsed_node)
 	int		i[3];
 
 	i[0] = 1;
+	// vars[0] = NULL;
+	// vars[1] = NULL;
 	while (parsed_node->args[i[0]] != NULL)
 	{
 		i[1] = 0;
@@ -60,6 +62,10 @@ void	export_not_empty(t_hold *hold, t_pars *parsed_node)
 		}
 		var_class_zero(i[2], hold, parsed_node, i[0]);
 		var_class_non_zero(hold, parsed_node, i, vars);
+		if(vars[0])
+			free(vars[0]);
+		if(vars[1])
+			free(vars[1]);
 		sort_export_end(hold->export_list);
 		i[0]++;
 	}
