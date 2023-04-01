@@ -13,7 +13,7 @@ int32_t	prep_minihell(t_hold *hold)
 	if (ft_strlen(hold->line) == 1 && hold->line[0] == ':')
 	{
 		free(hold->line);
-			return (0);
+		return (0);
 	}
 	if (ft_strlen(hold->line) > 0)
 		return (1);
@@ -57,7 +57,6 @@ int	main(int32_t argc, char **argv, char **env)
 	}
 }
 
-
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //!  GENERAL:
 // - move cursor bums
@@ -71,7 +70,6 @@ int	main(int32_t argc, char **argv, char **env)
 // - change 'ori_env' to **char of own env list
 
 //!  LEAKS:
-
 
 //!  PROBLEMOS:
 //	

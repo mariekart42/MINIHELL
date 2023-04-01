@@ -23,7 +23,6 @@ void	open_extensions(t_lex *lex, t_hold *hold)
 	while (tmp)
 	{
 		i = 0;
-		// while (i < ft_strlen(tmp->item) && (tmp->macro == DOUBL_QUOTE || tmp->macro == WORD))
 		while (i < ft_strlen(tmp->item) && tmp->macro != DO_NOT_EXPAND)
 		{
 			if (tmp->item[i] == '$')

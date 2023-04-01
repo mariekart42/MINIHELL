@@ -4,7 +4,7 @@ char	*init_string(char *line, int32_t i, int32_t quote_len_)
 {
 	int32_t	x;
 	char	*string;
-	char quote;
+	char	quote;
 
 	x = 0;
 	string = (char *)malloc(quote_len_ + 1);

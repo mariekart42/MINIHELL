@@ -100,15 +100,14 @@ typedef struct s_hold
 }						t_hold;
 
 //
-void	init_error_code(t_hold *hold);
-int32_t prep_minihell(t_hold *hold);
+void		init_error_code(t_hold *hold);
+int32_t		prep_minihell(t_hold *hold);
 t_env_exp	*new_node_env(void);
 
 // new
 
-void init_lex_macro(t_hold *hold, char quote);
-bool check_single_expand(char *s, int32_t i);
-
+void		init_lex_macro(t_hold *hold, char quote);
+bool		check_single_expand(char *s, int32_t i);
 
 //!- - - -  LEXER: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //			lexer_00.c
@@ -125,7 +124,7 @@ int32_t		check_beginning_redir(t_hold *hold);
 int32_t		lex_redir(t_hold *hold, int32_t i);
 
 //			lexer_02.c
-char	*init_string(char *line, int32_t i, int32_t quote_len_);
+char		*init_string(char *line, int32_t i, int32_t quote_len_);
 char		*handle_quote_chunk(char **string, char **quote_chunk);
 int32_t		update_i(char *quote_chunk);
 char		*quote_chunk2(char *line, int32_t i);
@@ -168,11 +167,7 @@ int32_t		init_infile(t_pars *p_file_node, t_lex *l_file_node, int32_t type);
 void		redir_first(t_pars *pars_node, int32_t pipe_fds[MAX_FD][2],
 				int32_t i, int32_t pipegroups);
 int32_t		prep_exec(t_hold *hold);
-void	executer(t_hold *hold, char **env);
-
-
-
-
+void		executer(t_hold *hold, char **env);
 
 //		init_data.c
 int32_t		init_structs(t_hold *hold, char **argv, int32_t argc);
@@ -299,11 +294,11 @@ int			ft_isalnum_mod(int val);
 
 // -----------------------------------------
 //		delete_later.c
-char		*return_macro(int32_t m);
-void		print_list(t_lex *list, char *name);
-void		print_macro_list(t_lex *list);
-void		print_export(t_hold *hold);
-void		print_parsed_list(t_pars *pars);
+// char		*return_macro(int32_t m);
+// void		print_list(t_lex *list, char *name);
+// void		print_macro_list(t_lex *list);
+// void		print_export(t_hold *hold);
+// void		print_parsed_list(t_pars *pars);
 // -----------------------------------------
 
 #endif
