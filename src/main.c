@@ -1,19 +1,5 @@
 #include "minishell.h"
 
-void	free_main(t_hold *hold)
-{
-	int32_t	i;
-
-	i = 3;
-	while (i < MAX_FD)
-	{
-		close(i);
-		i++;
-	}
-	free_env_export(hold);
-	clear_history();
-}
-
 int32_t	prep_minihell(t_hold *hold)
 {
 	hold->line = readline(BLU"MINIHELL> "RESET);

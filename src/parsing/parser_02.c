@@ -20,21 +20,6 @@ void	count_pipegroups(t_hold *hold)
 		hold->pipegroups = pipegroup;
 }
 
-void	free_env_path(char **env_path)
-{
-	int32_t	i;
-
-	i = 0;
-	while (env_path[i] != NULL)
-	{
-		free(env_path[i]);
-		env_path[i] = NULL;
-		i++;
-	}
-	free(env_path);
-	env_path = NULL;
-}
-
 /* function appends command from 'pars_list' at the end of
  * each path of $PATH and checks for access
  * in case of access, function returns path
