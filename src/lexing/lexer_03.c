@@ -34,3 +34,37 @@ int32_t	quote_len(char *line, int32_t i, char quote)
 	}
 	return (-1);
 }
+
+bool	is_invalid_char(char *s, int32_t i)
+{
+	if (s[i] == '\0' || s[i] == ' ' || s[i] == '|' || s[i] == '>'
+		|| s[i] == '<')
+	{
+		return (true);
+	}
+	return (false);
+}
+
+void	when_x_positive(t_hold *hold, int32_t x, char *string,
+			bool single_expand)
+{
+	t_lex	*tmp;
+
+	if (x > 0)
+	{
+		string[x] = '\0';
+		add_node_lex(hold, string);
+		if (single_expand == true)
+		{
+			tmp = last_node_lex(hold->lex_struct);
+			tmp->macro = DO_NOT_EXPAND;
+		}
+		free(string);
+	}
+}
+
+void	increase_counters(int32_t *i, int32_t *x)
+{
+	(*i)++;
+	(*x)++;
+}

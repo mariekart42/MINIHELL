@@ -57,3 +57,11 @@ char	*quote_chunk2(char *line, int32_t i)
 		return (NULL);
 	return (init_string(line, i, quote_len_));
 }
+
+bool	check_single_expand(char *s, int32_t i)
+{
+	if (s[i] == '\'' && s[i + 1] == '$' && s[i + 2] != '\0')
+		return (true);
+	else
+		return (false);
+}

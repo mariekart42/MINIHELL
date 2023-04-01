@@ -132,6 +132,10 @@ char		*quote_chunk2(char *line, int32_t i);
 //			lexer_03.c
 char		*add_letter(char *pointer, char letter);
 int32_t		quote_len(char *line, int32_t i, char quote);
+bool		is_invalid_char(char *s, int32_t i);
+void		increase_counters(int32_t *i, int32_t *x);
+void		when_x_positive(t_hold *hold, int32_t x, char *string,
+				bool single_expand);
 
 //
 //!- - - -  PARSER:  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
