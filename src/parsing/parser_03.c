@@ -22,11 +22,8 @@ bool	builtin_parser(char *node)
 
 /* function appends specific macro to each node of 'lex_struct'
  * 	Macros: QUOTES, PIPE, (SINGLE-/DOUBLE) REDIRECTION, BUILTIN */
-void	recognize_type(t_hold *hold)
+void	recognize_type_cont(t_lex *tmp)
 {
-	t_lex	*tmp;
-
-	tmp = hold->lex_struct;
 	while (tmp != NULL)
 	{
 		if (builtin_parser(tmp->item) == true)
@@ -51,6 +48,14 @@ void	recognize_type(t_hold *hold)
 			tmp->macro = WORD;
 		tmp = tmp->next;
 	}
+}
+
+void	recognize_type(t_hold *hold)
+{
+	t_lex	*tmp;
+
+	tmp = hold->lex_struct;
+	recognize_type_cont(tmp);
 }
 
 /* function checks and returns outfile on success
