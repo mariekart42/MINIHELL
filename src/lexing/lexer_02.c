@@ -1,17 +1,5 @@
 #include "minishell.h"
 
-// void init_lex_macro(t_hold *hold, char quote)
-// {
-// 	t_lex *tmp;
-
-// 	tmp = last_node_lex(hold->lex_struct);
-// 	if (quote == '\'')
-// 		tmp->macro = SING_QUOTE;
-// 	else if (quote == '\"')
-// 		tmp->macro = DOUBL_QUOTE;
-
-// }
-
 char	*init_string(t_hold *hold, char *line, int32_t i, int32_t quote_len_)
 {
 	int32_t	x;
@@ -22,8 +10,6 @@ char	*init_string(t_hold *hold, char *line, int32_t i, int32_t quote_len_)
 	string = (char *)malloc(quote_len_ + 1);
 	quote = line[i];
 	i++;
-	// init_lex_macro(hold, quote);
-	// at last node of lex list add macro single or double quote
 	while (line[i] != '\0')
 	{
 		if (line[i] == quote)

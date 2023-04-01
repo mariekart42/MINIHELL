@@ -21,10 +21,7 @@ void	when_x_positive(t_hold *hold, int32_t x, char *string, bool single_expand)
 		add_node_lex(hold, string);
 		if (single_expand == true)
 		{
-			fprintf(stderr, "update do not expand\n");
 			tmp = last_node_lex(hold->lex_struct);
-			fprintf(stderr, "arg: %s\n", tmp->item);
-
 			tmp->macro = DO_NOT_EXPAND;
 		}
 		free(string);
@@ -40,10 +37,7 @@ void	increase_counters(int32_t *i, int32_t *x)
 bool check_single_expand(char *s, int32_t i)
 {
 	if (s[i] == '\'' && s[i + 1] == '$' && s[i + 2] != '\0')
-	{
-		fprintf(stderr, "single expand\n");
 		return (true);
-	}
 	else
 		return (false);
 }
@@ -66,7 +60,6 @@ int32_t	lex_word(t_hold *hold, char *s, int32_t i)
 		{
 			single_expand = check_single_expand(s, i);
 			quote_chunk_ = quote_chunk2(hold, s, i);
-			fprintf(stderr, "quote_chunk: %s\n", quote_chunk_);
 			i += update_i(quote_chunk_);
 			if (quote_chunk_ != NULL)
 				string = handle_quote_chunk(&string, &quote_chunk_);
@@ -122,11 +115,6 @@ void	check_closed_quotes(t_hold *hold)
 	}
 }
 
-// int32_t lex_expand(t_hold *hold)
-// {
-
-// }
-
 // devide chunks of commands etc in single linked list
 void	lexer(t_hold *hold)
 {
@@ -138,18 +126,6 @@ void	lexer(t_hold *hold)
 	{
 		if (g_error_code != 0)
 			return ;
-		// if (hold->line[i] == '$')
-		// {
-		// 	i = lex_expand(hold);
-		// }
-
-		// if (hold->line[i] == '$' && hold->line[i + 1] == '?')
-		// {
-		// 	add_node_lex(hold, "$?");
-		// 	i++;
-		// }
-
-		// else 
 		if (hold->line[i] == '|')
 			lex_pipe(hold, i);
 		else if (hold->line[i] == '<' || hold->line[i] == '>')
@@ -161,7 +137,3 @@ void	lexer(t_hold *hold)
 	if (hold->lex_struct == NULL)
 		exit_status(": :command not found!", "", "", 127);
 }
-
-
-// is not working
-// echo '$'e

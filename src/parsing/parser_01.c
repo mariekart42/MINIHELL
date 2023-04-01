@@ -64,7 +64,7 @@ char	*sub_extend(char *var, t_hold *hold)
 	t_env_exp	*tmp;
 
 	i = 0;
-	tmp = hold->env_list;
+	tmp = hold->export_list;
 	while (var[i])
 	{
 		if (var[i] == '$')
@@ -73,7 +73,7 @@ char	*sub_extend(char *var, t_hold *hold)
 	}
 	while (tmp != NULL)
 	{
-		if (ft_strncmp(var, tmp->item, i) == 0)
+		if (getenv(var) && ft_strncmp(var, tmp->item, ft_strlen(var)) == 0)
 			return (ft_strdup(&tmp->item[i + 1]));
 		tmp = tmp->next;
 	}

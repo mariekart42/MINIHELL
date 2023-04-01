@@ -31,7 +31,7 @@ void	recognize_type(t_hold *hold)
 	{
 		if (builtin_parser(tmp->item) == true)
 			tmp->macro = BUILTIN;
-		if (tmp->macro == DO_NOT_EXPAND)
+		else if (tmp->macro == DO_NOT_EXPAND)
 			return ;
 		else if (ft_strncmp(tmp->item, "|", 1) == 0)
 			tmp->macro = PIPE;

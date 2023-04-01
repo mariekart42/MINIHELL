@@ -13,7 +13,6 @@ void	redir_first(t_pars *pars_node, int32_t pipe_fds[MAX_FD][2], int32_t i, \
 			exit(0);
 		}
 		dup2(pipe_fds[i][1], STDOUT_FILENO);
-		// fprintf(stderr, "hi: %s", pars_node->args[0]);	
 	}
 	else
 	{
@@ -103,8 +102,6 @@ void	handle_here_doc(t_pars *pars_node)
 	while (1)
 	{
 		input_string = readline(CYN"heredoc> "RESET);
-		// fprintf(stderr, "del: %s\n", pars_node->here_doc_delim);
-		// fprintf(stderr, "input: %s\n", input_string);
 		if (ft_strncmp(input_string, pars_node->here_doc_delim, ft_strlen(pars_node->here_doc_delim)) == 0 && (ft_strlen(pars_node->here_doc_delim) == ft_strlen(input_string)))
 		{
 			ft_putstr_fd(tmp2, pars_node->infile);

@@ -28,7 +28,6 @@
 # define DOUBL_CLOSE_REDIR 8	// >>
 # define DO_NOT_EXPAND 9	// >>
 
-
 # define MAX_FD 1024
 
 // Get_next_line //
