@@ -59,3 +59,14 @@ int	ft_strcmp(char *s1, char *s2)
 		i++;
 	return (s1[i] - s2[i]);
 }
+
+int	var_start_number(t_pars *parsed_node, int i)
+{
+	if (ft_isdigit(parsed_node->args[i][0]) != 0)
+	{
+		exit_status("export:", parsed_node->args[i],
+			": not a valid identifier", 1);
+		return (0);
+	}
+	return (1);
+}
