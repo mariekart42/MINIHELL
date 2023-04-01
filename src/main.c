@@ -10,10 +10,18 @@ int32_t	prep_minihell(t_hold *hold)
 		exit(g_error_code);
 	}
 	g_error_code = 0;
+	if (ft_strlen(hold->line) == 1 && hold->line[0] == ':')
+	{
+		free(hold->line);
+			return (0);
+	}
 	if (ft_strlen(hold->line) > 0)
 		return (1);
 	else
+	{
+		free(hold->line);
 		return (0);
+	}
 }
 
 void	init_error_code(t_hold *hold)
@@ -39,13 +47,13 @@ int	main(int32_t argc, char **argv, char **env)
 		{
 			add_history(hold.line);
 			lexer(&hold);
-			// print_list(hold.lex_struct, "ksjdfgh");
+			// print_list(hold.lex_struct, "aieuhf");
 			parser(&hold);
 			// print_macro_list(hold.lex_struct);
 			executer(&hold, env);
 			free_content(&hold);
-			init_error_code(&hold);
 		}
+		init_error_code(&hold);
 	}
 }
 
@@ -63,7 +71,7 @@ int	main(int32_t argc, char **argv, char **env)
 // - change 'ori_env' to **char of own env list
 
 //!  LEAKS:
-// 2,200 bytes in 62 blocks
+
 
 //!  PROBLEMOS:
 //	

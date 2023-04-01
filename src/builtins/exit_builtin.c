@@ -52,7 +52,7 @@ void	exit_builtin(t_hold *hold, t_pars *parsed_node)
 			exit(255);
 		}
 		else
-			g_error_code = exit_code % 256;
+			g_error_code = exit_code % 255;
 	}
 	else
 		g_error_code = 0;

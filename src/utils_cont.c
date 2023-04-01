@@ -9,7 +9,7 @@ void	exit_status(char *msg1, char *msg2, char *msg3, int32_t exit_code_)
 	write(2, " ", 1);
 	write(2, msg3, ft_strlen(msg3));
 	write(2, ""RESET, 7);
-	g_error_code = exit_code_ % 256;
+	g_error_code = exit_code_ % 255;
 }
 
 void	print_error_code(void)

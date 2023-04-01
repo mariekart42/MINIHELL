@@ -19,18 +19,18 @@
 
 # define BUILTIN 0
 # define WORD 1
-# define SING_QUOTE 2
-# define DOUBL_QUOTE 3
-# define PIPE 4
-# define SING_OPEN_REDIR 5		// <
-# define SING_CLOSE_REDIR 6		// >
-# define DOUBL_OPEN_REDIR 7		// << heredoc
-# define DOUBL_CLOSE_REDIR 8	// >>
-# define DO_NOT_EXPAND 9	// >>
+# define SING_QUOTE 2		  //  '
+# define DOUBL_QUOTE 3		  //  "
+# define PIPE 4				  //  |
+# define SING_OPEN_REDIR 5	  //  <
+# define SING_CLOSE_REDIR 6	  //  >
+# define DOUBL_OPEN_REDIR 7	  //  <<  [heredoc]
+# define DOUBL_CLOSE_REDIR 8  //  >>
+# define DO_NOT_EXPAND 9
 
 # define MAX_FD 1024
 
-// Get_next_line //
+// Get_next_line
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 4096
 # endif
@@ -48,24 +48,21 @@
 /* Libraries */
 # include <stdlib.h>
 # include <stdio.h>
-# include <unistd.h> // unlink
+# include <unistd.h>	// unlink func
 # include <limits.h>	// for PATH_MAX macro
-# include <sys/stat.h> // for stat function
-# include <signal.h> // function for signal funcs
-# include <stdbool.h>	// bool
-# include <fcntl.h> // open function
+# include <sys/stat.h>	// stat funcs
 # include <sys/types.h>
+# include <signal.h>	// signal funcs
+# include <stdbool.h>	// bool
+# include <fcntl.h>		// open func
 
 # include "../libft/libft.h"
 
-// Readline //
-# include <readline/readline.h>
+# include <readline/readline.h>	// readline
 # include <readline/history.h>
 
-/* Global */
 int32_t	g_error_code;
 
-/* Structs */
 typedef struct s_lex
 {
 	char			*item;
@@ -93,7 +90,6 @@ typedef struct s_hold
 {
 	char				*valid_path;
 	char				*env_path;
-	char				**my_env;
 	char				*line;
 	int32_t				pipegroups;
 	int32_t				prev_error;

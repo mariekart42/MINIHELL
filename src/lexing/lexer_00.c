@@ -134,6 +134,4 @@ void	lexer(t_hold *hold)
 			i = lex_word(hold, hold->line, i);
 		i++;
 	}
-	if (hold->lex_struct == NULL)
-		exit_status(": :command not found!", "", "", 127);
 }
