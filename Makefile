@@ -1,6 +1,6 @@
 NAME	= minishell
 CC		= cc
-CFLAGS	= -g
+CFLAGS	= -Wall -Werror -Wextra -g
 # DEBUG	=  -fsanitize=address
 RM		= rm -rf
 SRC_PATH = src/

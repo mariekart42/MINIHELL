@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	free_main(t_hold *hold)
+void	free_main(void)
 {
 	int32_t	i;
 
@@ -15,11 +15,14 @@ void	free_main(t_hold *hold)
 
 void	free_content(t_hold *hold)
 {
-	free(hold->line);
+	if (hold->line)
+		free(hold->line);
 	hold->line = NULL;
-	free_list_lex(hold->lex_struct);
-	free_list_pars(hold->pars_list);
+	if (hold->lex_struct)
+		free_list_lex(hold->lex_struct);
 	hold->lex_struct = NULL;
+	if (hold->pars_list)
+		free_list_pars(hold->pars_list);
 	hold->pars_list = NULL;
 }
 
@@ -30,10 +33,12 @@ void	free_env_path(char **env_path)
 	i = 0;
 	while (env_path[i] != NULL)
 	{
-		free(env_path[i]);
+		if (env_path[i])
+			free(env_path[i]);
 		env_path[i] = NULL;
 		i++;
 	}
-	free(env_path);
+	if (env_path)
+		free(env_path);
 	env_path = NULL;
 }
