@@ -112,8 +112,7 @@ t_env_exp	*new_node_env(void);
 void	free_main(t_hold *hold);
 
 // new
-char	*quote_chunk2(t_hold *hold, char *line, int32_t i);
-char	*init_string(t_hold *hold, char *line, int32_t i, int32_t quote_len_);
+
 void init_lex_macro(t_hold *hold, char quote);
 bool check_single_expand(char *s, int32_t i);
 
@@ -133,10 +132,10 @@ int32_t		check_beginning_redir(t_hold *hold);
 int32_t		lex_redir(t_hold *hold, int32_t i);
 
 //			lexer_02.c
-// char		*init_string(char *line, char quote, int32_t i, int32_t quote_len_);
+char	*init_string(char *line, int32_t i, int32_t quote_len_);
 char		*handle_quote_chunk(char **string, char **quote_chunk);
 int32_t		update_i(char *quote_chunk);
-// char		*quote_chunk2(char *line, int32_t i);
+char		*quote_chunk2(char *line, int32_t i);
 
 //			lexer_03.c
 char		*add_letter(char *pointer, char letter);

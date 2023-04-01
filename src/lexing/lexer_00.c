@@ -59,7 +59,7 @@ int32_t	lex_word(t_hold *hold, char *s, int32_t i)
 		else if (s[i] == 34 || s[i] == 39)
 		{
 			single_expand = check_single_expand(s, i);
-			quote_chunk_ = quote_chunk2(hold, s, i);
+			quote_chunk_ = quote_chunk2(s, i);
 			i += update_i(quote_chunk_);
 			if (quote_chunk_ != NULL)
 				string = handle_quote_chunk(&string, &quote_chunk_);

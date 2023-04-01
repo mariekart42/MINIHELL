@@ -13,33 +13,33 @@ void	sort_export_list_sub(t_hold *hold, t_env_exp	*tmp)
 		hold->export_list = hold->export_list->next;
 }
 
-void	sort_export_list(t_hold *hold)
-{
-	t_env_exp	*tmp;
-	char		**tmp_tmp;
-	int			i;
+// void	sort_export_list(t_hold *hold)
+// {
+// 	t_env_exp	*tmp;
+// 	char		**tmp_tmp;
+// 	int			i;
 
-	i = 2;
-	tmp = hold->export_list;
-	while (tmp != NULL)
-	{
-		tmp_tmp = ft_split(tmp->item, '=');
-		tmp->var_name = tmp_tmp[0];
-		tmp->var_value = tmp_tmp[1];
-		while (tmp_tmp[i] != NULL)
-		{
-			tmp->var_value = ft_strjoin(tmp->var_value, tmp_tmp[i]);
-			i++;
-		}
-		free(tmp_tmp);
-		i = 2;
-		tmp = tmp->next;
-	}
-	tmp = hold->export_list;
-	while (hold->export_list != NULL && hold->export_list->next != NULL)
-		sort_export_list_sub(hold, tmp);
-	hold->export_list = tmp;
-}
+// 	i = 2;
+// 	tmp = hold->export_list;
+// 	while (tmp != NULL)
+// 	{
+// 		tmp_tmp = ft_split(tmp->item, '=');
+// 		tmp->var_name = tmp_tmp[0];
+// 		tmp->var_value = tmp_tmp[1];
+// 		while (tmp_tmp[i] != NULL)
+// 		{
+// 			tmp->var_value = ft_strjoin(tmp->var_value, tmp_tmp[i]);
+// 			i++;
+// 		}
+// 		free(tmp_tmp);
+// 		i = 2;
+// 		tmp = tmp->next;
+// 	}
+// 	tmp = hold->export_list;
+// 	while (hold->export_list != NULL && hold->export_list->next != NULL)
+// 		sort_export_list_sub(hold, tmp);
+// 	hold->export_list = tmp;
+// }
 
 t_env_exp	*new_node_env(void)
 {

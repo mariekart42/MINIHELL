@@ -98,7 +98,7 @@ void	handle_here_doc(t_pars *pars_node)
 	tmp2[0] = '\0';
 	if (pars_node->here_doc_delim == NULL)
 		write(2, "problem with delim in handle_here_doc\n", 38);
-	heredoc_sig(); // Signal goes before input of hierdoc
+	heredoc_sig();
 	while (1)
 	{
 		input_string = readline(CYN"heredoc> "RESET);
@@ -158,7 +158,6 @@ void	close_fds_parent(t_pars **parsed_node)
 
 void	exec_child(t_hold *hold, t_pars *pars_node, char **ori_env, int32_t pipe_fds[MAX_FD][2])
 {
-	 //Placed at start of child
 	close_fds_child(hold, hold->pipegroups, pipe_fds);
 	if (builtin(hold, pars_node) == false)
 	{
@@ -203,7 +202,6 @@ void	executer(t_hold *hold, char **ori_env)
 		}
 		else
 		{
-			// close_fds_parent(&parsed_node);
 			close(pipe_fds[i][1]);
 			if (i != 0)
 				close(pipe_fds[i - 1][0]);

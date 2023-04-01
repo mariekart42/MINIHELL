@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char	*init_string(t_hold *hold, char *line, int32_t i, int32_t quote_len_)
+char	*init_string(char *line, int32_t i, int32_t quote_len_)
 {
 	int32_t	x;
 	char	*string;
@@ -46,7 +46,7 @@ int32_t	update_i(char *quote_chunk)
 		return (ft_strlen(quote_chunk) + 1);
 }
 
-char	*quote_chunk2(t_hold *hold, char *line, int32_t i)
+char	*quote_chunk2(char *line, int32_t i)
 {
 	char	quote;
 	int32_t	quote_len_;
@@ -55,5 +55,5 @@ char	*quote_chunk2(t_hold *hold, char *line, int32_t i)
 	quote_len_ = quote_len(line, i + 1, quote);
 	if (line[i + 1] == quote || quote_len_ == -1)
 		return (NULL);
-	return (init_string(hold, line, i, quote_len_));
+	return (init_string(line, i, quote_len_));
 }
