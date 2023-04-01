@@ -88,6 +88,7 @@ void	free_list_env_export(t_env_exp *head)
 	{
 		tmp = head;
 		head = head->next;
+		free(tmp->item);
 		free(tmp);
 		tmp = NULL;
 	}

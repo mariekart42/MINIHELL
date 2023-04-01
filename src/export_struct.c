@@ -29,7 +29,7 @@ void	add_node_env(t_hold *hold, char *content, char *type)
 	t_env_exp	*p;
 
 	tmp = new_node_env();
-	tmp->item = content;
+	tmp->item = ft_strdup(content);
 	p = NULL;
 	if (ft_strncmp(type, "env", 3) == 0)
 	{

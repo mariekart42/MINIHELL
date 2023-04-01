@@ -22,7 +22,10 @@ void	delete_var(t_hold **hold, char *var, char *structure)
 	if (tmp == NULL)
 		return ;
 	prev->next = tmp->next;
+	free(tmp->item);
+	free(tmp);
 }
+
 
 bool	find_var(t_hold *hold, char *var, char *structure)
 {
