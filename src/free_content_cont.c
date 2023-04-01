@@ -12,6 +12,7 @@ void	free_exit(t_hold *hold)
 		free_list_env_export(hold->env_list);
 	if (hold->export_list)
 		free_list_env_export(hold->export_list);
+	free_main(hold);
 }
 
 /* function frees all nodes of linked list 'lexed_list'
