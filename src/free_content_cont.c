@@ -12,6 +12,7 @@ void	free_exit(t_hold *hold)
 		free_list_env_export(hold->env_list);
 	if (hold->export_list)
 		free_list_env_export(hold->export_list);
+	free_main();
 }
 
 /* function frees all nodes of linked list 'lexed_list'
@@ -25,9 +26,11 @@ void	free_list_lex(t_lex *head)
 	{
 		tmp = head;
 		head = head->next;
-		free(tmp->item);
+		if (tmp->item)
+			free(tmp->item);
 		tmp->item = NULL;
-		free(tmp);
+		if (tmp)
+			free(tmp);
 		tmp = NULL;
 	}
 }
@@ -35,7 +38,8 @@ void	free_list_lex(t_lex *head)
 void	free_list_pars_helper(t_pars *tmp)
 {
 	unlink("tmp.hd");
-	free(tmp->here_doc_delim);
+	if (tmp->here_doc_delim)
+		free(tmp->here_doc_delim);
 }
 
 /* function frees all nodes of linked list 'pars_list'
@@ -51,7 +55,8 @@ void	free_list_pars(t_pars *head)
 	{
 		tmp = head;
 		head = head->next;
-		free(tmp->cmd_path);
+		if (tmp->cmd_path)
+			free(tmp->cmd_path);
 		tmp->cmd_path = NULL;
 		if (tmp->here_doc_delim != NULL)
 		{
@@ -60,14 +65,17 @@ void	free_list_pars(t_pars *head)
 		}
 		while (tmp->args[i] != NULL)
 		{
-			free(tmp->args[i]);
+			if (tmp->args[i])
+				free(tmp->args[i]);
 			tmp->args[i] = NULL;
 			i++;
 		}
-		free(tmp->args);
+		if (tmp->args)
+			free(tmp->args);
 		tmp->args = NULL;
 		i = 0;
-		free(tmp);
+		if (tmp)
+			free(tmp);
 		tmp = NULL;
 	}
 }

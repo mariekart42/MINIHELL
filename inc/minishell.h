@@ -107,7 +107,6 @@ typedef struct s_hold
 void	init_error_code(t_hold *hold);
 int32_t prep_minihell(t_hold *hold);
 t_env_exp	*new_node_env(void);
-void	free_main(t_hold *hold);
 
 // new
 
@@ -185,8 +184,8 @@ void		create_env_export_list(t_hold *hold, char **ori_env);
 
 //		free_content.c
 void		free_content(t_hold *hold);
-void		free_env_export(t_hold *hold);
-void		free_main(t_hold *hold);
+// void		free_env_export(t_hold *hold);
+void		free_main(void);
 void		free_list_pars_helper(t_pars *tmp);
 void		free_list_pars(t_pars *head);
 void		free_list_lex(t_lex *head);
