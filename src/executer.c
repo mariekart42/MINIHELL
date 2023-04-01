@@ -179,7 +179,7 @@ int32_t prep_exec(t_hold *hold)
 	return (0);
 }
 
-void	executer(t_hold *hold, char **ori_env)
+void	executer(t_hold *hold, char **env)
 {
 	int32_t	i;
 	t_pars	*parsed_node;
@@ -198,7 +198,7 @@ void	executer(t_hold *hold, char **ori_env)
 		{
 			child_sig();
 			redirection(parsed_node, i, hold->pipegroups, pipe_fds);
-			exec_child(hold, parsed_node, ori_env, pipe_fds);
+			exec_child(hold, parsed_node, env, pipe_fds);
 		}
 		else
 		{

@@ -72,9 +72,6 @@ void	free_list_pars(t_pars *head)
 	}
 }
 
-/* function frees all nodes of linked list 'env_list' or 'export_list'
- * and all its variables:
- *	-> item, var_name, var_value				*/
 void	free_list_env_export(t_env_exp *head)
 {
 	t_env_exp	*tmp;
@@ -83,10 +80,6 @@ void	free_list_env_export(t_env_exp *head)
 	{
 		tmp = head;
 		head = head->next;
-		free(tmp->var_name);
-		tmp->var_name = NULL;
-		free(tmp->var_value);
-		tmp->var_value = NULL;
 		free(tmp);
 		tmp = NULL;
 	}
