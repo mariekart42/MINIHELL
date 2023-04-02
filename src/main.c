@@ -15,7 +15,7 @@ void	free_exit(t_hold *hold)
 	free_main();
 }
 
-bool only_spaces(char *line)
+bool	only_spaces(char *line)
 {
 	int32_t	i;
 
@@ -42,7 +42,7 @@ bool	line_is_nothing(char *line)
 		i = skip_spaces(line, i + 2);
 		if (line[i] == '\0')
 		{
-			exit_status(": :command not found!", "", "", 69);
+			exit_status(" :command not found!", "", "", 69);
 			return (true);
 		}
 	}
