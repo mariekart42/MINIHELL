@@ -13,7 +13,9 @@ LIB = libft.a
 SRC		=	main.c \
 			utils.c \
 			utils_cont.c \
-			executer.c \
+			executer_00.c \
+			executer_01.c \
+			executer_02.c \
 			init_data.c \
 			export_struct.c \
 			export_struct_cont.c \

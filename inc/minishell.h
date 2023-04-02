@@ -172,6 +172,17 @@ void		redir_first(t_pars *pars_node, int32_t pipe_fds[MAX_FD][2],
 				int32_t i, int32_t pipegroups);
 int32_t		prep_exec(t_hold *hold);
 void		executer(t_hold *hold, char **env);
+void		exec_child(t_hold *hold, t_pars *pars_node, char **ori_env,
+				int32_t pipe_fds[MAX_FD][2]);
+void		executer_core(t_hold *hold, int32_t	pipe_fds[1024][2],
+				int32_t i, char **env);
+bool		is_heredoc_break(char	*input_string, t_pars *pars_node,
+				char	*tmp2);
+void		handle_here_doc_cont(t_pars *pars_node, char *input_string,
+				char *tmp1, char *tmp2);
+void		handle_here_doc(t_pars *pars_node);
+void		handle_single_builtin(t_hold *hold);
+void		close_fds_parent(t_pars **parsed_node);
 
 //		init_data.c
 int32_t		init_structs(t_hold *hold, char **argv, int32_t argc);
