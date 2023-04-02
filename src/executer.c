@@ -35,7 +35,7 @@ void	redirection(t_pars *parsed_node, int32_t i, int32_t pipegroups,
 		if (parsed_node->outfile != 1)
 			dup2(parsed_node->outfile, STDOUT_FILENO);
 	}
-	else // in the middle of pipegroups
+	else
 	{
 		dup2(pipe_fds[i - 1][0], STDIN_FILENO);
 		dup2(pipe_fds[i][1], STDOUT_FILENO);
@@ -188,7 +188,7 @@ void	exec_child(t_hold *hold, t_pars *pars_node, char **ori_env,
 	exit(g_error_code);
 }
 
-int32_t prep_exec(t_hold *hold, int32_t pipe_fds[MAX_FD][2], int32_t *i)
+int32_t	prep_exec(t_hold *hold, int32_t pipe_fds[MAX_FD][2], int32_t *i)
 {
 	if (g_error_code != 0)
 	{
@@ -204,16 +204,16 @@ int32_t prep_exec(t_hold *hold, int32_t pipe_fds[MAX_FD][2], int32_t *i)
 	return (0);
 }
 
-void close_pipe_fds(int32_t pipe_fds[MAX_FD][2], int32_t i)
+void	close_pipe_fds(int32_t pipe_fds[MAX_FD][2], int32_t i)
 {
 	close(pipe_fds[i][1]);
 	if (i != 0)
 		close(pipe_fds[i - 1][0]);
 }
 
-void wait_4_childs(t_hold *hold)
+void	wait_4_childs(t_hold *hold)
 {
-	int32_t i;
+	int32_t	i;
 
 	i = 0;
 	while (i++ < hold->pipegroups)
@@ -246,60 +246,3 @@ void	executer(t_hold *hold, char **env)
 	close(pipe_fds[i - 1][0]);
 	wait_4_childs(hold);
 }
-
-// int32_t	prep_exec(t_hold *hold)
-// {
-// 	if (g_error_code != 0)
-// 		return (1);
-// 	if (hold->pipegroups == 1 && hold->lex_struct->macro == BUILTIN)
-// 	{
-// 		handle_single_builtin(hold);
-// 		return (1);
-// 	}
-// 	return (0);
-// }
-
-// void	close_fds(int32_t i, int32_t pipe_fds[MAX_FD][2])
-// {
-// 	close(pipe_fds[i][1]);
-// 	if (i != 0)
-// 		close(pipe_fds[i - 1][0]);
-// }
-
-// void	executer_cont(t_hold *hold, char **env, int32_t i, t_pars *parsed_node)
-// {
-// 	int32_t	pipe_fds[MAX_FD][2];
-
-// 	if (prep_exec(hold))
-// 		return ;
-// 	open_pipefds(hold->pipegroups, pipe_fds);
-// 	while (i < hold->pipegroups)
-// 	{
-// 		if (parsed_node->here_doc_delim != NULL)
-// 			handle_here_doc(parsed_node);
-// 		if (fork() == 0)
-// 		{
-// 			child_sig();
-// 			redirection(parsed_node, i, hold->pipegroups, pipe_fds);
-// 			exec_child(hold, parsed_node, env, pipe_fds);
-// 		}
-// 		else
-// 			close_fds(i, pipe_fds);
-// 		i++;
-// 		parsed_node = parsed_node->next;
-// 	}
-// 	close(pipe_fds[i - 1][0]);
-// 	i = 0;
-// 	while (i++ < hold->pipegroups)
-// 		waitpid(-1, &g_error_code, WUNTRACED);
-// }
-
-// void	executer(t_hold *hold, char **env)
-// {
-// 	int32_t	i;
-// 	t_pars	*parsed_node;
-
-// 	i = 0;
-// 	parsed_node = hold->pars_list;
-// 	executer_cont(hold, env, i, parsed_node);
-// }

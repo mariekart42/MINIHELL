@@ -62,29 +62,10 @@ int	main(int32_t argc, char **argv, char **env)
 		{
 			add_history(hold.line);
 			lexer(&hold);
-			// print_list(hold.lex_struct, "aieuhf");
 			parser(&hold);
-			// print_macro_list(hold.lex_struct);
 			executer(&hold, env);
 			free_content(&hold);
 		}
 		init_error_code(&hold);
 	}
 }
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//!  GENERAL:
-// - move cursor bums
-// - handle also relativ paths
-
-//!  LEXER: √
-
-//!  PARSER:√
-
-//!  EXECUTER:
-// - change 'ori_env' to **char of own env list
-
-//!  LEAKS:
-
-//!  PROBLEMOS:
-//	
