@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 21:45:14 by mmensing          #+#    #+#             */
-/*   Updated: 2023/04/02 21:47:45 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/04/02 22:15:39 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,21 +112,56 @@ typedef struct s_hold
 	struct s_pars		*pars_list;
 }						t_hold;
 
-void		init_error_code(t_hold *hold);
-int32_t		prep_minihell(t_hold *hold);
-t_env_exp	*new_node_env(void);
-
-// new
-char		*get_env_path(t_env_exp *env_node);
-char		*return_valid_path(char *curr_cmd, char *valid_path, \
-													char **env_path);
-
+//!- - - -  MAIN: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void		create_env(t_hold *hold);
 bool		line_is_nothing(char *line);
-char		*get_cmdpath(t_env_exp *env_node, char *curr_cmd);
+int32_t		prep_minihell(t_hold *hold);
+void		init_error_code(t_hold *hold);
+
+//!- - - -  UTILS: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void		add_node_lex(t_hold *hold, char *content);
+t_lex		*last_node_lex(t_lex *lst);
+t_pars		*last_node_pars(t_pars *lst);
+char		**append_string(char **array, char *string);
 bool		only_spaces(char *line);
-void		init_lex_macro(t_hold *hold, char quote);
-bool		check_single_expand(char *s, int32_t i);
+
+//!- - - -  UTILSCONT: - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void		exit_status(char *msg1, char *msg2, char *msg3, int32_t exit_code_);
+void		print_error_code(void);
+int			ft_isalnum_mod(int val);
+
+//!- - - -  INITDATA: - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int32_t		init_structs(t_hold *hold, char **argv, int32_t argc);
+void		create_env_export_list(t_hold *hold, char **ori_env);
+
+//!- - - -  FREECONTENT: - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void		free_main(void);
+void		free_content(t_hold *hold);
+void		free_env_path(char **env_path);
+void		free_exit(t_hold *hold);
+
+//!- - - -  FREECONTENTCONT: - - - - - - - - - - - - - - - - - - - - - - - - - -
+void		free_list_lex(t_lex *head);
+void		free_list_pars_helper(t_pars *tmp);
+void		free_list_pars_tmp(t_pars *tmp);
+void		free_list_pars(t_pars *head);
+void		free_list_env_export(t_env_exp *head);
+
+//!- - - -  EXPORTSTRUCT: - - - - - - - - - - - - - - - - - - - - - - - - - -
+t_env_exp	*new_node_env(void);
+void		add_node_export_sub(t_hold *hold, t_env_exp *tmp, t_env_exp *p);
+void		add_node_env(t_hold *hold, char *content, char *type);
+
+//!- - - -  EXPORTSTRUCTCONT: - - - - - - - - - - - - - - - - - - - - - - - - -
+void		swap_data(t_env_exp *export_list);
+
+//!- - - -  GETNEXTLINE: - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void		buff_after_line(char *buff);
+char		*create_last(char *buff, char *line);
+char		*get_next_line(int fd);
+
+//!- - - -  SYNTAXERROR: - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int32_t		check_syntax_errors(t_hold *hold);
 
 //!- - - -  LEXER: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //			lexer_00.c
@@ -175,7 +210,6 @@ char		*extend(char *var, t_hold *hold);
 //  	    parser_02.c
 void		count_pipegroups(t_hold *hold);
 void		free_env_path(char **env_path);
-// char		*get_cmdpath(char *curr_cmd);
 t_pars		*last_node_pars(t_pars *lst);
 void		add_node_pars(t_hold **hold);
 
@@ -186,6 +220,14 @@ int32_t		init_outfile(t_lex *file_node, int32_t type);
 int32_t		init_infile(t_pars *p_file_node, t_lex *l_file_node, int32_t type);
 
 //
+//!- - - -  SIGNALS:  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void		signals(void);
+void		child_sig(void);
+void		heredoc_sig(void);
+void		sig_handle(int sig);
+void		sig_handle_child(int sig);
+void		heredoc_sig_handle(int sig);
+
 //!- - - -  EXECUTER:  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //			execute_00.c
 void		exec_child(t_hold *hold, t_pars *pars_node, \
@@ -214,34 +256,23 @@ void		close_fds_child(t_hold *hold, int32_t pipegroups, \
 void		execute_cmd(t_pars *parsed_node, char **ori_env);
 
 //!- - - -  OTHERS:  - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//			init_data.c
-int32_t		init_structs(t_hold *hold, char **argv, int32_t argc);
-void		create_env_export_list(t_hold *hold, char **ori_env);
+void		var_class_zero(int var_class, t_hold *hold, t_pars *parsed_node, \
+																	int i);
+void		var_class_non_zero(t_hold *hold, t_pars *parsed_node, int i[], \
+															char **vars);
+void		non_zero_var(t_hold *hold, t_pars *parsed_node, int i, \
+															char *var_name);
+void		sort_export_end(t_env_exp *export_list);
+void		swap_export(t_env_exp *export_list);
 
-//			free_content.c
-void		free_content(t_hold *hold);
-void		free_main(void);
-void		free_list_pars_helper(t_pars *tmp);
-void		free_list_pars(t_pars *head);
-void		free_list_lex(t_lex *head);
-void		free_list_env_export(t_env_exp *head);
-void		free_exit(t_hold *hold);
-void		free_env_path(char **env_path);
+char		*get_cmdpath(t_env_exp *env_node, char *curr_cmd);
+bool		check_single_expand(char *s, int32_t i);
 
 //			builtins.c
 void		env_builtin(t_hold *hold, t_pars *parsed_node);
 void		pwd_builtin(t_hold *hold, t_pars *parsed_node);
 bool		builtin(t_hold *hold, t_pars *parsed_node);
 char		*handle_quote_chunk(char **string, char **quote_chunk);
-
-//			get_next_line.c
-void		buff_after_line(char *buff);
-char		*create_last(char *buff, char *line);
-char		*get_next_line(int fd);
-
-//			syntax_errors.c
-int32_t		check_syntax_errors(t_hold *hold);
-char		*ft_strnew(const int size);
 
 //			builtins
 void		echo_builtin(t_hold *hold, t_pars *parsed_node);
@@ -299,24 +330,10 @@ char		*ft_strnew(const int size);
 char		*ft_strndup(const char *s1, size_t n);
 int			ft_strcmp(char *s1, char *s2);
 
-//			signals.c
-void		signals(void);
-void		child_sig(void);
-void		heredoc_sig(void);
+t_env_exp	*new_node_env(void);
 
-//			signal_handlers.c
-void		sig_handle(int sig);
-void		sig_handle_child(int sig);
-void		heredoc_sig_handle(int sig);
-
-//			utils.c
-void		free_list_pars(t_pars *head);
-void		free_list_lex(t_lex *head);
-void		free_list_env_export(t_env_exp *head);
-void		add_node_lex(t_hold *hold, char *content);
-t_lex		*last_node_lex(t_lex *lst);
-void		exit_status(char *msg1, char *msg2, char *msg3, int32_t exit_code_);
-void		print_error_code(void);
-int			ft_isalnum_mod(int val);
+char		*get_env_path(t_env_exp *env_node);
+char		*return_valid_path(char *curr_cmd, char *valid_path, \
+													char **env_path);
 
 #endif
