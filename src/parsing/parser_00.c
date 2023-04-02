@@ -11,6 +11,7 @@ void	sub_open_extension(t_lex	*lex, int i, t_hold *hold)
 	extended = extend(&lex->item[i], hold);
 	lex->item = ft_strnnjoin(lex->item, i, extended, ft_strlen(extended));
 	free(to_free);
+	free(extended);
 	return ;
 }
 
