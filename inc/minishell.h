@@ -90,6 +90,7 @@ typedef struct s_hold
 {
 	char				*valid_path;
 	char				*env_path;
+	char				**my_env;
 	char				*line;
 	int32_t				pipegroups;
 	int32_t				prev_error;
@@ -105,7 +106,12 @@ int32_t		prep_minihell(t_hold *hold);
 t_env_exp	*new_node_env(void);
 
 // new
+char *get_PATH(t_env_exp *env_node);
+
+void create_env(t_hold *hold);
 bool line_is_nothing(char *line);
+char	*get_cmdpath(t_env_exp *env_node, char *curr_cmd);
+
 
 bool only_spaces(char *line);
 void		init_lex_macro(t_hold *hold, char quote);
@@ -158,7 +164,7 @@ char		*extend(char *var, t_hold *hold);
 //  	    parser_02.c
 void		count_pipegroups(t_hold *hold);
 void		free_env_path(char **env_path);
-char		*get_cmdpath(char *curr_cmd);
+// char		*get_cmdpath(char *curr_cmd);
 t_pars		*last_node_pars(t_pars *lst);
 void		add_node_pars(t_hold **hold);
 
@@ -173,7 +179,7 @@ int32_t		init_infile(t_pars *p_file_node, t_lex *l_file_node, int32_t type);
 void		redir_first(t_pars *pars_node, int32_t pipe_fds[MAX_FD][2],
 				int32_t i, int32_t pipegroups);
 int32_t		prep_exec(t_hold *hold, int32_t pipe_fds[MAX_FD][2], int32_t *i);
-void		executer(t_hold *hold, char **env);
+void		executer(t_hold *hold);
 
 //		init_data.c
 int32_t		init_structs(t_hold *hold, char **argv, int32_t argc);
@@ -280,8 +286,7 @@ void		open_pipefds(int32_t pipegroups, int32_t pipe_fds[MAX_FD][2]);
 // 				int32_t pipe_fds[MAX_FD][2]);
 void		execute_cmd(t_pars *parsed_node, char **ori_env);
 void		handle_here_doc(t_pars *pars_node);
-void		exec_child(t_hold *hold, t_pars *pars_node, char **ori_env,
-				int32_t pipe_fds[MAX_FD][2]);
+void		exec_child(t_hold *hold, t_pars *pars_node, int32_t pipe_fds[MAX_FD][2]);
 void		close_fds_child(t_hold *hold, int32_t pipegroups,
 				int32_t pipe_fds[MAX_FD][2]);
 void		close_all_fds(t_pars *parsed_node, int32_t pipe_fds[MAX_FD][2],
@@ -300,11 +305,11 @@ int			ft_isalnum_mod(int val);
 
 // -----------------------------------------
 //		delete_later.c
-// char		*return_macro(int32_t m);
-// void		print_list(t_lex *list, char *name);
-// void		print_macro_list(t_lex *list);
-// void		print_export(t_hold *hold);
-// void		print_parsed_list(t_pars *pars);
+char		*return_macro(int32_t m);
+void		print_list(t_lex *list, char *name);
+void		print_macro_list(t_lex *list);
+void		print_export(t_hold *hold);
+void		print_parsed_list(t_pars *pars);
 // -----------------------------------------
 
 #endif

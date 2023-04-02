@@ -176,13 +176,13 @@ void	close_fds_parent(t_pars **parsed_node)
 		close((*parsed_node)->outfile);
 }
 
-void	exec_child(t_hold *hold, t_pars *pars_node, char **ori_env,
+void	exec_child(t_hold *hold, t_pars *pars_node,
 			int32_t pipe_fds[MAX_FD][2])
 {
 	close_fds_child(hold, hold->pipegroups, pipe_fds);
 	if (builtin(hold, pars_node) == false)
 	{
-		execute_cmd(pars_node, ori_env);
+		execute_cmd(pars_node, hold->my_env);
 		exit(122);
 	}
 	exit(g_error_code);
@@ -220,7 +220,7 @@ void	wait_4_childs(t_hold *hold)
 		waitpid(-1, &g_error_code, WUNTRACED);
 }
 
-void	executer(t_hold *hold, char **env)
+void	executer(t_hold *hold)
 {
 	int32_t	i;
 	t_pars	*parsed_node;
@@ -236,7 +236,7 @@ void	executer(t_hold *hold, char **env)
 		{
 			child_sig();
 			redirection(parsed_node, i, hold->pipegroups, pipe_fds);
-			exec_child(hold, parsed_node, env, pipe_fds);
+			exec_child(hold, parsed_node, pipe_fds);
 		}
 		else
 			close_pipe_fds(pipe_fds, i);

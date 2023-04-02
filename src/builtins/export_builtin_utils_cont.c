@@ -32,7 +32,7 @@ void	sort_export_end(t_env_exp *export_list)
 	t_env_exp	*tmp;
 
 	tmp = export_list;
-	while (export_list->next != NULL)
+	while (export_list && export_list->next != NULL)
 	{
 		if (ft_strcmp(export_list->item, export_list->next->item) > 0)
 		{

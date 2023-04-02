@@ -8,6 +8,7 @@ int32_t	init_structs(t_hold *hold, char **argv, int32_t argc)
 	hold->prev_error = 0;
 	hold->line = NULL;
 	hold->env_list = NULL;
+	hold->my_env = NULL;
 	hold->pars_list = NULL;
 	hold->export_list = NULL;
 	hold->lex_struct = NULL;

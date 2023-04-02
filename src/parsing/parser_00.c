@@ -81,7 +81,7 @@ void	create_parsed_list(t_hold **hold, t_lex *lex, int32_t pipegroups)
 	{
 		i = init_pars_node(&tmp_pars, &tmp_lex, i);
 		tmp_pars->args[i] = NULL;
-		tmp_pars->cmd_path = get_cmdpath(tmp_pars->args[0]);
+		tmp_pars->cmd_path = get_cmdpath((*hold)->env_list, tmp_pars->args[0]);
 		tmp_lex = tmp_lex->next;
 		tmp_pars = tmp_pars->next;
 		pipegroups--;

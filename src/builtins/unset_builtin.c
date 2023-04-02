@@ -23,7 +23,9 @@ void	delete_var(t_hold **hold, char *var, char *structure)
 		return ;
 	prev->next = tmp->next;
 	free(tmp->item);
+	tmp->item = NULL;
 	free(tmp);
+	tmp = NULL;
 }
 
 bool	find_var(t_hold *hold, char *var, char *structure)

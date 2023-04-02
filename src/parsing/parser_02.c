@@ -20,21 +20,37 @@ void	count_pipegroups(t_hold *hold)
 		hold->pipegroups = pipegroup;
 }
 
+char *get_PATH(t_env_exp *env_node)
+{
+	t_env_exp *tmp;
+
+	tmp = env_node;
+	while (tmp)
+	{
+		if (ft_strncmp(tmp->item, "PATH=", 4) == 0)
+			return (tmp->item);
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
 /* function appends command from 'pars_list' at the end of
  * each path of $PATH and checks for access
  * in case of access, function returns path
  * otherwise returns NULL		*/
-char	*get_cmdpath(char *curr_cmd)
+char	*get_cmdpath(t_env_exp *env_node, char *curr_cmd)
 {
 	char	**env_path;
 	char	*valid_path;
 	char	*tmp;
 	int32_t	i;
 
-	env_path = ft_split(getenv("PATH"), ':');
+	// env_path = ft_split(getenv("PATH"), ':');
 	tmp = NULL;
+	env_path = ft_split(get_PATH(env_node), ':');
+	valid_path = NULL;
 	i = 0;
-	while (env_path[i] != NULL)
+	while (env_path && env_path[i] != NULL)
 	{
 		tmp = ft_strjoin(env_path[i], "/");
 		valid_path = ft_strjoin(tmp, curr_cmd);
@@ -46,9 +62,21 @@ char	*get_cmdpath(char *curr_cmd)
 		valid_path = NULL;
 		i++;
 	}
-	free_env_path(env_path);
+	if (ft_strncmp(curr_cmd, "./", 2) == 0){
+		valid_path = ft_strdup(curr_cmd);
+	}
+	if (env_path)
+		free_env_path(env_path);
+	env_path = NULL;
 	if (access(valid_path, F_OK | X_OK) != 0)
+	{
+		if (valid_path)
+		{
+			free(valid_path);
+			valid_path = NULL;
+		}
 		return (NULL);
+	}
 	else
 		return (valid_path);
 }
