@@ -105,7 +105,7 @@ int32_t		prep_minihell(t_hold *hold);
 t_env_exp	*new_node_env(void);
 
 // new
-
+bool only_spaces(char *line);
 void		init_lex_macro(t_hold *hold, char quote);
 bool		check_single_expand(char *s, int32_t i);
 

@@ -15,6 +15,17 @@ void	free_exit(t_hold *hold)
 	free_main();
 }
 
+bool only_spaces(char *line)
+{
+	int32_t	i;
+
+	i = 0;
+	if (line[skip_spaces(line, i)] == '\0')
+		return (true);
+	else
+		return (false);
+}
+
 int32_t	prep_minihell(t_hold *hold)
 {
 	hold->line = readline(BLU"MINIHELL> "RESET);
@@ -25,7 +36,7 @@ int32_t	prep_minihell(t_hold *hold)
 		exit(g_error_code);
 	}
 	g_error_code = 0;
-	if (ft_strlen(hold->line) == 1 && hold->line[0] == ':')
+	if ((ft_strlen(hold->line) == 1 && hold->line[0] == ':') || only_spaces(hold->line) == true)
 	{
 		free(hold->line);
 		return (0);
