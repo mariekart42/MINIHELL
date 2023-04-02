@@ -106,7 +106,7 @@ int32_t		prep_minihell(t_hold *hold);
 t_env_exp	*new_node_env(void);
 
 // new
-char *get_PATH(t_env_exp *env_node);
+char *get_env_path(t_env_exp *env_node);
 
 void create_env(t_hold *hold);
 bool line_is_nothing(char *line);

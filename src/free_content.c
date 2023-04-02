@@ -17,9 +17,6 @@ void	free_content(t_hold *hold)
 {
 	if (hold->line)
 		free(hold->line);
-	// if (hold->env_path)
-	// 	free(hold->env_path);
-		// env_path
 	if (hold->my_env)
 	{
 		free(hold->my_env);
@@ -45,8 +42,6 @@ void	free_env_path(char **env_path)
 		env_path[i] = NULL;
 		i++;
 	}
-	// if(env_path[i+1])
-		// fprintf(stderr, "next: %s\n", env_path[i+1]);
 	if (env_path)
 	{
 		free(env_path);

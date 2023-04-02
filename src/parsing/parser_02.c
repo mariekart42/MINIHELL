@@ -20,9 +20,9 @@ void	count_pipegroups(t_hold *hold)
 		hold->pipegroups = pipegroup;
 }
 
-char *get_PATH(t_env_exp *env_node)
+char	*get_env_path(t_env_exp *env_node)
 {
-	t_env_exp *tmp;
+	t_env_exp	*tmp;
 
 	tmp = env_node;
 	while (tmp)
@@ -45,9 +45,8 @@ char	*get_cmdpath(t_env_exp *env_node, char *curr_cmd)
 	char	*tmp;
 	int32_t	i;
 
-	// env_path = ft_split(getenv("PATH"), ':');
 	tmp = NULL;
-	env_path = ft_split(get_PATH(env_node), ':');
+	env_path = ft_split(get_env_path(env_node), ':');
 	valid_path = NULL;
 	i = 0;
 	while (env_path && env_path[i] != NULL)
@@ -62,9 +61,8 @@ char	*get_cmdpath(t_env_exp *env_node, char *curr_cmd)
 		valid_path = NULL;
 		i++;
 	}
-	if (ft_strncmp(curr_cmd, "./", 2) == 0){
+	if (ft_strncmp(curr_cmd, "./", 2) == 0)
 		valid_path = ft_strdup(curr_cmd);
-	}
 	if (env_path)
 	{
 		free_env_path(env_path);
