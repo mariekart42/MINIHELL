@@ -1,0 +1,13 @@
+{
+	"files.associations": {
+		"algorithm": "c",
+		"atomic": "c",
+		"exception": "c",
+		"functional": "c",
+		"istream": "c",
+		"locale": "c",
+		"ostream": "c",
+		"tuple": "c",
+		"unordered_map": "c"
+	}
+}

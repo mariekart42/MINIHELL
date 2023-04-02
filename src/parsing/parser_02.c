@@ -66,8 +66,10 @@ char	*get_cmdpath(t_env_exp *env_node, char *curr_cmd)
 		valid_path = ft_strdup(curr_cmd);
 	}
 	if (env_path)
+	{
 		free_env_path(env_path);
-	env_path = NULL;
+		env_path = NULL;
+	}
 	if (access(valid_path, F_OK | X_OK) != 0)
 	{
 		if (valid_path)

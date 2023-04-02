@@ -6,97 +6,165 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 12:52:16 by mmensing          #+#    #+#             */
-/*   Updated: 2022/06/08 15:27:31 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/04/02 21:13:33 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-/**
- * @brief Allocates (with malloc(3)) and returns an array of strings obtained 
- * by splitting ’s’ using the character ’c’ as a delimiter. 
- * The array must end with a NULL pointer.
- * 
- * @param s The string to be split.
- * @param c The delimiter character.
- * @return The array of new strings resulting from the split.
- * NULL if the allocation fails.
- */
-static char	*sub_dup(const char *str, int start, int finish)
+/*
+s: The string to be split.
+c: The delimiter character.
+return: The array of new strings resulting from the split.
+NULL if the allocation fails.
+Allocates (with malloc(3)) and returns an array
+of strings obtained by splitting ’s’ using the
+character ’c’ as a delimiter. The array must end
+with a NULL pointer.
+*/
+
+/*
+Counts strings by identifying delimiters not followed by delimiters or 0.
+Does not identify the first string, because either
+- there is no delimiter in front of it
+- if there is a delimiter before the first string, the index i will already
+have passed by it in the first while loop.
+Therefore j has to returned as j + 1.
+If j is returned as 0, an edge case of all delimiters
+or empty string is present.
+Malloc for the final array uses j + 1 + 1, because another space for
+the NULL pointer is needed.
+*/
+int	count_strings(char const *s, char c)
 {
-	char	*word;
-	int		i;
+	int	i;
+	int	j;
+	int	len;
 
-	if (!str)
-		return (NULL);
 	i = 0;
-	word = malloc((finish - start + 1) * sizeof(char));
-	if (!word)
-		return (NULL);
-	while (start < finish)
-		word[i++] = str[start++];
-	word[i] = '\0';
-	return (word);
-}
-
-static int	amount_subs(const char *s, char c)
-{
-	int		i;
-	int		subs;
-
-	if (!s)
-		return (0);
-	i = 0;
-	subs = 0;
-	while (s[i] != '\0')
+	j = 0;
+	len = ft_strlen(s);
+	if (len == 0)
+		return (j);
+	while (s[i] == c)
+		i++;
+	if (i == len)
+		return (j);
+	while (s[i])
 	{
-		if (s[i] == c)
-			subs++;
+		if (s[i] == c && s[i + 1] != c && s[i + 1] != 0)
+			j++;
 		i++;
 	}
-	return (subs);
+	return (j + 1);
 }
 
-char	**ft_split(char const *s, char c)
+int	count_chars(char const *s, char c)
 {
-	char	**str2;
-	size_t	i;
-	size_t	k;
-	int		start;
+	int	i;
+	int	j;
 
-	str2 = malloc((amount_subs(s, c) + 2) * sizeof(char *));
-	if (!s || !str2)
-		return (0);
 	i = 0;
-	k = 0;
-	start = -1;
-	while (i <= ft_strlen(s))
+	j = 0;
+	while (s[i])
 	{
-		if (s[i] != c && start < 0)
-			start = i;
-		else if ((s[i] == c || i == ft_strlen(s)) && start >= 0)
+		if (s[i] != c)
+			j++;
+		i++;
+	}
+	return (j);
+}
+
+void	transfercleanstring(char *copy, char const *s, char c)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (s[i] == c)
+		i++;
+	while (s[i])
+	{
+		if (s[i] != c)
 		{
-			str2[k] = sub_dup(s, start, i);
-			start = -1;
-				k++;
+			copy[j] = s[i];
+			j++;
+		}
+		if (s[i] == c && s[i + 1] != c)
+		{
+			copy[j] = 0;
+			j++;
 		}
 		i++;
 	}
-	str2[k] = 0;
-	return (str2);
+	return ;
 }
 
-// int main()
-// {
-//      char *ptr = "du bist dumm";
-//      char c = ' ';
-//      char **brot; 
-//      brot = ft_split(ptr, c);
-//      //printf("val: %s\n", brot);
-//      int i = 0;
-//      while (brot[i] != NULL)
-//      {
-//           printf("%s\n", brot[i]);
-//           i++;
-//      }
-// }
+char	**makearray(const char *s, char c, char *copy, int j)
+{
+	char	**out;
+	int		i;
+
+	out = malloc((j + 1) * sizeof(char *));
+	if (!out)
+		return (NULL);
+	out[j] = NULL;
+	i = j + count_chars(s, c) - 2;
+	while (i > -1)
+	{
+		if (copy[i] == 0)
+		{
+			out[j - 1] = ft_strdup(copy + i + 1);
+			if (!out[j - 1])
+				return (NULL);
+			j--;
+		}
+		i--;
+	}
+	out[0] = ft_strdup(copy);
+	if (!out[0])
+		return (NULL);
+	free(copy);
+	return (out);
+}
+
+/*
+Concept:
+- Count number of strings
+- deal with edge cases: empty string / only delimiters
+- Count number of chars
+- number of strings + number of chars = total needed mem for new string
+because mem = number of chars + number of 0 bytes (= number of chars)
+- allocate needed mem to copy
+- transfer clean string to copy by
+	- omitting starting delimiters
+	- copying non delimiters
+	- inserting 0 bytes for delimiters that are not followed by delimiters
+		and skipping delimiters which are followed by other delimiters
+	- final 0 byte does not have to be written because calloc was used -
+		but it will be written if array ends with delimiter (but 0
+		will already have been at that position)
+*/
+char	**ft_split(char const *s, char c)
+{
+	int		j;
+	char	*copy;
+	char	**out;
+
+	if (!s)
+		return (NULL);
+	j = count_strings(s, c);
+	if (j == 0)
+	{
+		out = ft_calloc(1, sizeof(char *));
+		if (!out)
+			return (NULL);
+		return (out);
+	}
+	copy = ft_calloc(j + count_chars(s, c), sizeof(char));
+	if (!copy)
+		return (NULL);
+	transfercleanstring(copy, s, c);
+	return (makearray(s, c, copy, j));
+}

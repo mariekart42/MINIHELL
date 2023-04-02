@@ -6,7 +6,7 @@
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 14:47:25 by mmensing          #+#    #+#             */
-/*   Updated: 2023/01/28 22:35:50 by mmensing         ###   ########.fr       */
+/*   Updated: 2023/04/02 21:14:42 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,10 @@ char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_itoa(int n);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
+int		count_strings(char const *s, char c);
+int		count_chars(char const *s, char c);
+void	transfercleanstring(char *copy, char const *s, char c);
+char	**makearray(const char *s, char c, char *copy, int j);
 char	**ft_split(char const *s, char c);
 
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));
@@ -74,7 +78,6 @@ int		ft_lstsize(t_list *lst);
 
 t_list	*ft_lstnew(void *content);
 t_list	*ft_lstlast(t_list *lst);
-//t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 void	ft_lstadd_front(t_list **lst, t_list *new);
 void	ft_lstadd_back(t_list **lst, t_list *new);

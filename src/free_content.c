@@ -17,6 +17,9 @@ void	free_content(t_hold *hold)
 {
 	if (hold->line)
 		free(hold->line);
+	// if (hold->env_path)
+	// 	free(hold->env_path);
+		// env_path
 	if (hold->my_env)
 	{
 		free(hold->my_env);
