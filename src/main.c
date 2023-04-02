@@ -26,6 +26,30 @@ bool only_spaces(char *line)
 		return (false);
 }
 
+bool	line_is_nothing(char *line)
+{
+	int32_t	i;
+
+	i = 0;
+	i = skip_spaces(line, i);
+	if (line[i] == '\0')
+		return (true);
+	if (line[i] == ':')
+		return (true);
+	if ((line[i] == '\'' && line[i + 1] == '\'') \
+		|| (line[i] == '\"' && line[i + 1] == '\"'))
+	{
+		i = skip_spaces(line, i + 2);
+		if (line[i] == '\0')
+		{
+			exit_status(": :command not found!", "", "", 69);
+			return (true);
+		}
+	}
+	return (false);
+
+}
+
 int32_t	prep_minihell(t_hold *hold)
 {
 	hold->line = readline(BLU"MINIHELL> "RESET);
@@ -36,7 +60,7 @@ int32_t	prep_minihell(t_hold *hold)
 		exit(g_error_code);
 	}
 	g_error_code = 0;
-	if ((ft_strlen(hold->line) == 1 && hold->line[0] == ':') || only_spaces(hold->line) == true)
+	if (line_is_nothing(hold->line) == true)
 	{
 		free(hold->line);
 		return (0);
