@@ -13,14 +13,16 @@ LIB = libft.a
 SRC		=	main.c \
 			utils.c \
 			utils_cont.c \
-			executer.c \
 			init_data.c \
 			export_struct.c \
 			export_struct_cont.c \
 			free_content.c \
 			free_content_cont.c \
 			syntax_errors.c \
-			delete_later.c \
+			$(addprefix executer/,\
+			execute_00.c \
+			execute_01.c \
+			execute_02.c) \
 			$(addprefix lexing/,\
 			lexer_00.c \
 			lexer_01.c \
@@ -55,7 +57,7 @@ all: $(NAME)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@mkdir -p $(OBJ_PATH)
-	@mkdir -p obj/signals obj/builtins obj/parsing obj/lexing
+	@mkdir -p obj/signals obj/builtins obj/parsing obj/lexing obj/executer
 	$(CC) $(CFLAGS) -c $< -o $@ $(INC)
 
 $(NAME): $(OBJS) $(LIB_F)/$(LIB)

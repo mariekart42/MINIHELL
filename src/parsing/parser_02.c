@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_02.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/02 21:21:53 by mmensing          #+#    #+#             */
+/*   Updated: 2023/04/02 21:30:19 by mmensing         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /* function counts and returns amount of pipegroups in 'lexed_list' */
@@ -15,7 +27,7 @@ void	count_pipegroups(t_hold *hold)
 		tmp = tmp->next;
 	}
 	if (pipegroup > 1000)
-		exit_status("fugguUUUUUUU!", "", "", 69);
+		exit_status("DUDE what da fuck!", "", "", 69);
 	else
 		hold->pipegroups = pipegroup;
 }
@@ -32,6 +44,27 @@ char	*get_env_path(t_env_exp *env_node)
 		tmp = tmp->next;
 	}
 	return (NULL);
+}
+
+char	*return_valid_path(char *curr_cmd, char *valid_path, char **env_path)
+{
+	if (env_path)
+	{
+		free_env_path(env_path);
+		env_path = NULL;
+	}
+	if (ft_strncmp(curr_cmd, "./", 2) == 0)
+		valid_path = ft_strdup(curr_cmd);
+	if (access(valid_path, F_OK | X_OK) != 0)
+	{
+		if (valid_path)
+		{
+			free(valid_path);
+			valid_path = NULL;
+		}
+		return (NULL);
+	}
+	return (valid_path);
 }
 
 /* function appends command from 'pars_list' at the end of
@@ -61,33 +94,7 @@ char	*get_cmdpath(t_env_exp *env_node, char *curr_cmd)
 		valid_path = NULL;
 		i++;
 	}
-	if (ft_strncmp(curr_cmd, "./", 2) == 0)
-		valid_path = ft_strdup(curr_cmd);
-	if (env_path)
-	{
-		free_env_path(env_path);
-		env_path = NULL;
-	}
-	if (access(valid_path, F_OK | X_OK) != 0)
-	{
-		if (valid_path)
-		{
-			free(valid_path);
-			valid_path = NULL;
-		}
-		return (NULL);
-	}
-	else
-		return (valid_path);
-}
-
-t_pars	*last_node_pars(t_pars *lst)
-{
-	if (!lst)
-		return (NULL);
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
+	return (return_valid_path(curr_cmd, valid_path, env_path));
 }
 
 void	add_node_pars(t_hold **hold)

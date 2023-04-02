@@ -1,47 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/02 21:40:27 by mmensing          #+#    #+#             */
+/*   Updated: 2023/04/02 21:42:31 by mmensing         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-/*
-Appends a string to a string array.
-If the string array doesn't exist yet,
-makes a new string array with the string as only content.
-Frees the passed string array.
-Danger! The intended use case is narrow. You might end up freeing stuff
-you intended to keep.
-It should mostly only be used for one and the same array.
-Ok:				array_a = append_string(array_a, string);
-Probably bad:	array_b = append_string(array_a, string);
-It won't leak, but array_a is lost.
-*/
-char	**append_string(char **array, char *string)
-{
-	char	**result;
-	int		i;
-
-	if (!array)
-	{
-		result = malloc(2 * sizeof(char *));
-		result[0] = string;
-		result[1] = NULL;
-		return (result);
-	}
-	i = 0;
-	while (array[i])
-		i++;
-	result = malloc((i + 2) * sizeof(char *));
-	i = 0;
-	while (array[i])
-	{
-		result[i] = array[i];
-		i++;
-	}
-	result[i] = string;
-	i++;
-	result[i] = NULL;
-	free(array);
-	return (result);
-}
-
-void create_env(t_hold *hold)
+void	create_env(t_hold *hold)
 {
 	t_env_exp	*env_node;
 
@@ -51,32 +22,6 @@ void create_env(t_hold *hold)
 		hold->my_env = append_string(hold->my_env, env_node->item);
 		env_node = env_node->next;
 	}
-}
-
-void	free_exit(t_hold *hold)
-{
-	if (hold->line)
-		free(hold->line);
-	if (hold->lex_struct)
-		free_list_lex(hold->lex_struct);
-	if (hold->pars_list)
-		free_list_pars(hold->pars_list);
-	if (hold->env_list)
-		free_list_env_export(hold->env_list);
-	if (hold->export_list)
-		free_list_env_export(hold->export_list);
-	free_main();
-}
-
-bool	only_spaces(char *line)
-{
-	int32_t	i;
-
-	i = 0;
-	if (line[skip_spaces(line, i)] == '\0')
-		return (true);
-	else
-		return (false);
 }
 
 bool	line_is_nothing(char *line)
@@ -150,10 +95,8 @@ int	main(int32_t argc, char **argv, char **env)
 			add_history(hold.line);
 			lexer(&hold);
 			parser(&hold);
-			// print_parsed_list(hold.pars_list);
 			executer(&hold);
 			free_content(&hold);
-	// exit(0);
 		}
 		init_error_code(&hold);
 	}
