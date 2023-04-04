@@ -5,30 +5,34 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmensing <mmensing@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/02 21:45:14 by mmensing          #+#    #+#             */
-/*   Updated: 2023/04/02 22:15:39 by mmensing         ###   ########.fr       */
+/*   Created: 2023/04/04 12:37:36 by mmensing          #+#    #+#             */
+/*   Updated: 2023/04/04 12:40:52 by mmensing         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+// ----------------------------------------------------------------------------
+//!		LIBS:
 # include <stdlib.h>
 # include <stdio.h>
-# include <unistd.h> // unlink
+# include <unistd.h>	// unlink
 # include <limits.h>	// for PATH_MAX macro
-# include <sys/stat.h> // for stat function
-# include <signal.h> // function for signal funcs
+# include <sys/stat.h>	// for stat function
+# include <signal.h>	// function for signal funcs
 # include <stdbool.h>	// bool
-# include <fcntl.h> // open function
+# include <fcntl.h>		// open function
 # include <sys/types.h>
-
+// libft:
 # include "../libft/libft.h"
-
-// libs for readline
+ // libs for readline:
 # include <readline/readline.h>
 # include <readline/history.h>
 
+// ----------------------------------------------------------------------------
+//!		MACROS:
 # define BUILTIN 0
 # define WORD 1
 # define SING_QUOTE 2		  //  '
@@ -42,7 +46,7 @@
 
 # define MAX_FD 1024
 
-// Get_next_line
+// get_next_line
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 4096
 # endif
@@ -57,22 +61,8 @@
 # define WHT   "\x1B[37m"
 # define RESET "\x1B[0m"
 
-/* Libraries */
-# include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>	// unlink func
-# include <limits.h>	// for PATH_MAX macro
-# include <sys/stat.h>	// stat funcs
-# include <sys/types.h>
-# include <signal.h>	// signal funcs
-# include <stdbool.h>	// bool
-# include <fcntl.h>		// open func
-
-# include "../libft/libft.h"
-
-# include <readline/readline.h>	// readline
-# include <readline/history.h>
-
+// ----------------------------------------------------------------------------
+//!		STRUCTS:
 int32_t	g_error_code;
 
 typedef struct s_lex
@@ -111,6 +101,9 @@ typedef struct s_hold
 	struct s_env_exp	*export_list;
 	struct s_pars		*pars_list;
 }						t_hold;
+
+// ----------------------------------------------------------------------------
+//!		FUNCS:
 
 //!- - - -  MAIN: - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void		create_env(t_hold *hold);
@@ -329,9 +322,7 @@ char		*ft_strncpy(char *dest, const char *src, size_t len);
 char		*ft_strnew(const int size);
 char		*ft_strndup(const char *s1, size_t n);
 int			ft_strcmp(char *s1, char *s2);
-
 t_env_exp	*new_node_env(void);
-
 char		*get_env_path(t_env_exp *env_node);
 char		*return_valid_path(char *curr_cmd, char *valid_path, \
 													char **env_path);
